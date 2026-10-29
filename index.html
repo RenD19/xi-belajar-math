@@ -1,0 +1,2082 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bunga Tunggal dan Bunga Majemuk</title>
+<!-- KaTeX 0.16.45 (dipatok, SRI) untuk merender rumus. Bila gagal dimuat, teks biasa tetap tampil. -->
+<link rel="stylesheet" id="katexCss" media="print" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.45/katex.min.css" integrity="sha384-UA8juhPf75SzzAMA/4fo3yOU7sBJ0om7SCD2GHq0fZqZco6tr1UCV7nUbk9J90JM" crossorigin="anonymous" referrerpolicy="no-referrer">
+<script defer id="katexJs" src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.45/katex.min.js" integrity="sha384-Tt7wBxLKwSzFVRET4O4U9H6v8MNaQ/CjN2FMP4xFm0ErrFu6aNqoonRVW5W40iGI" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<style>
+:root{--ink:#1b2a41;--mut:#5b6b82;--bg:#eef3fb;--card:#fff;--blue:#1d4ed8;--green:#15803d;--red:#b91c1c;--amber:#b45309;--line:#d5deee;--orange:#c2410c}
+*{box-sizing:border-box}
+body{margin:0;font:17px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--ink);background:var(--bg)}
+.wrap{max-width:1080px;margin:0 auto;padding:14px}
+header{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:10px}
+header h1{font-size:clamp(1.15rem,4.2vw,1.7rem);margin:0;line-height:1.25}
+header p{margin:0;color:var(--mut);font-size:.9rem}
+.tabs{display:flex;gap:6px;background:#dde6f5;padding:4px;border-radius:12px}
+.tab{border:0;background:transparent;font:inherit;font-weight:600;padding:9px 14px;border-radius:9px;color:var(--mut);cursor:pointer;min-height:44px}
+.tab.on{background:#fff;color:var(--blue);box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:12px}
+.prob{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+.prob>div:first-child{flex:1;min-width:0}
+.prob small{color:var(--mut);display:block}
+.prob-actions{display:flex;gap:8px;flex-wrap:wrap}
+.ask{margin:4px 0 6px;font-size:1rem}
+.qask{font-weight:700;color:var(--blue)}
+.pdata{margin-top:8px}
+ol.prog{list-style:none;display:flex;gap:4px;padding:0;margin:0 0 8px}
+ol.prog li{flex:1;text-align:center;font-size:.78rem;color:var(--mut)}
+ol.prog li span{display:grid;place-items:center;width:32px;height:32px;margin:0 auto 2px;border-radius:50%;background:#e4ebf7;font-weight:700;color:var(--mut)}
+ol.prog li.cur span{background:var(--blue);color:#fff}
+ol.prog li.cur{color:var(--blue);font-weight:700}
+ol.prog li.done span{background:var(--green);color:#fff}
+ol.prog li.miss span{background:var(--amber);color:#fff}
+ol.prog em{font-style:normal;display:block}
+#stepText{margin:0;font-size:.9rem;color:var(--mut);text-align:center}
+.layout{display:grid;grid-template-columns:1fr;gap:12px}
+@media(min-width:860px){.layout{grid-template-columns:minmax(340px,1fr) minmax(320px,440px);align-items:start}.side{position:sticky;top:10px}}
+h2{font-size:1.2rem;margin:0 0 8px}
+.side h3{font-size:1rem;margin:4px 0 6px}
+.muted{color:var(--mut);font-size:.95rem}
+.eq{display:inline-block;background:#eaf0ff;border-radius:8px;padding:0 8px;font-weight:700}
+.note{background:#f6f9ff;border-left:4px solid var(--blue);padding:8px 12px;border-radius:8px;margin:10px 0}
+.note p{margin:.3em 0}
+.rule{background:#fff8e6;border:1px solid #f3dca0;border-radius:10px;padding:8px 12px;margin:10px 0;font-size:.97rem}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.chip{font:inherit;font-weight:600;border:2px solid var(--line);background:#fff;border-radius:999px;padding:8px 14px;min-height:44px;cursor:pointer;color:var(--ink)}
+.chip.on{border-color:var(--blue);background:#eaf0ff;color:var(--blue)}
+.chip:disabled{opacity:.45;cursor:default}
+.btn{font:inherit;font-weight:700;border:2px solid var(--blue);background:#fff;color:var(--blue);border-radius:12px;padding:10px 18px;min-height:48px;cursor:pointer}
+.btn.primary{background:var(--blue);color:#fff}
+.btn.ghost{border-color:var(--line);color:var(--ink)}
+.btn:disabled,.segb:disabled{opacity:.55;cursor:default}
+.row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+input.num{font:inherit;font-size:1.15rem;padding:8px 10px;border:2px solid var(--line);border-radius:10px;min-height:46px;width:min(100%,230px);background:#fff;color:var(--ink)}
+input.num:focus{outline:none;border-color:var(--blue)}
+input.num.ok{border-color:var(--green);background:#ecfdf3}
+input.num.bad{border-color:var(--red);background:#fef2f2}
+.seg{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.seg.col{flex-direction:column;align-items:stretch}
+.segb{font:inherit;font-weight:600;display:flex;align-items:center;gap:8px;border:2px solid var(--line);background:#fff;border-radius:12px;padding:10px 14px;min-height:48px;cursor:pointer;color:var(--ink);text-align:left}
+.segb.on{border-color:var(--blue);background:#eaf0ff;color:var(--blue)}
+.segb .bx{flex:none;width:22px;height:22px;border:2px solid currentColor;border-radius:6px;display:grid;place-items:center;font-size:.9rem;line-height:1}
+.segb.rad .bx{border-radius:50%}
+.hints{margin:10px 0 0;padding:8px 12px 8px 30px;background:#fff8e6;border:1px solid #f3dca0;border-radius:10px;font-size:.97rem}
+.hints[hidden],.fb[hidden]{display:none}
+.hints li{margin:.25em 0}
+.fb{margin-top:10px;padding:10px 12px;border-radius:10px;font-weight:500}
+.fb.ok{background:#ecfdf3;border:1px solid #9be0b8;color:#14532d}
+.fb.bad{background:#fef2f2;border:1px solid #f3b4b4;color:#7f1d1d}
+.fb.info{background:#eff6ff;border:1px solid #b6d0fb;color:#1e3a8a}
+.fb p{margin:.3em 0}
+.okc{color:var(--green)}.badc{color:var(--red)}
+ol.sum{padding-left:22px}
+ol.sum li{margin:.5em 0}
+.score{font-size:3rem;font-weight:800;color:var(--blue)}
+.score small{font-size:1.2rem;color:var(--mut)}
+.over #problemCard,.over #progressBox{display:none}
+.noside .side{display:none}
+.mini{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}
+.mini span{font-size:.78rem;padding:3px 10px;border-radius:999px;background:#e4ebf7;color:var(--mut);font-weight:600}
+.mini span.cur{background:var(--blue);color:#fff}
+.mini span.dn{background:#dcf5e6;color:#14532d}
+.mini span.ms{background:#fdecc8;color:#7c2d12}
+.lvl{margin:10px 0}
+.trow{border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:8px 0}
+.trow.ok{background:#ecfdf3;border-color:#9be0b8}
+.trow.bad{background:#fef2f2;border-color:#f3b4b4}
+.trow p{margin:.3em 0}
+.trow .flb{font-weight:700;margin:0 0 4px}
+.inrow{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.pre,.suf{font-weight:700;color:var(--mut)}
+.pv{display:block;color:var(--mut);font-size:.82rem;margin-top:3px;min-height:1.1em}
+table.dt{border-collapse:collapse;width:100%;font-size:.95rem;margin:6px 0}
+.dt th,.dt td{border:1px solid var(--line);padding:5px 8px;text-align:right;white-space:nowrap}
+.dt th{background:#eaf0ff;text-align:center}
+.dt td:first-child{text-align:center}
+.dtwrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.dtcap{margin:4px 0 0;font-weight:700;font-size:.92rem}
+.mini-chart{width:100%;max-width:420px;height:auto;display:block;background:#fff;margin:6px 0}
+.ax{font:11px system-ui,sans-serif;fill:#44546a}
+.found{list-style:none;padding:0;margin:4px 0}
+.found li{padding:5px 8px;border-radius:8px;margin:4px 0;background:#f6f9ff;font-size:.93rem}
+.found li.ms{background:#fff7e8}
+details.rumus{border:1px solid var(--line);border-radius:12px;padding:6px 12px;margin-top:10px}
+details.rumus summary{cursor:pointer;font-weight:700;min-height:44px;display:flex;align-items:center}
+details.rumus p{margin:.35em 0}
+.chart svg{width:100%;height:auto;display:block;background:#fff;border-radius:10px}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:.88rem;font-weight:700;margin:4px 0}
+.lgT{color:var(--blue)}.lgM{color:var(--orange)}
+.sl{display:grid;grid-template-columns:2.4em 1fr 7.2em;gap:8px;align-items:center;margin:2px 0}
+.sl label{font-weight:700}
+.sl input[type=range]{width:100%;min-height:44px;accent-color:var(--blue)}
+.sl output{font-weight:700;text-align:right;font-size:.92rem}
+.timer{font-weight:700;color:var(--blue)}
+.timer.low{color:var(--red)}
+.refl{background:#f5f3ff;border:1px solid #d9d2fb;border-radius:12px;padding:8px 12px;margin:10px 0}
+.refl p{margin:.3em 0}
+@media(min-width:860px){.pdata{display:none}}
+@media(max-width:859px){.sdata{display:none}}
+
+/* ===== Maskot Plus ===== */
+:root{--plus-w:90px}
+@media(min-width:860px){:root{--plus-w:120px}}
+body:not(.plus-off) .wrap{padding-bottom:calc(var(--plus-w)*.93 + 36px)}
+#plusWrap{position:fixed;right:8px;bottom:8px;z-index:50;display:flex;align-items:flex-end;gap:4px;pointer-events:none}
+body.plus-off #plusWrap{display:none}
+#plusBody{position:relative;width:var(--plus-w);flex:none}
+#plusBody svg{width:100%;height:auto;display:block;overflow:visible}
+#plusBubble{align-self:center;position:relative;max-width:min(190px,52vw);background:#fff;color:var(--ink);border:2px solid var(--blue);border-radius:14px;padding:7px 11px;font-weight:700;font-size:.86rem;line-height:1.3;box-shadow:0 2px 8px rgba(29,78,216,.18);opacity:0;visibility:hidden;transform:translateX(8px) scale(.92);transform-origin:right center;transition:opacity .25s,transform .25s,visibility 0s .25s}
+#plusBubble.show{opacity:1;visibility:visible;transform:none;transition-delay:0s}
+#plusBubble::after{content:"";position:absolute;right:-8px;top:50%;width:12px;height:12px;background:#fff;border-right:2px solid var(--blue);border-top:2px solid var(--blue);transform:translateY(-50%) rotate(45deg)}
+@media(min-width:860px){#plusBubble{max-width:240px;font-size:.95rem}}
+#plusToggle{position:fixed;z-index:51;right:8px;bottom:calc(var(--plus-w)*.93 + 12px);width:44px;height:44px;border-radius:50%;border:2px solid var(--line);background:#fff;color:var(--mut);font:700 14px/1 system-ui,sans-serif;cursor:pointer;display:grid;place-items:center;padding:0;box-shadow:0 1px 4px rgba(0,0,0,.18)}
+body.plus-off #plusToggle{bottom:8px;width:auto;height:44px;border-radius:999px;padding:0 16px;border-color:var(--blue);color:var(--blue);font-size:.95rem}
+#plusWrap .eyeH,#plusWrap .mH,#plusWrap .mS,#plusWrap .brow{display:none}
+#plusWrap[data-mood=happy] .eye,#plusWrap[data-mood=happy] .mN,#plusWrap[data-mood=happy] .mS{display:none}
+#plusWrap[data-mood=happy] .eyeH,#plusWrap[data-mood=happy] .mH{display:inline}
+#plusWrap[data-mood=sad] .mN{display:none}
+#plusWrap[data-mood=sad] .mS,#plusWrap[data-mood=sad] .brow{display:inline}
+#plusChar{transform-origin:70px 72px;animation:plusFloat 3.2s ease-in-out infinite}
+#armL{transform-origin:30px 64px}
+#armR{transform-origin:110px 64px}
+.eye{transform-box:fill-box;transform-origin:center;animation:plusBlink 4.8s infinite}
+#plusWrap[data-act=wave] #armR{animation:plusWave 2.2s ease-in-out 1}
+#plusWrap[data-act=cheer] #plusChar{animation:plusJump 1s ease-out 1}
+#plusWrap[data-act=cheer] #armL{animation:plusUpL 1.4s ease-in-out 1}
+#plusWrap[data-act=cheer] #armR{animation:plusUpR 1.4s ease-in-out 1}
+#plusWrap[data-act=shake] #plusChar{animation:plusShake 1.1s ease-in-out 1}
+#plusWrap[data-act=point] #armL{animation:plusPoint 1.8s ease-in-out 1}
+#plusWrap[data-act=spin] #plusChar{animation:plusSpin 1.1s ease-in-out 1}
+#plusWrap[data-act=spin] #armL{animation:plusUpL 1.6s ease-in-out 1}
+#plusWrap[data-act=spin] #armR{animation:plusUpR 1.6s ease-in-out 1}
+@keyframes plusFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes plusBlink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+@keyframes plusWave{0%{transform:rotate(0)}15%{transform:rotate(-100deg)}30%{transform:rotate(-124deg)}45%{transform:rotate(-96deg)}60%{transform:rotate(-124deg)}75%{transform:rotate(-96deg)}90%{transform:rotate(-100deg)}100%{transform:rotate(0)}}
+@keyframes plusUpL{0%{transform:rotate(0)}20%,80%{transform:rotate(105deg)}100%{transform:rotate(0)}}
+@keyframes plusUpR{0%{transform:rotate(0)}20%,80%{transform:rotate(-105deg)}100%{transform:rotate(0)}}
+@keyframes plusPoint{0%{transform:rotate(0)}20%{transform:rotate(75deg)}35%{transform:rotate(66deg)}50%{transform:rotate(78deg)}65%{transform:rotate(66deg)}85%{transform:rotate(75deg)}100%{transform:rotate(0)}}
+@keyframes plusJump{0%,100%{transform:translateY(0)}25%{transform:translateY(-22px)}50%{transform:translateY(0)}65%{transform:translateY(-9px)}80%{transform:translateY(0)}}
+@keyframes plusShake{0%,100%{transform:rotate(0)}20%{transform:rotate(-5deg)}40%{transform:rotate(5deg)}60%{transform:rotate(-3deg)}80%{transform:rotate(3deg)}}
+@keyframes plusSpin{0%{transform:translateY(0) rotate(0)}45%{transform:translateY(-16px) rotate(360deg)}100%{transform:translateY(0) rotate(360deg)}}
+#plusConf{position:absolute;left:50%;top:45%;width:0;height:0;pointer-events:none}
+#plusConf i{position:absolute;width:7px;height:10px;border-radius:2px;animation:plusConf 1.5s ease-out forwards}
+@keyframes plusConf{0%{transform:translate(0,0) rotate(0);opacity:1}60%{transform:translate(var(--dx),var(--dy)) rotate(var(--rot));opacity:1}100%{transform:translate(var(--dx),calc(var(--dy) + 50px)) rotate(var(--rot));opacity:0}}
+@media (prefers-reduced-motion:reduce){
+  #plusChar,#armL,#armR,.eye,#plusConf i{animation:none!important}
+  #plusBubble{transition:none!important}
+  #plusWrap[data-act=wave] #armR,#plusWrap[data-act=cheer] #armR,#plusWrap[data-act=spin] #armR{transform:rotate(-105deg)}
+  #plusWrap[data-act=cheer] #armL,#plusWrap[data-act=spin] #armL{transform:rotate(105deg)}
+  #plusWrap[data-act=point] #armL{transform:rotate(75deg)}
+}
+#plusFx{position:fixed;left:0;top:0;width:100vw;height:100vh;z-index:49;pointer-events:none;overflow:visible}
+#plusFx .ring{fill:rgba(245,158,11,.14);stroke:#f59e0b;stroke-width:4;animation:fxPulse 1.4s ease-in-out infinite}
+@keyframes fxPulse{50%{stroke-opacity:.45}}
+#plusFx .beam{stroke:#f59e0b;stroke-width:3;stroke-dasharray:7 6;fill:none;marker-end:url(#fxArr)}
+#plusWrap.go{transition:transform .65s cubic-bezier(.4,0,.2,1)}
+#plusWrap[data-side=r]{flex-direction:row-reverse}
+#plusWrap[data-side=r] #plusBubble{transform-origin:left center}
+#plusWrap[data-side=r] #plusBubble::after{right:auto;left:-8px;border-right:0;border-top:0;border-left:2px solid var(--blue);border-bottom:2px solid var(--blue)}
+@media(prefers-reduced-motion:reduce){#plusWrap.go{transition:none!important}#plusFx .ring{animation:none}}
+
+/* ===== Tampilan ringkas PC/laptop: satu layar, tanpa scroll halaman ===== */
+@media (min-width:860px) and (min-height:500px){
+  body{--sw:clamp(330px,36vw,470px)}
+  html,body{height:100%}
+  body{overflow:hidden;font-size:15px;line-height:1.45}
+  body .wrap,body:not(.plus-off) .wrap{height:100vh;max-width:1320px;padding:8px 14px;display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto auto auto minmax(0,1fr);column-gap:12px}
+  header{grid-column:1/3;margin:0 0 6px;gap:6px}
+  header>div{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  header h1{font-size:1.15rem}
+  header p{font-size:.82rem}
+  .tabs{padding:3px}
+  .card{padding:10px 14px;margin-bottom:8px;border-radius:12px}
+  #problemCard{grid-column:1;grid-row:2}
+  #progressBox{grid-column:1;grid-row:3}
+  .layout{display:contents}
+  #panel{grid-column:1;grid-row:4;overflow:auto;min-height:0;margin-bottom:0}
+  .side{grid-column:2;grid-row:2/5;align-self:stretch;position:static;margin:0;width:var(--sw);overflow:auto;min-height:0}
+  body:not(.plus-off) .side{margin-bottom:calc(var(--plus-w)*.93 + 20px)}
+  .prob{flex-wrap:nowrap;gap:12px;align-items:center}
+  .prob-actions{flex-direction:column;gap:4px}
+  #progressBox{padding:6px 10px}
+  ol.prog{margin:0}
+  ol.prog li{font-size:.72rem}
+  ol.prog li span{width:26px;height:26px;font-size:.78rem}
+  #stepText{display:none}
+  #panel h2{font-size:1.05rem;margin:0 0 4px}
+  #panel p{margin:.35em 0}
+  .row{margin-top:8px}
+  .note{margin:6px 0;padding:4px 10px}
+  .rule{margin:6px 0;padding:5px 10px;font-size:.9rem}
+  .chips{margin:4px 0;gap:6px}
+  .lvl{margin:4px 0;display:flex;align-items:center;gap:10px}
+  .lvl>b{flex:0 0 110px}
+  .lvl .chips{margin:0}
+  .mini{margin:0 0 6px}
+  .hints{margin:6px 0 0;padding:5px 10px 5px 26px;font-size:.9rem}
+  .fb{margin-top:6px;padding:7px 10px}
+  .trow{padding:6px 10px;margin:6px 0}
+  .seg{margin:6px 0}
+  .score{font-size:2.4rem}
+  ol.sum li{margin:.3em 0}
+}
+@media (min-width:860px) and (max-height:720px){:root{--plus-w:100px}}
+.form{display:grid;gap:10px;margin:12px 0}
+.form label{display:block;font-weight:600}
+.form label small{font-weight:400;color:var(--mut)}
+.form input{display:block;width:100%;font:inherit;font-size:1.1rem;padding:10px 12px;border:2px solid var(--line);border-radius:10px;min-height:46px;margin-top:4px;background:#fff;color:var(--ink)}
+.form input:focus{outline:none;border-color:var(--blue)}
+.form .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:420px){.form .two{grid-template-columns:1fr}}
+
+/* ===== Tab Belajar dan penunjuk Plus ===== */
+.exhd{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:4px}
+.exhd select{font:inherit;font-size:.95rem;padding:6px 10px;border:2px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);max-width:100%;min-height:44px}
+.exsrc{display:block;color:var(--mut);font-size:.8rem;margin-top:6px}
+.exl{margin:6px 0;padding-left:22px}
+.exl li{margin:4px 0;padding:3px 6px;border-radius:8px}
+.hit{background:#fff3c4;outline:2px solid #f59e0b;outline-offset:1px;border-radius:8px}
+.ans{margin:8px 0;padding:8px 12px;border-radius:10px;background:#e8f1fb;font-weight:700}
+.sols{display:grid;gap:6px;margin:8px 0}
+.sol{display:block;width:100%;text-align:left;font:inherit;font-size:.95rem;padding:7px 10px;border:2px solid var(--line);border-radius:10px;background:#fff;color:var(--ink);cursor:pointer;min-height:44px}
+.sol:hover{border-color:var(--blue)}
+.sol.ok{border-color:#a7dcb8;background:#f2fbf5}
+.sol.bad{border-color:var(--red);background:#fee2e2}
+.exbox{margin:8px 0;padding:8px 12px;border-radius:10px;border:1px solid var(--line);background:#f8fafc}
+.exbox.why{border-color:#f3b5b5;background:#fff1f1}
+.exbox.fix{border-color:#a7dcb8;background:#effaf2}
+table.ext{width:100%;border-collapse:collapse;font-size:.93rem;margin:6px 0}
+table.ext th,table.ext td{border:1px solid var(--line);padding:5px 8px;text-align:left;vertical-align:top}
+table.ext th{background:#e8f0fb}
+#panel p.eq{display:block;width:fit-content;max-width:100%;margin:6px 0;overflow-x:auto}
+.whereBox{margin-top:6px}
+#whereTxt{display:block;margin-top:4px;font-weight:600}
+
+/* ===== Tab Belajar: tombol Sebelumnya / Berikutnya / Ulangi melayang di perangkat kecil ===== */
+#exFloat{display:contents}
+#exFloat .exfpos{display:none}
+@media not all and (min-width:860px) and (min-height:500px){
+  .exempty{margin:0;padding:0;height:0;min-height:0;border:0}
+  body.ex-bar:not(.plus-off) .wrap{padding-bottom:calc(var(--plus-w)*.93 + 36px + var(--exbar-h,0px))}
+  body.ex-bar.plus-off .wrap{padding-bottom:calc(64px + var(--exbar-h,0px))}
+  body.ex-bar #plusWrap{bottom:calc(8px + var(--exbar-h,0px))}
+  body.ex-bar #plusToggle{bottom:calc(var(--plus-w)*.93 + 12px + var(--exbar-h,0px))}
+  body.ex-bar.plus-off #plusToggle{bottom:calc(8px + var(--exbar-h,0px))}
+  #exFloat{position:fixed;left:0;right:0;bottom:0;z-index:48;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr) auto;grid-template-areas:"pos pos pos" "prev next again";gap:4px 8px;align-items:stretch;padding:6px 10px calc(8px + env(safe-area-inset-bottom,0px));background:rgba(255,255,255,.98);border-top:1px solid var(--line);box-shadow:0 -4px 14px rgba(27,42,65,.16)}
+  #exFloat .exfpos{grid-area:pos;display:block;text-align:center;font-size:.76rem;line-height:1.1;color:var(--mut)}
+  #exFloat #exPrev{grid-area:prev}
+  #exFloat #exNext{grid-area:next}
+  #exFloat #exAgain{grid-area:again}
+  #exFloat .btn{min-height:48px;min-width:48px;margin:0;padding:6px 10px;font-size:.92rem;white-space:nowrap;touch-action:manipulation}
+}
+@media (max-width:379px){#exFloat .btn{padding:6px 7px;font-size:.84rem}}
+@media (max-width:339px){#exFloat{gap:4px 6px;padding-left:6px;padding-right:6px}#exFloat .btn{padding:6px 4px;font-size:.78rem}}
+@media (max-width:859px){.layout>*{min-width:0}}
+@media (max-width:359px){#panel table td,#panel table th{padding:4px 5px;font-size:.84rem;overflow-wrap:anywhere}}
+@media (max-width:359px){.tabs{max-width:100%}.tab{padding:9px 8px;font-size:.88rem}}
+@media (max-width:399px){#exFloat #exAgain .lb{display:none}}
+@media (max-height:559px){#exFloat .exfpos{display:none}}
+/* ===== Rumus (KaTeX): hanya berlaku setelah rumus dirender ===== */
+[data-tex]>.katex{font-size:1.1em;line-height:1.2;white-space:nowrap}
+.eq[data-tex]:has(>.katex){max-width:100%;overflow-x:auto;overflow-y:hidden;vertical-align:middle;padding-top:3px;padding-bottom:3px;-webkit-overflow-scrolling:touch}
+span[data-tex]:not(.eq):has(>.katex){display:inline-block;max-width:100%;overflow-x:auto;overflow-y:hidden;vertical-align:middle;padding:2px 0}
+.sol:has(.katex){min-height:44px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Bunga Tunggal dan Bunga Majemuk</h1>
+      <p>Matematika · Kelas XI · Fase F</p>
+    </div>
+    <div class="tabs" role="tablist">
+      <button class="tab on" id="tabExplain" role="tab">Belajar</button>
+      <button class="tab" id="tabLearn" role="tab">Latihan Mandiri</button>
+      <button class="tab" id="tabPractice" role="tab">Kuis</button>
+    </div>
+  </header>
+
+  <section class="card" id="problemCard">
+    <div class="prob">
+      <div><small id="probMeta"></small><div id="probAsk" class="ask"></div><div id="probText"></div><div id="probData" class="pdata"></div></div>
+      <div class="prob-actions">
+        <button class="btn ghost" id="bRepeat">↺ Ulangi</button>
+        <button class="btn ghost" id="bNextQ">Soal berikutnya ➜</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="card" id="progressBox">
+    <ol class="prog" id="progress"></ol>
+    <p id="stepText"></p>
+  </section>
+
+  <div class="layout">
+    <section class="card" id="panel"></section>
+    <section class="card side" id="side"></section>
+  </div>
+</div>
+
+<!-- Maskot Plus -->
+<div id="plusWrap" data-mood="normal">
+  <div id="plusBubble" role="status" aria-live="polite"></div>
+  <div id="plusBody">
+    <svg viewBox="0 0 140 130" aria-hidden="true" focusable="false">
+      <ellipse cx="70" cy="122" rx="30" ry="4" fill="#1b2a41" opacity=".13"/>
+      <g id="plusChar">
+        <g id="armL"><line x1="30" y1="64" x2="15" y2="85" stroke="#1d4ed8" stroke-width="6" stroke-linecap="round"/><circle cx="15" cy="85" r="7.5" fill="#e0ecff" stroke="#1d4ed8" stroke-width="3"/></g>
+        <g id="armR"><line x1="110" y1="64" x2="125" y2="85" stroke="#1d4ed8" stroke-width="6" stroke-linecap="round"/><circle cx="125" cy="85" r="7.5" fill="#e0ecff" stroke="#1d4ed8" stroke-width="3"/></g>
+        <polygon points="49,34 91,34 91,51 108,51 108,93 91,93 91,110 49,110 49,93 32,93 32,51 49,51" fill="#1d4ed8" stroke="#1d4ed8" stroke-width="8" stroke-linejoin="round"/>
+        <circle cx="47" cy="82" r="4.5" fill="#f9a8d4" opacity=".75"/><circle cx="93" cy="82" r="4.5" fill="#f9a8d4" opacity=".75"/>
+        <g class="eye"><circle cx="59" cy="70" r="9" fill="#fff"/><circle cx="59" cy="71.5" r="4.8" fill="#1b2a41"/><circle cx="60.8" cy="69.5" r="1.5" fill="#fff"/></g>
+        <g class="eye"><circle cx="81" cy="70" r="9" fill="#fff"/><circle cx="81" cy="71.5" r="4.8" fill="#1b2a41"/><circle cx="82.8" cy="69.5" r="1.5" fill="#fff"/></g>
+        <path class="eyeH" d="M51 72Q59 61 67 72M73 72Q81 61 89 72" stroke="#fff" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+        <path class="brow" d="M50 58L68 53M72 53L90 58" stroke="#fff" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+        <path class="mN" d="M63 82Q70 90 77 82" stroke="#fff" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+        <path class="mH" d="M62 80Q70 97 78 80Z" fill="#fff" stroke="#fff" stroke-width="2" stroke-linejoin="round"/>
+        <path class="mS" d="M63 88Q70 80 77 88" stroke="#fff" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+      </g>
+    </svg>
+    <div id="plusConf"></div>
+  </div>
+</div>
+<button id="plusToggle" type="button" title="Sembunyikan Plus" aria-label="Sembunyikan Plus">✕</button>
+
+<script>
+/* ================= PENGATURAN (diisi guru) =================
+   ENDPOINT : alamat Web App Google Apps Script materi BUNGA, berakhiran /exec.
+              Dibiarkan kosong = MODE UJI: kuis tetap bisa dikerjakan,
+              tetapi nilai TIDAK disetor ke mana pun.
+   MATERI   : jangan diubah ("bunga").                          */
+window.BUNGA_CONFIG={ENDPOINT:"",MATERI:"bunga"};
+</script>
+<script>
+(function(){
+'use strict';
+var CONFIG=window.BUNGA_CONFIG||{ENDPOINT:'',MATERI:'bunga'};
+/* ===== CORE-MULAI ===== */
+/* ============================================================
+   CORE BERSAMA (dipakai persis sama oleh halaman siswa dan server)
+   Jangan diubah sebagian: pembangkit soal dan penilai harus
+   identik di kedua sisi. Server menolak halaman yang "cek"-nya
+   berbeda. Blok ini berada di antara penanda CORE-MULAI dan
+   CORE-SELESAI, dan harus sama byte demi byte di bunga.html
+   dan Code.gs.
+   ============================================================ */
+var CORE=(function(){
+'use strict';
+var VERSI='2026-10-29.1';
+/* Semua hitungan memakai +, −, ×, ÷, Math.round, Math.floor, Math.sqrt dan pangkat bulat lewat
+   perkalian berulang (powi). Operasi-operasi ini dibulatkan sama oleh IEEE 754 di semua mesin,
+   sehingga soal, kunci, dan sidik jari cek() identik di peramban dan di server. Math.pow dan
+   Math.log TIDAK dipakai. Jawaban siswa tetap dinilai dengan toleransi. */
+
+/* ---------- bilangan acak berbenih ---------- */
+function mulberry32(seed){
+  var a=seed>>>0;
+  return function(){
+    a=(a+0x6D2B79F5)>>>0;
+    var t=a;
+    t=Math.imul(t^(t>>>15),t|1);
+    t^=t+Math.imul(t^(t>>>7),t|61);
+    return((t^(t>>>14))>>>0)/4294967296;
+  };
+}
+function rnd(rng,a,b){return Math.floor(rng()*(b-a+1))+a;}
+function pick(rng,arr){return arr[Math.floor(rng()*arr.length)];}
+function shuffle(arr,rng){
+  for(var i=arr.length-1;i>0;i--){var j=Math.floor(rng()*(i+1));var t=arr[i];arr[i]=arr[j];arr[j]=t;}
+  return arr;
+}
+var isNum=function(v){return typeof v==='number'&&isFinite(v);};
+var isInt=function(v){return isNum(v)&&Math.floor(v)===v;};
+function powi(x,n){var r=1;for(var k=0;k<n;k++)r*=x;return r;}
+
+/* ---------- format angka Indonesia ---------- */
+function grp(s){return s.replace(/\B(?=(\d{3})+(?!\d))/g,'.');}
+function fNum(x,d,trim){
+  var p=powi(10,d),s=(Math.round(Math.abs(x)*p)/p).toFixed(d);
+  if(trim&&s.indexOf('.')>=0)s=s.replace(/0+$/,'').replace(/\.$/,'');
+  var a=s.split('.');
+  return (x<0&&Number(s)!==0?'−':'')+grp(a[0])+(a.length>1?','+a[1]:'');
+}
+function fRp(x){return 'Rp'+fNum(x,0);}
+function fPct(p){return fNum(p,2,true)+'%';}
+function fD(x,d){return fNum(x,d==null?4:d,true);}
+function TX(t,s){return '<span data-tex="'+t+'">'+s+'</span>';}
+var RM={
+  BT:TX('B = M_0 \\cdot i \\cdot n','B = M₀ · i · n'),
+  MT:TX('M_n = M_0(1 + i \\cdot n)','Mₙ = M₀(1 + i · n)'),
+  M0T:TX('M_0 = \\dfrac{B}{i \\cdot n}','M₀ = B / (i · n)'),
+  IT:TX('i = \\dfrac{B}{M_0 \\cdot n}','i = B / (M₀ · n)'),
+  NT:TX('n = \\dfrac{B}{M_0 \\cdot i}','n = B / (M₀ · i)'),
+  MM:TX('M_n = M_0(1 + i)^n','Mₙ = M₀(1 + i)ⁿ'),
+  BM:TX('B = M_n - M_0','B = Mₙ − M₀'),
+  MMm:TX('M_n = M_0\\left(1 + \\dfrac{r}{m}\\right)^{mt}','Mₙ = M₀(1 + r/m)^(m·t)')
+};
+
+/* ---------- kesalahan yang sering terjadi (Rangkuman bagian 5) dan kesalahan lain yang dikenali ---------- */
+var MIS={
+  konv:'<b>Satuan tidak disamakan.</b> Suku bunga per tahun dipakai dengan n dalam bulan atau hari tanpa konversi.',
+  persen:'<b>Persen tidak diubah ke desimal.</b> Misalnya 6% harus ditulis 0,06.',
+  rm:'<b>Pada bunga majemuk, r tidak dibagi m.</b> Bunga 12% per tahun yang dimajemukkan bulanan berarti i = 1% per bulan, bukan 12%.',
+  bm:'<b>Tertukar antara B dan Mₙ.</b> Perhatikan apakah soal menanyakan besar bunga atau modal akhir.',
+  hari:'Basis hari tertukar: tahun bank memakai 360 hari, tahun kalender memakai 365 hari.',
+  jenisT:'Itu hasil rumus <b>bunga tunggal</b>, padahal soal ini memakai bunga majemuk.',
+  jenisM:'Itu rumus <b>bunga majemuk</b>, padahal soal ini memakai bunga tunggal.',
+  admin:'Biaya administrasi belum ditambahkan ke total biaya.',
+  beda:'Selisih kedua saldo terjadi selama beberapa bulan. Bagi selisih itu dengan banyaknya bulan di antaranya.',
+  suku:'Saldo akhir bulan ke-k = M₀ + k · b. Kurangi saldo itu dengan k kali beda, bukan (k − 1) kali.',
+  dasar:'Pada bunga majemuk, bunga suatu tahun dihitung dari saldo tahun sebelumnya, bukan dari modal awal.',
+  ubah:'Suku bunga berubah di tengah jalan: saldo pada akhir tahap pertama menjadi modal untuk tahap kedua dengan suku bunga yang baru.',
+  setor:'Setoran tambahan hanya ikut berbunga sejak disetorkan, sedangkan modal awal berbunga sejak awal.',
+  bulat:'Pada periode itu saldo belum mencapai target. Periode yang ditanyakan adalah periode bulat pertama saat target tercapai.',
+  silang:'Pada periode itu saldo bunga majemuk belum lebih besar daripada saldo bunga tunggal.',
+  alasan:'Pilihanmu benar, tetapi alasannya kurang tepat. Bandingkan dengan hasil hitunganmu.'
+};
+var CAT={id:'Identifikasi unsur',kv:'Konversi satuan',rm:'Memilih rumus',hit:'Menghitung',pola:'Membaca pola',kpt:'Mengambil keputusan'};
+
+/* ---------- daftar 26 kriteria (Susunan Kriteria Soal) ---------- */
+var KRIT=[
+ ['T1','T',1,'LOTS','C2','Diketahui M₀, i, n (satuan sama); ditanya B'],
+ ['T2','T',2,'LOTS','C2','Diketahui M₀, i, n (satuan sama); ditanya Mₙ'],
+ ['T3','T',3,'LOTS','C2','Diketahui B, i, n (satuan sama); ditanya M₀'],
+ ['T4','T',4,'MOTS','C3','i per tahun, n dalam bulan atau hari; ditanya B atau Mₙ'],
+ ['T5','T',5,'MOTS','C3','Diketahui M₀, Mₙ, i; ditanya lama menabung n'],
+ ['T6','T',6,'MOTS','C3','Diketahui M₀, Mₙ, n dalam bulan; ditanya i per tahun'],
+ ['T7','T',7,'MOTS','C3','Diketahui Mₙ, i, n; ditanya M₀'],
+ ['T8','T',8,'MOTS','C3','Saldo pada dua periode; ditanya M₀ dan i (barisan aritmetika)'],
+ ['T9','T',9,'HOTS','C4','Tabel saldo; ditanya jenis bunga, alasan, dan suku bunga'],
+ ['T10','T',10,'HOTS','C5','Dua penawaran pinjaman; ditanya penawaran paling menguntungkan'],
+ ['K1','K',1,'LOTS','C2','Diketahui M₀, i, n (satuan sama); ditanya Mₙ'],
+ ['K2','K',2,'LOTS','C2','Diketahui M₀, i, n (satuan sama); ditanya B'],
+ ['K3','K',3,'LOTS','C2','Diketahui M₀, i, n dan tabel (1 + i)ⁿ; ditanya Mₙ'],
+ ['K4','K',4,'MOTS','C3','r per tahun dimajemukkan m kali selama t tahun; ditanya Mₙ atau B'],
+ ['K5','K',5,'MOTS','C3','Diketahui Mₙ, i, n; ditanya M₀ (nilai sekarang)'],
+ ['K6','K',6,'MOTS','C3','Diketahui M₀, Mₙ, n; ditanya i'],
+ ['K7','K',7,'MOTS','C3','Diketahui M₀ dan target (kelipatan modal), i; ditanya n'],
+ ['K8','K',8,'MOTS','C3','r nominal per tahun dan m; ditanya suku bunga efektif per tahun'],
+ ['K9','K',9,'MOTS','C3','Suku bunga berubah di tengah jangka waktu; ditanya Mₙ'],
+ ['K10','K',10,'HOTS','C4','Setoran tambahan di tengah jangka waktu; ditanya saldo akhir'],
+ ['K11','K',11,'HOTS','C5','Dua tawaran deposito (r dan m berbeda); ditanya yang lebih menguntungkan'],
+ ['K12','K',12,'HOTS','C6','Target dana dan beberapa rencana; ditanya rencana dan modal awal minimum'],
+ ['G1','G',1,'MOTS','C3','M₀, i, n sama untuk kedua jenis bunga; ditanya selisih modal akhir'],
+ ['G2','G',2,'HOTS','C4','Tabel dan grafik dua tabungan; ditanya jenis bunga, alasan, dan suku bunga'],
+ ['G3','G',3,'HOTS','C4','Bunga tunggal vs majemuk dengan suku bunga berbeda; ditanya periode majemuk mulai lebih untung'],
+ ['G4','G',4,'HOTS','C5','Menilai pernyataan “bunga majemuk selalu lebih menguntungkan”']
+];
+
+/* ---------- pembentuk soal ---------- */
+var TD=0.0001,TP=0.01;
+function trp(v){return Math.max(1,Math.abs(v)*0.0005);}
+function Fn(ty,lb,k,t,mis,u){return {ty:ty,lb:lb,k:k,t:t,mis:mis||[],u:u||''};}
+function Fo(lb,opts,rng){
+  var idx=opts.map(function(_,i){return i;});
+  if(rng)shuffle(idx,rng);
+  return {ty:'opt',lb:lb,o:idx.map(function(i){return opts[i][0];}),mo:idx.map(function(i){return opts[i][1]||'';}),k:idx.indexOf(0)};
+}
+function S(nm,cat,p,f,h,ok){return {nm:nm,cat:CAT[cat],p:p,f:f,h:h,ok:ok||''};}
+function Q(id,ctx,ask,steps,akhir,data){
+  var m=null;KRIT.forEach(function(r){if(r[0]===id)m=r;});
+  return {id:id,g:m[1],no:m[2],lv:m[3],kog:m[4],ds:m[5],ctx:ctx,ask:ask,data:data||'',steps:steps,akhir:akhir};
+}
+var NAMA=['Andi','Rina','Budi','Sari','Dewi','Raka','Nisa','Fajar','Lina','Tegar','Putri','Yoga','Maya','Dimas'];
+var hm=function(k){return k*100000;},jt=function(k){return k*1000000;};
+function fI(p){return Fn('dec','Suku bunga i (desimal)',p/100,TD/10,[[p,'persen',TD]]);}
+function fM0(v,lb){return Fn('rp',lb||'Modal awal M₀',v,1);}
+function idHints(){return ['Modal awal (M₀) adalah uang yang disimpan atau dipinjam di awal; n adalah banyaknya periode bunga.',
+  'Ubah persen ke desimal dengan membagi 100, misalnya 6% = 0,06.'];}
+function tabel(head,rows){
+  return '<table class="dt"><tr>'+head.map(function(h){return '<th>'+h+'</th>';}).join('')+'</tr>'
+    +rows.map(function(r){return '<tr>'+r.map(function(c){return '<td>'+c+'</td>';}).join('')+'</tr>';}).join('')+'</table>';
+}
+/* grafik garis kecil (deret saldo); koordinat dibulatkan agar teksnya sama di semua mesin */
+function svgSeri(seri){
+  var W=300,H=170,L=46,B=24,T=10,R=10,mx=0,n=seri[0].v.length-1;
+  seri.forEach(function(s){s.v.forEach(function(v){if(v>mx)mx=v;});});
+  var mn=mx;seri.forEach(function(s){s.v.forEach(function(v){if(v<mn)mn=v;});});
+  var lo=Math.floor(mn*0.95/1000000)*1000000,hi=Math.ceil(mx*1.02/1000000)*1000000;if(hi<=lo)hi=lo+1000000;
+  var X=function(k){return Math.round(L+(W-L-R)*k/n);},Y=function(v){return Math.round(T+(H-T-B)*(1-(v-lo)/(hi-lo)));};
+  var s='<svg class="mini-chart" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Grafik saldo per tahun">';
+  s+='<line x1="'+L+'" y1="'+(H-B)+'" x2="'+(W-R)+'" y2="'+(H-B)+'" stroke="#94a3b8"/><line x1="'+L+'" y1="'+T+'" x2="'+L+'" y2="'+(H-B)+'" stroke="#94a3b8"/>';
+  for(var k=0;k<=n;k++)s+='<text x="'+X(k)+'" y="'+(H-B+15)+'" class="ax" text-anchor="middle">'+k+'</text>';
+  s+='<text x="'+(L-4)+'" y="'+(Y(hi)+4)+'" class="ax" text-anchor="end">'+fNum(hi/1000000,1,true)+' jt</text>';
+  s+='<text x="'+(L-4)+'" y="'+(Y(lo)+4)+'" class="ax" text-anchor="end">'+fNum(lo/1000000,1,true)+' jt</text>';
+  seri.forEach(function(se){
+    s+='<polyline fill="none" stroke="'+se.c+'" stroke-width="2.5" points="'+se.v.map(function(v,k){return X(k)+','+Y(v);}).join(' ')+'"/>';
+    se.v.forEach(function(v,k){s+='<circle cx="'+X(k)+'" cy="'+Y(v)+'" r="3.5" fill="'+se.c+'"/>';});
+    var ly=Y(se.v[n])-8;if(ly<12)ly=Y(se.v[n])+18;
+    s+='<text x="'+(X(n)-4)+'" y="'+ly+'" class="ax" text-anchor="end" style="fill:'+se.c+';font-weight:700">'+se.nm+'</text>';
+  });
+  return s+'<text x="'+((W+L)/2)+'" y="'+(H-1)+'" class="ax" text-anchor="middle">tahun ke-</text></svg>';
+}
+
+/* ============ BUNGA TUNGGAL ============ */
+function varT(rng,bulan){
+  var M0=hm(rnd(rng,10,200));
+  if(bulan&&rng()<0.35){
+    var p100=pick(rng,[50,75,100,125,150]),n=rnd(rng,3,12);
+    return {M0:M0,p:p100/100,n:n,u:'bulan',per:'per bulan',B:M0*p100*n/10000};
+  }
+  var p10=rnd(rng,4,30)*5,n2=rnd(rng,1,5);
+  return {M0:M0,p:p10/10,n:n2,u:'tahun',per:'per tahun',B:M0*p10*n2/1000};
+}
+function stIdT(v,lbN,ok){
+  return S('Identifikasi','id','Tuliskan unsur yang diketahui. Suku bunga ditulis dalam bentuk <b>desimal</b>.',
+    [fM0(v.M0),fI(v.p),Fn('int',lbN||'Banyak periode n',v.n,0,[],v.u)],
+    idHints().concat(['M₀ = '+fRp(v.M0)+', i = '+fPct(v.p)+' = '+fD(v.p/100)+', n = '+v.n+' '+v.u+'.']),
+    ok||('M₀ = '+fRp(v.M0)+', i = '+fD(v.p/100)+', n = '+v.n+' '+v.u+'.'));
+}
+var GEN={};
+GEN.T1=function(rng){
+  var v=varT(rng,true),nm=pick(rng,NAMA);
+  return Q('T1',nm+' menyimpan uang '+fRp(v.M0)+' di koperasi dengan <b>bunga tunggal</b> '+fPct(v.p)+' '+v.per+' selama '+v.n+' '+v.u+'.',
+    'Tentukan besar bunga (B) yang diperoleh '+nm+'.',[
+    stIdT(v),
+    S('Pilih rumus','rm','Rumus mana yang dipakai untuk menghitung <b>besar bunga</b>?',
+      [Fo('Rumus',[[RM.BT],[RM.MT,'bm'],[TX('B = M_0(1 + i)^n - M_0','B = M₀(1 + i)ⁿ − M₀'),'jenisM'],[TX('B = M_0 + i \\cdot n','B = M₀ + i · n')]],rng)],
+      ['Soal menanyakan besar bunga, bukan modal akhir.','Pada bunga tunggal, bunga setiap periode tetap, yaitu M₀ · i.','Rumusnya '+RM.BT+'.'],'Rumus: '+RM.BT),
+    S('Hitung B','hit','Hitung besar bunga yang diperoleh.',
+      [Fn('rp','Besar bunga B',v.B,1,[[v.M0+v.B,'bm',1],[v.M0*v.p*v.n,'persen',1]])],
+      ['B = M₀ · i · n.','B = '+fRp(v.M0)+' × '+fD(v.p/100)+' × '+v.n+'.','B = '+fRp(v.B)+'.'],'B = '+fRp(v.B)+'.')
+  ],'Bunga yang diperoleh: <b>'+fRp(v.B)+'</b>.');
+};
+GEN.T2=function(rng){
+  var v=varT(rng,true),nm=pick(rng,NAMA),Mn=v.M0+v.B;
+  return Q('T2',nm+' menabung '+fRp(v.M0)+' dengan <b>bunga tunggal</b> '+fPct(v.p)+' '+v.per+'.',
+    'Tentukan modal akhir (Mₙ) setelah '+v.n+' '+v.u+'.',[
+    stIdT(v),
+    S('Pilih rumus','rm','Rumus mana yang dipakai untuk menghitung <b>modal akhir</b>?',
+      [Fo('Rumus',[[RM.MT],[RM.BT,'bm'],[RM.MM,'jenisM'],[TX('M_n = M_0 \\cdot i \\cdot n','Mₙ = M₀ · i · n')]],rng)],
+      ['Soal menanyakan modal akhir, yaitu modal awal ditambah bunga.','Mₙ = M₀ + B = M₀ + M₀ · i · n.','Rumusnya '+RM.MT+'.'],'Rumus: '+RM.MT),
+    S('Hitung Mₙ','hit','Hitung modal akhir setelah '+v.n+' '+v.u+'.',
+      [Fn('rp','Modal akhir Mₙ',Mn,1,[[v.B,'bm',1],[v.M0*(1+v.p*v.n),'persen',1]])],
+      ['Mₙ = M₀(1 + i · n).','Mₙ = '+fRp(v.M0)+' × (1 + '+fD(v.p/100)+' × '+v.n+') = '+fRp(v.M0)+' × '+fD(1+v.p*v.n/100)+'.','Mₙ = '+fRp(Mn)+'.'],'Mₙ = '+fRp(Mn)+'.')
+  ],'Modal akhir: <b>'+fRp(Mn)+'</b>.');
+};
+GEN.T3=function(rng){
+  var v=varT(rng,true),nm=pick(rng,NAMA);
+  return Q('T3',nm+' menyimpan uang dengan <b>bunga tunggal</b> '+fPct(v.p)+' '+v.per+'. Setelah '+v.n+' '+v.u+', bunga yang diperoleh '+fRp(v.B)+'.',
+    'Tentukan modal awal (M₀) yang disimpan '+nm+'.',[
+    S('Identifikasi','id','Tuliskan unsur yang diketahui. Suku bunga ditulis dalam bentuk <b>desimal</b>.',
+      [Fn('rp','Besar bunga B',v.B,1),fI(v.p),Fn('int','Banyak periode n',v.n,0,[],v.u)],
+      ['Yang diketahui di sini adalah besar bunga (B), bukan modal akhir.','Ubah persen ke desimal dengan membagi 100.','B = '+fRp(v.B)+', i = '+fD(v.p/100)+', n = '+v.n+'.'],
+      'B = '+fRp(v.B)+', i = '+fD(v.p/100)+', n = '+v.n+' '+v.u+'.'),
+    S('Pilih rumus','rm','Rumus turunan mana yang dipakai untuk mencari <b>M₀</b>?',
+      [Fo('Rumus',[[RM.M0T],[TX('M_0 = B \\cdot i \\cdot n','M₀ = B · i · n')],[TX('M_0 = \\dfrac{i \\cdot n}{B}','M₀ = (i · n) / B')],[TX('M_0 = B - i \\cdot n','M₀ = B − i · n')]],rng)],
+      ['Mulai dari '+RM.BT+'.','Bagi kedua ruas dengan i · n.','Rumusnya '+RM.M0T+'.'],'Rumus: '+RM.M0T),
+    S('Hitung M₀','hit','Hitung modal awal.',
+      [Fn('rp','Modal awal M₀',v.M0,1,[[v.M0/100,'persen',1]])],
+      ['M₀ = B / (i · n).','M₀ = '+fRp(v.B)+' / ('+fD(v.p/100)+' × '+v.n+') = '+fRp(v.B)+' / '+fD(v.p*v.n/100)+'.','M₀ = '+fRp(v.M0)+'.'],'M₀ = '+fRp(v.M0)+'.')
+  ],'Modal awal: <b>'+fRp(v.M0)+'</b>.');
+};
+GEN.T4=function(rng){
+  var M0,p10,n,kind,den,B,num;
+  for(var t=0;t<500;t++){
+    kind=pick(rng,['bulan','bulan','h360','h365']);M0=hm(rnd(rng,10,300));p10=rnd(rng,6,24)*5;
+    if(kind==='bulan'){n=rnd(rng,3,30);if(n%12===0)continue;den=12;}
+    else if(kind==='h360'){n=pick(rng,[30,45,60,90,120,150,180,270]);den=360;}
+    else{n=pick(rng,[73,146,219,292]);den=365;}
+    num=M0*p10*n;if(num%(den*1000)!==0)continue;B=num/(den*1000);break;
+  }
+  if(B===undefined){kind='bulan';M0=1200000;p10=60;n=9;den=12;B=54000;}
+  var p=p10/10,i=p/100,tY=n/den,Mn=M0+B,askB=rng()<0.5,nm=pick(rng,NAMA),u=kind==='bulan'?'bulan':'hari';
+  var basis=kind==='h360'?' Gunakan <b>tahun bank</b> (1 tahun = 360 hari).':kind==='h365'?' Gunakan <b>tahun kalender</b> (1 tahun = 365 hari).':'';
+  var key=askB?B:Mn,raw=M0*i*n+(askB?0:M0),mis=[[askB?Mn:B,'bm',1],[raw,'konv',1]];
+  var misN=[[n,'konv',0.5]];
+  if(kind!=='bulan'){var alt=den===360?365:360;misN.push([n/alt,'hari',TD]);mis.push([M0*i*n/alt+(askB?0:M0),'hari',1]);}
+  var fracT=kind==='bulan'?n+'/12':n+'/'+den;
+  return Q('T4',nm+' '+(rng()<0.5?'menabung':'meminjam uang')+' '+fRp(M0)+' dengan <b>bunga tunggal</b> '+fPct(p)+' per tahun selama '+n+' '+u+'.'+basis,
+    'Tentukan '+(askB?'besar bunga (B)':'modal akhir (Mₙ)')+' setelah '+n+' '+u+'.',[
+    S('Identifikasi','id','Tuliskan unsur yang diketahui. Perhatikan bahwa satuan i dan n <b>belum sama</b>.',
+      [fM0(M0),fI(p),Fn('int','Lama waktu',n,0,[],u)],
+      idHints().concat(['M₀ = '+fRp(M0)+', i = '+fD(i)+' per tahun, lama waktu '+n+' '+u+'.']),
+      'M₀ = '+fRp(M0)+', i = '+fD(i)+' per tahun, lama '+n+' '+u+'.'),
+    S('Konversi satuan','kv','Suku bunganya per tahun, jadi ubah lama waktu ke dalam <b>tahun</b>. Boleh ditulis pecahan, misalnya '+(kind==='bulan'?'9/12':'90/360')+'.',
+      [Fn('dec','n dalam tahun',tY,TD,misN,'tahun')],
+      ['Satuan n harus sama dengan satuan suku bunga.',kind==='bulan'?'n dalam bulan → gunakan n/12 tahun.':'n dalam hari → gunakan n/360 (tahun bank) atau n/365 (tahun kalender).','n = '+fracT+' = '+fD(tY)+' tahun.'],
+      'n = '+fracT+' tahun.'),
+    S('Pilih rumus','rm','Rumus mana yang dipakai untuk menghitung '+(askB?'<b>besar bunga</b>':'<b>modal akhir</b>')+'?',
+      [Fo('Rumus',askB?[[RM.BT],[RM.MT,'bm'],[RM.MM,'jenisM'],[RM.NT]]:[[RM.MT],[RM.BT,'bm'],[RM.MM,'jenisM'],[RM.M0T]],rng)],
+      ['Soal menanyakan '+(askB?'besar bunga.':'modal akhir.'),'Soal ini memakai bunga tunggal.','Rumusnya '+(askB?RM.BT:RM.MT)+', dengan n dalam tahun.'],'Rumus: '+(askB?RM.BT:RM.MT)),
+    S('Hitung','hit','Hitung '+(askB?'besar bunga B':'modal akhir Mₙ')+'.',
+      [Fn('rp',askB?'Besar bunga B':'Modal akhir Mₙ',key,1,mis)],
+      [askB?'B = M₀ · i · n, dengan n = '+fracT+'.':'Mₙ = M₀(1 + i · n), dengan n = '+fracT+'.',
+       'B = '+fRp(M0)+' × '+fD(i)+' × '+fracT+' = '+fRp(B)+'.',askB?'B = '+fRp(B)+'.':'Mₙ = '+fRp(M0)+' + '+fRp(B)+' = '+fRp(Mn)+'.'],
+      (askB?'B = ':'Mₙ = ')+fRp(key)+'.')
+  ],(askB?'Besar bunga':'Modal akhir')+': <b>'+fRp(key)+'</b>.');
+};
+GEN.T5=function(rng){
+  var M0=hm(rnd(rng,10,200)),p10=rnd(rng,6,24)*5,n=rnd(rng,2,10),p=p10/10,i=p/100,B=M0*p10*n/1000,Mn=M0+B,nm=pick(rng,NAMA);
+  return Q('T5',nm+' menyimpan '+fRp(M0)+' dengan <b>bunga tunggal</b> '+fPct(p)+' per tahun. Saat diambil, tabungannya menjadi '+fRp(Mn)+'.',
+    'Berapa tahun '+nm+' menabung?',[
+    S('Hitung B','hit','Tentukan dulu besar bunga yang sudah diperoleh.',
+      [Fn('rp','Besar bunga B',B,1,[[Mn+M0,null,1]])],
+      ['Bunga adalah selisih modal akhir dan modal awal.','B = Mₙ − M₀.','B = '+fRp(Mn)+' − '+fRp(M0)+' = '+fRp(B)+'.'],'B = '+fRp(B)+'.'),
+    S('Pilih rumus','rm','Rumus turunan mana yang dipakai untuk mencari <b>n</b>?',
+      [Fo('Rumus',[[RM.NT],[TX('n = \\dfrac{M_n}{M_0 \\cdot i}','n = Mₙ / (M₀ · i)'),'bm'],[TX('n = B \\cdot M_0 \\cdot i','n = B · M₀ · i')],[TX('n = \\dfrac{M_0}{B \\cdot i}','n = M₀ / (B · i)')]],rng)],
+      ['Mulai dari '+RM.BT+'.','Bagi kedua ruas dengan M₀ · i.','Rumusnya '+RM.NT+'.'],'Rumus: '+RM.NT),
+    S('Hitung n','hit','Hitung lama menabung.',
+      [Fn('int','Lama menabung n',n,0,[[Mn/(M0*i),'bm',0.05],[n*100,'persen',0]],'tahun')],
+      ['n = B / (M₀ · i).','n = '+fRp(B)+' / ('+fRp(M0)+' × '+fD(i)+') = '+fRp(B)+' / '+fRp(M0*i)+'.','n = '+n+' tahun.'],'n = '+n+' tahun.')
+  ],'Lama menabung: <b>'+n+' tahun</b>.');
+};
+GEN.T6=function(rng){
+  var M0,p10,n,num,B;
+  for(var t=0;t<500;t++){M0=jt(rnd(rng,2,30));p10=rnd(rng,6,24)*5;n=pick(rng,[6,9,15,18,20,30]);num=M0*p10*n;if(num%12000===0){B=num/12000;break;}}
+  if(B===undefined){M0=6000000;p10=80;n=9;B=360000;}
+  var p=p10/10,i=p/100,tY=n/12,Mn=M0+B,nm=pick(rng,NAMA);
+  return Q('T6','Pinjaman '+nm+' sebesar '+fRp(M0)+' dikenai <b>bunga tunggal</b>. Setelah '+n+' bulan, '+nm+' harus mengembalikan '+fRp(Mn)+'.',
+    'Tentukan suku bunga per tahun (dalam persen).',[
+    S('Hitung B','hit','Tentukan besar bunga.',[Fn('rp','Besar bunga B',B,1)],
+      ['B = Mₙ − M₀.','B = '+fRp(Mn)+' − '+fRp(M0)+'.','B = '+fRp(B)+'.'],'B = '+fRp(B)+'.'),
+    S('Konversi satuan','kv','Suku bunga yang dicari per tahun, jadi ubah '+n+' bulan ke dalam <b>tahun</b> (boleh pecahan, misalnya 9/12).',
+      [Fn('dec','n dalam tahun',tY,TD,[[n,'konv',0.5]],'tahun')],
+      ['Satuan n harus sama dengan satuan suku bunga.','n dalam bulan → gunakan n/12 tahun.','n = '+n+'/12 = '+fD(tY)+' tahun.'],'n = '+n+'/12 tahun.'),
+    S('Hitung i','hit','Hitung suku bunga per tahun dalam bentuk <b>desimal</b>.',
+      [Fn('dec','i per tahun (desimal)',i,TD/10,[[B/(M0*n),'konv',TD/10]])],
+      ['Gunakan rumus turunan '+RM.IT+'.','i = '+fRp(B)+' / ('+fRp(M0)+' × '+n+'/12).','i = '+fD(i)+'.'],'i = '+fD(i)+' per tahun.'),
+    S('Ubah ke persen','hit','Tuliskan suku bunga per tahun dalam <b>persen</b> (2 desimal).',
+      [Fn('pct','Suku bunga per tahun',p,TP,[[i,'persen',TD]])],
+      ['Kalikan bentuk desimal dengan 100%.',fD(i)+' × 100% = ?','i = '+fPct(p)+' per tahun.'],'i = '+fPct(p)+' per tahun.')
+  ],'Suku bunga: <b>'+fPct(p)+' per tahun</b>.');
+};
+GEN.T7=function(rng){
+  var M0=hm(rnd(rng,10,200)),p10=rnd(rng,6,24)*5,n=rnd(rng,2,8),p=p10/10,i=p/100,B=M0*p10*n/1000,Mn=M0+B,fak=1+p10*n/1000,nm=pick(rng,NAMA);
+  return Q('T7',nm+' ingin memiliki '+fRp(Mn)+' setelah '+n+' tahun dari tabungan <b>bunga tunggal</b> '+fPct(p)+' per tahun.',
+    'Berapa modal awal (M₀) yang harus disimpan sekarang?',[
+    S('Hitung faktor','hit','Hitung nilai <b>1 + i · n</b>.',[Fn('dec','1 + i · n',fak,TD,[[1+p*n,'persen',0.01]])],
+      ['Ubah i ke desimal lebih dulu.','1 + '+fD(i)+' × '+n+'.','1 + i · n = '+fD(fak)+'.'],'1 + i · n = '+fD(fak)+'.'),
+    S('Pilih rumus','rm','Rumus mana yang dipakai untuk mencari <b>M₀</b> bila Mₙ diketahui?',
+      [Fo('Rumus',[[TX('M_0 = \\dfrac{M_n}{1 + i \\cdot n}','M₀ = Mₙ / (1 + i · n)')],[TX('M_0 = \\dfrac{M_n}{i \\cdot n}','M₀ = Mₙ / (i · n)'),'bm'],[TX('M_0 = M_n(1 + i \\cdot n)','M₀ = Mₙ(1 + i · n)')],[TX('M_0 = \\dfrac{M_n}{(1 + i)^n}','M₀ = Mₙ / (1 + i)ⁿ'),'jenisM']],rng)],
+      ['Mulai dari '+RM.MT+'.','Bagi kedua ruas dengan (1 + i · n).','M₀ = Mₙ / (1 + i · n).'],'M₀ = Mₙ / (1 + i · n)'),
+    S('Hitung M₀','hit','Hitung modal awal.',[Fn('rp','Modal awal M₀',M0,1,[[Mn/(i*n),'bm',1]])],
+      ['M₀ = Mₙ / (1 + i · n).','M₀ = '+fRp(Mn)+' / '+fD(fak)+'.','M₀ = '+fRp(M0)+'.'],'M₀ = '+fRp(M0)+'.')
+  ],'Modal awal: <b>'+fRp(M0)+'</b>.');
+};
+GEN.T8=function(rng){
+  var M0,p10,b;
+  for(var t=0;t<500;t++){M0=jt(rnd(rng,2,30));p10=rnd(rng,4,30)*5;if((M0*p10)%12000===0){b=M0*p10/12000;break;}}
+  if(b===undefined){M0=6000000;p10=60;b=30000;}
+  var p=p10/10,a=rnd(rng,2,6),c=rnd(rng,a+3,12),Sa=M0+a*b,Sc=M0+c*b,nm=pick(rng,NAMA);
+  return Q('T8','Tabungan '+nm+' memakai <b>bunga tunggal</b> dengan suku bunga per tahun; bunganya ditambahkan setiap bulan. Saldo pada akhir bulan ke-'+a+' adalah '+fRp(Sa)+', dan pada akhir bulan ke-'+c+' adalah '+fRp(Sc)+'.',
+    'Tentukan modal awal (M₀) dan suku bunga per tahun.',[
+    S('Beda barisan','pola','Saldo tiap bulan membentuk <b>barisan aritmetika</b>. Tentukan bedanya (bunga per bulan).',
+      [Fn('rp','Beda b',b,1,[[Sc-Sa,'beda',1]])],
+      ['Pada bunga tunggal, saldo bertambah dengan besar yang sama setiap periode.','Dari bulan ke-'+a+' ke bulan ke-'+c+' ada '+(c-a)+' kali penambahan.','b = ('+fRp(Sc)+' − '+fRp(Sa)+') / '+(c-a)+' = '+fRp(b)+'.'],'b = '+fRp(b)+' per bulan.'),
+    S('Modal awal','pola','Tentukan modal awal M₀ (saldo pada bulan ke-0).',
+      [fM0(M0,'Modal awal M₀')].map(function(f){f.mis=[[Sa-(a-1)*b,'suku',1]];return f;}),
+      ['Saldo akhir bulan ke-k = M₀ + k · b.',fRp(Sa)+' = M₀ + '+a+' × '+fRp(b)+'.','M₀ = '+fRp(Sa)+' − '+fRp(a*b)+' = '+fRp(M0)+'.'],'M₀ = '+fRp(M0)+'.'),
+    S('Suku bunga','hit','Tentukan suku bunga <b>per tahun</b> dalam persen.',
+      [Fn('pct','Suku bunga per tahun',p,TP,[[p/12,'konv',0.005]])],
+      ['Beda barisan b = M₀ × i, dengan i di sini per bulan.','i per bulan = '+fRp(b)+' / '+fRp(M0)+' = '+fPct(p/12)+'. Satu tahun = 12 bulan.','i = 12 × '+fPct(p/12)+' = '+fPct(p)+' per tahun.'],'i = '+fPct(p)+' per tahun.')
+  ],'M₀ = <b>'+fRp(M0)+'</b> dan suku bunga <b>'+fPct(p)+' per tahun</b>.');
+};
+var OPT_JENIS=[
+  ['Bunga tunggal, karena selisih saldo setiap tahun tetap (pola linear).'],
+  ['Bunga majemuk, karena selisih saldo setiap tahun makin besar (pola eksponensial).'],
+  ['Bunga tunggal, karena saldonya selalu bertambah.'],
+  ['Bunga majemuk, karena saldo tahun pertama lebih besar daripada modal awal.']
+];
+function saldo(M0,p,typ,k){return typ==='T'?M0+M0*p*k/100:Math.round(M0*powi(1+p/100,k));}
+GEN.T9=function(rng){
+  var typ=rng()<0.5?'T':'M',M0=jt(rnd(rng,2,20)),p=rnd(rng,3,12),Sv=[0,1,2,3,4].map(function(k){return saldo(M0,p,typ,k);}),nm=pick(rng,NAMA);
+  var o=typ==='T'?[OPT_JENIS[0],[OPT_JENIS[1][0]],[OPT_JENIS[2][0],'alasan'],[OPT_JENIS[3][0]]]:[OPT_JENIS[1],[OPT_JENIS[0][0]],[OPT_JENIS[3][0],'alasan'],[OPT_JENIS[2][0]]];
+  var mis3=typ==='M'?[[(Sv[2]-Sv[1])/Sv[0]*100,'dasar',0.005]]:[];
+  return Q('T9','Tabel berikut menunjukkan saldo tabungan '+nm+' pada akhir setiap tahun. Tidak ada setoran atau penarikan.',
+    'Tentukan jenis bunganya beserta alasannya, lalu tentukan besar suku bunga per tahun.',[
+    S('Amati selisih','pola','Hitung selisih saldo dari tahun ke tahun.',
+      [Fn('rp','Saldo tahun ke-2 − tahun ke-1',Sv[2]-Sv[1],1),Fn('rp','Saldo tahun ke-3 − tahun ke-2',Sv[3]-Sv[2],1)],
+      ['Kurangkan saldo yang berurutan pada tabel.','Selisih 1: '+fRp(Sv[2])+' − '+fRp(Sv[1])+'.','Selisihnya '+fRp(Sv[2]-Sv[1])+' dan '+fRp(Sv[3]-Sv[2])+'.'],
+      'Selisih: '+fRp(Sv[2]-Sv[1])+' dan '+fRp(Sv[3]-Sv[2])+'.'),
+    S('Jenis bunga','pola','Berdasarkan pola selisihnya, tabungan ini memakai bunga apa?',[Fo('Jenis dan alasan',o,rng)],
+      ['Bandingkan kedua selisih: sama atau makin besar?','Bunga tunggal: bunga per periode tetap (linear). Bunga majemuk: bunga per periode bertambah (eksponensial).',typ==='T'?'Selisihnya tetap, jadi bunga tunggal.':'Selisihnya makin besar, jadi bunga majemuk.'],
+      typ==='T'?'Bunga tunggal (selisih tetap).':'Bunga majemuk (selisih makin besar).'),
+    S('Suku bunga','hit','Tentukan suku bunga per tahun (dalam persen).',[Fn('pct','Suku bunga per tahun',p,TP,mis3)],
+      typ==='T'?['Pada bunga tunggal, bunga per tahun b = M₀ × i.','i = '+fRp(Sv[1]-Sv[0])+' / '+fRp(Sv[0])+'.','i = '+fPct(p)+'.']
+        :['Pada bunga majemuk, saldo tahun ke-1 = M₀(1 + i).','1 + i = '+fRp(Sv[1])+' / '+fRp(Sv[0])+' = '+fD(1+p/100)+'.','i = '+fPct(p)+'.'],
+      'i = '+fPct(p)+' per tahun.')
+  ],(typ==='T'?'Bunga tunggal':'Bunga majemuk')+' dengan suku bunga <b>'+fPct(p)+' per tahun</b>.',
+  tabel(['Tahun ke-','Saldo'],Sv.map(function(v,k){return [k,fRp(v)];})));
+};
+function tawaranT(rng,P){
+  var p10=rnd(rng,12,30)*5,n=pick(rng,[6,12,18,24,36]),adm,admTx;
+  if(rng()<0.5){adm=50000*rnd(rng,2,20);admTx=fRp(adm);}
+  else{var a10=rnd(rng,1,6)*5;adm=P*a10/1000;admTx=fPct(a10/10)+' dari pinjaman';}
+  var bunga=P*p10*n/12000;
+  return {p:p10/10,n:n,adm:adm,admTx:admTx,bunga:bunga,tot:bunga+adm};
+}
+GEN.T10=function(rng){
+  var P=jt(rnd(rng,5,50)),A,B,lawan=rng()<0.5,ok=false;
+  for(var t=0;t<400&&!ok;t++){
+    A=tawaranT(rng,P);B=tawaranT(rng,P);
+    if(A.p===B.p||A.n===B.n||Math.abs(A.tot-B.tot)<50000)continue;
+    var murah=A.tot<B.tot?A:B,rendah=A.p<B.p?A:B;
+    ok=t>300||((murah!==rendah)===lawan);
+  }
+  var win=A.tot<B.tot?'A':'B',low=A.p<B.p?'A':'B',sh=A.n<B.n?'A':'B';
+  var opts=[['Penawaran '+win+', karena total biayanya lebih kecil.'],['Penawaran '+(win==='A'?'B':'A')+', karena total biayanya lebih kecil.'],
+    ['Penawaran '+low+', karena suku bunganya lebih kecil.',low===win?'alasan':''],['Penawaran '+sh+', karena jangka waktunya lebih pendek.',sh===win?'alasan':'']];
+  var fo=function(X,L){return Fn('rp','Total biaya penawaran '+L,X.tot,1,[[X.bunga,'admin',1],[P*X.p/100*X.n+X.adm,'konv',1]]);};
+  var hint=function(X,L){return ['Total biaya = bunga + biaya administrasi.','Bunga '+L+' = '+fRp(P)+' × '+fD(X.p/100)+' × '+X.n+'/12 = '+fRp(X.bunga)+'.','Total '+L+' = '+fRp(X.bunga)+' + '+fRp(X.adm)+' = '+fRp(X.tot)+'.'];};
+  var tx=function(X,L){return '<b>Penawaran '+L+'</b>: bunga tunggal '+fPct(X.p)+' per tahun, jangka '+X.n+' bulan, biaya administrasi '+X.admTx+'.';};
+  return Q('T10',pick(rng,NAMA)+' akan meminjam '+fRp(P)+' dan mendapat dua penawaran pinjaman bunga tunggal.<br>'+tx(A,'A')+'<br>'+tx(B,'B'),
+    'Penawaran mana yang paling menguntungkan bagi peminjam? Hitung total biaya (bunga + administrasi) masing-masing.',[
+    S('Total biaya A','hit','Hitung total biaya penawaran A (bunga + biaya administrasi).',[fo(A,'A')],hint(A,'A'),'Total A = '+fRp(A.tot)+'.'),
+    S('Total biaya B','hit','Hitung total biaya penawaran B (bunga + biaya administrasi).',[fo(B,'B')],hint(B,'B'),'Total B = '+fRp(B.tot)+'.'),
+    S('Keputusan','kpt','Penawaran mana yang paling menguntungkan bagi peminjam, dan apa alasannya?',[Fo('Keputusan',opts,rng)],
+      ['Peminjam ingin membayar sesedikit mungkin.','Bandingkan total biaya, bukan hanya suku bunganya.','Total terkecil: penawaran '+win+'.'],'Penawaran '+win+' (total biaya lebih kecil).')
+  ],'Penawaran <b>'+win+'</b> lebih menguntungkan: total biayanya '+fRp(Math.min(A.tot,B.tot))+', lebih kecil '+fRp(Math.abs(A.tot-B.tot))+'.');
+};
+
+/* ============ BUNGA MAJEMUK ============ */
+function varM(rng,bulan){
+  var M0=rng()<0.5?hm(rnd(rng,10,200)):jt(rnd(rng,1,50));
+  if(bulan&&rng()<0.3){var p100=pick(rng,[50,75,100,125,150]);return {M0:M0,p:p100/100,n:rnd(rng,6,24),u:'bulan',per:'per bulan'};}
+  return {M0:M0,p:rnd(rng,2,15),n:rnd(rng,2,6),u:'tahun',per:'per tahun'};
+}
+function hasilM(v){v.g=1+v.p/100;v.f=powi(v.g,v.n);v.Mn=v.M0*v.f;v.B=v.Mn-v.M0;return v;}
+GEN.K1=function(rng){
+  var v=hasilM(varM(rng,true)),nm=pick(rng,NAMA);
+  return Q('K1',nm+' menyimpan '+fRp(v.M0)+' di bank dengan <b>bunga majemuk</b> '+fPct(v.p)+' '+v.per+'.',
+    'Tentukan modal akhir (Mₙ) setelah '+v.n+' '+v.u+'.',[
+    stIdT(v),
+    S('Pilih rumus','rm','Rumus mana yang dipakai untuk menghitung modal akhir pada bunga majemuk?',
+      [Fo('Rumus',[[RM.MM],[RM.MT,'jenisT'],[TX('M_n = M_0 \\cdot i^n','Mₙ = M₀ · iⁿ')],[TX('M_n = M_0 + (1 + i)^n','Mₙ = M₀ + (1 + i)ⁿ')]],rng)],
+      ['Pada bunga majemuk, bunga ikut berbunga pada periode berikutnya.','Modal dikalikan (1 + i) setiap periode, sebanyak n kali.','Rumusnya '+RM.MM+'.'],'Rumus: '+RM.MM),
+    S('Hitung Mₙ','hit','Hitung modal akhir (bulatkan ke rupiah terdekat).',
+      [Fn('rp','Modal akhir Mₙ',v.Mn,trp(v.Mn),[[v.M0*(1+v.p*v.n/100),'jenisT'],[v.B,'bm']])],
+      ['Mₙ = M₀(1 + i)ⁿ.','(1 + '+fD(v.p/100)+')^'+v.n+' = '+fD(v.f,6)+'.','Mₙ = '+fRp(v.M0)+' × '+fD(v.f,6)+' ≈ '+fRp(v.Mn)+'.'],'Mₙ ≈ '+fRp(v.Mn)+'.')
+  ],'Modal akhir: <b>'+fRp(v.Mn)+'</b>.');
+};
+GEN.K2=function(rng){
+  var v=hasilM(varM(rng,true)),nm=pick(rng,NAMA);
+  return Q('K2',nm+' menyimpan '+fRp(v.M0)+' dengan <b>bunga majemuk</b> '+fPct(v.p)+' '+v.per+' selama '+v.n+' '+v.u+'.',
+    'Tentukan besar bunga (B) yang diperoleh.',[
+    stIdT(v),
+    S('Pilih rumus','rm','Rumus mana yang dipakai untuk menghitung <b>besar bunga</b> pada bunga majemuk?',
+      [Fo('Rumus',[[TX('B = M_0(1 + i)^n - M_0','B = M₀(1 + i)ⁿ − M₀')],[TX('B = M_0(1 + i)^n','B = M₀(1 + i)ⁿ'),'bm'],[RM.BT,'jenisT'],[TX('B = M_0 \\cdot i^n','B = M₀ · iⁿ')]],rng)],
+      ['Bunga = modal akhir − modal awal: '+RM.BM+'.','Modal akhir bunga majemuk: '+RM.MM+'.','B = M₀(1 + i)ⁿ − M₀.'],'B = M₀(1 + i)ⁿ − M₀'),
+    S('Hitung B','hit','Hitung besar bunga (bulatkan ke rupiah terdekat).',
+      [Fn('rp','Besar bunga B',v.B,trp(v.Mn),[[v.Mn,'bm'],[v.M0*v.p*v.n/100,'jenisT']])],
+      ['Hitung Mₙ dulu, lalu kurangi M₀.','Mₙ = '+fRp(v.M0)+' × '+fD(v.f,6)+' ≈ '+fRp(v.Mn)+'.','B = '+fRp(v.Mn)+' − '+fRp(v.M0)+' ≈ '+fRp(v.B)+'.'],'B ≈ '+fRp(v.B)+'.')
+  ],'Besar bunga: <b>'+fRp(v.B)+'</b>.');
+};
+function f4(p,k){return Math.round(powi(1+p/100,k)*10000)/10000;}
+GEN.K3=function(rng){
+  var base=rnd(rng,3,8),ps=[base,base+1,base+2],p=pick(rng,ps),n=rnd(rng,2,6),M0=rng()<0.5?jt(rnd(rng,2,50)):hm(rnd(rng,10,200)),fk=f4(p,n),Mn=M0*fk,nm=pick(rng,NAMA);
+  var rows=[];for(var k=1;k<=6;k++)rows.push([k].concat(ps.map(function(q){return fD(f4(q,k),4);})));
+  return Q('K3',nm+' menyimpan '+fRp(M0)+' dengan <b>bunga majemuk</b> '+fPct(p)+' per tahun selama '+n+' tahun. Gunakan tabel nilai (1 + i)ⁿ.',
+    'Tentukan modal akhir (Mₙ).',[
+    S('Baca tabel','id','Baca nilai (1 + i)ⁿ dari tabel untuk i = '+fPct(p)+' dan n = '+n+'.',[Fn('dec','(1 + i)ⁿ',fk,0.00006)],
+      ['Cari kolom i = '+fPct(p)+'.','Lalu baris n = '+n+'.','Nilainya '+fD(fk,4)+'.'],'(1 + i)ⁿ = '+fD(fk,4)+'.'),
+    S('Hitung Mₙ','hit','Hitung modal akhir dengan nilai dari tabel.',
+      [Fn('rp','Modal akhir Mₙ',Mn,trp(Mn),[[M0*(1+p*n/100),'jenisT'],[Mn-M0,'bm']])],
+      ['Mₙ = M₀(1 + i)ⁿ.','Mₙ = '+fRp(M0)+' × '+fD(fk,4)+'.','Mₙ = '+fRp(Mn)+'.'],'Mₙ = '+fRp(Mn)+'.')
+  ],'Modal akhir: <b>'+fRp(Mn)+'</b>.',
+  '<p class="dtcap">Tabel nilai (1 + i)ⁿ</p>'+tabel(['n'].concat(ps.map(function(q){return 'i = '+fPct(q);})),rows));
+};
+var MNAMA={2:'semesteran (2 kali setahun)',4:'kuartalan/triwulan (4 kali setahun)',12:'bulanan (12 kali setahun)'};
+GEN.K4=function(rng){
+  var pr=pick(rng,[[6,2],[6,4],[6,12],[8,2],[8,4],[9,2],[9,4],[9,12],[10,2],[10,4],[12,2],[12,4],[12,12]]),r=pr[0],m=pr[1];
+  var t=m===12?rnd(rng,1,3):rnd(rng,1,5),M0=jt(rnd(rng,1,30)),ip=r/m,n=m*t,f=powi(1+ip/100,n),Mn=M0*f,B=Mn-M0,askB=rng()<0.4,nm=pick(rng,NAMA);
+  var key=askB?B:Mn,raw1=M0*powi(1+r/100,t),raw2=M0*powi(1+ip/100,t);
+  var mis=[[askB?raw1-M0:raw1,'rm'],[askB?raw2-M0:raw2,'konv'],[askB?Mn:B,'bm']];
+  return Q('K4',nm+' menyimpan '+fRp(M0)+' dengan bunga '+fPct(r)+' per tahun yang <b>dimajemukkan '+MNAMA[m]+'</b> selama '+t+' tahun.',
+    'Tentukan '+(askB?'besar bunga (B)':'modal akhir (Mₙ)')+'.',[
+    S('Suku bunga per periode','kv','Tentukan suku bunga per periode pemajemukan, i = r/m (dalam persen).',
+      [Fn('pct','i per periode',ip,0.001,[[r,'rm',0.001]])],
+      ['Pemajemukan '+MNAMA[m]+' berarti m = '+m+'.','i = r/m = '+fPct(r)+' / '+m+'.','i = '+fPct(ip)+' per periode.'],'i = '+fPct(ip)+' per periode.'),
+    S('Banyak periode','kv','Tentukan banyak periode pemajemukan, n = m · t.',[Fn('int','Banyak periode n',n,0,[[t,'konv',0]],'periode')],
+      ['Ada m = '+m+' periode dalam setahun.','n = '+m+' × '+t+'.','n = '+n+' periode.'],'n = '+n+' periode.'),
+    S('Hitung','hit','Hitung '+(askB?'besar bunga B':'modal akhir Mₙ')+' (bulatkan ke rupiah terdekat).',
+      [Fn('rp',askB?'Besar bunga B':'Modal akhir Mₙ',key,trp(Mn),mis)],
+      [RM.MMm+'.','Mₙ = '+fRp(M0)+' × (1 + '+fD(ip/100,6)+')^'+n+' = '+fRp(M0)+' × '+fD(f,6)+'.',askB?'Mₙ ≈ '+fRp(Mn)+', jadi B ≈ '+fRp(B)+'.':'Mₙ ≈ '+fRp(Mn)+'.'],
+      (askB?'B ≈ ':'Mₙ ≈ ')+fRp(key)+'.')
+  ],(askB?'Besar bunga':'Modal akhir')+': <b>'+fRp(key)+'</b>.');
+};
+GEN.K5=function(rng){
+  var M0=hm(rnd(rng,10,500)),p=rnd(rng,3,12),n=rnd(rng,2,8),f=powi(1+p/100,n),Mn=Math.round(M0*f),nm=pick(rng,NAMA);
+  return Q('K5',nm+' ingin tabungannya menjadi '+fRp(Mn)+' setelah '+n+' tahun. Bank memberi <b>bunga majemuk</b> '+fPct(p)+' per tahun.',
+    'Berapa modal awal (M₀) yang harus disimpan sekarang?',[
+    S('Hitung faktor','hit','Hitung (1 + i)ⁿ (minimal 4 desimal).',[Fn('dec','(1 + i)ⁿ',f,TD,[[1+p*n/100,'jenisT',TD]])],
+      ['i = '+fD(p/100)+' dan n = '+n+'.','(1 + '+fD(p/100)+')^'+n+'.','(1 + i)ⁿ = '+fD(f,6)+'.'],'(1 + i)ⁿ = '+fD(f,6)+'.'),
+    S('Pilih rumus','rm','Dari '+RM.MM+', bagaimana cara mendapatkan M₀?',
+      [Fo('Rumus',[[TX('M_0 = \\dfrac{M_n}{(1 + i)^n}','M₀ = Mₙ ÷ (1 + i)ⁿ')],[TX('M_0 = M_n \\cdot (1 + i)^n','M₀ = Mₙ × (1 + i)ⁿ')],[TX('M_0 = M_n - (1 + i)^n','M₀ = Mₙ − (1 + i)ⁿ')],[TX('M_0 = \\dfrac{M_n}{1 + i \\cdot n}','M₀ = Mₙ ÷ (1 + i · n)'),'jenisT']],rng)],
+      ['M₀ dikalikan (1 + i)ⁿ menghasilkan Mₙ.','Untuk membalik perkalian, gunakan pembagian.','M₀ = Mₙ ÷ (1 + i)ⁿ.'],'M₀ = Mₙ ÷ (1 + i)ⁿ'),
+    S('Hitung M₀','hit','Hitung modal awal (bulatkan ke rupiah terdekat).',[Fn('rp','Modal awal M₀',M0,trp(M0),[[Mn/(1+p*n/100),'jenisT'],[Mn*f,null]])],
+      ['M₀ = Mₙ ÷ (1 + i)ⁿ.','M₀ = '+fRp(Mn)+' ÷ '+fD(f,6)+'.','M₀ ≈ '+fRp(M0)+'.'],'M₀ ≈ '+fRp(M0)+'.')
+  ],'Modal awal: <b>'+fRp(M0)+'</b>.');
+};
+GEN.K6=function(rng){
+  var M0=jt(rnd(rng,2,50)),p=rnd(rng,3,12),n=rnd(rng,2,4),Mn=Math.round(M0*powi(1+p/100,n)),rs=Mn/M0,tg=(rs-1)/n,nm=pick(rng,NAMA);
+  var c=[1+p/100,1+(p+1)/100,1+(p-1)/100,1+tg],o=[[fD(c[0],4)],[fD(c[1],4)],[fD(c[2],4)],[fD(c[3],4),'jenisT']];
+  if(Math.abs(c[3]-c[1])<0.0006)o[1]=[fD(1+(p+2)/100,4)];
+  return Q('K6','Modal '+fRp(M0)+' yang disimpan dengan <b>bunga majemuk</b> tahunan menjadi '+fRp(Mn)+' setelah '+n+' tahun.',
+    'Tentukan suku bunga per tahun (dalam persen).',[
+    S('Hitung rasio','hit','Hitung rasio Mₙ / M₀ (minimal 4 desimal).',[Fn('dec','Mₙ / M₀',rs,TD)],
+      ['Dari Mₙ = M₀(1 + i)ⁿ diperoleh (1 + i)ⁿ = Mₙ / M₀.','Mₙ / M₀ = '+fRp(Mn)+' / '+fRp(M0)+'.','Rasionya '+fD(rs,6)+'.'],'(1 + i)^'+n+' = '+fD(rs,6)+'.'),
+    S('Cari 1 + i','pola','Nilai 1 + i mana yang jika dipangkatkan '+n+' menghasilkan rasio itu?',[Fo('Nilai 1 + i',o,rng)],
+      ['Pangkatkan setiap pilihan sebanyak '+n+' kali.','Pilih yang hasilnya sama dengan '+fD(rs,4)+'.','1 + i = '+fD(c[0],4)+'.'],'1 + i = '+fD(c[0],4)+'.'),
+    S('Suku bunga','hit','Tuliskan suku bunga per tahun dalam persen.',[Fn('pct','Suku bunga per tahun',p,TP,[[tg*100,'jenisT',0.01],[p/100,'persen',TD]])],
+      ['i = (1 + i) − 1.','i = '+fD(c[0],4)+' − 1 = '+fD(p/100)+'.','i = '+fPct(p)+' per tahun.'],'i = '+fPct(p)+' per tahun.')
+  ],'Suku bunga: <b>'+fPct(p)+' per tahun</b>.');
+};
+GEN.K7=function(rng){
+  var p,rs,n,M0,mode,tgt,ok=false,g;
+  for(var t=0;t<600&&!ok;t++){
+    p=rnd(rng,6,15);g=1+p/100;mode=rng()<0.5?'kali':'target';
+    rs=mode==='kali'?pick(rng,[2,3]):pick(rng,[1.5,2,2.5,3]);
+    n=0;var v=1;while(v<rs&&n<40){v*=g;n++;}
+    ok=n>=3&&n<=14&&powi(g,n-1)<=rs*0.998&&powi(g,n)>=rs*1.002;
+  }
+  if(!ok){p=8;g=1.08;rs=2;n=10;mode='kali';}
+  M0=jt(rnd(rng,2,20));tgt=M0*rs;
+  var nm=pick(rng,NAMA),tT=Math.ceil((rs-1)/(p/100)-1e-9),mis=[[n-1,'bulat',0]];if(tT!==n)mis.push([tT,'jenisT',0]);
+  var ctx=mode==='kali'?nm+' menyimpan '+fRp(M0)+' dengan <b>bunga majemuk</b> '+fPct(p)+' per tahun.':nm+' menyimpan '+fRp(M0)+' dengan <b>bunga majemuk</b> '+fPct(p)+' per tahun dan ingin tabungannya mencapai '+fRp(tgt)+'.';
+  var ask=mode==='kali'?'Paling sedikit berapa tahun agar modalnya menjadi '+(rs===2?'dua':'tiga')+' kali lipat?':'Paling sedikit berapa tahun agar target itu tercapai?';
+  return Q('K7',ctx,ask,[
+    S('Rasio target','hit','Tentukan rasio target Mₙ / M₀.',[Fn('dec','Mₙ / M₀',rs,TD)],
+      ['Bandingkan target dengan modal awal.',mode==='kali'?'Kelipatan modal itulah rasionya.':'Rasio = '+fRp(tgt)+' / '+fRp(M0)+'.','Rasionya '+fD(rs)+'.'],'Mₙ / M₀ = '+fD(rs)+'.'),
+    S('Syarat','rm','Syarat mana yang harus dipenuhi n agar target tercapai?',
+      [Fo('Syarat',[[TX('(1 + i)^n \\ge '+fD(rs).replace(',','{,}'),'(1 + i)ⁿ ≥ '+fD(rs))],[TX('1 + i \\cdot n \\ge '+fD(rs).replace(',','{,}'),'1 + i · n ≥ '+fD(rs)),'jenisT'],[TX('(1 + i) \\cdot n \\ge '+fD(rs).replace(',','{,}'),'(1 + i) · n ≥ '+fD(rs))],[TX('i^n \\ge '+fD(rs).replace(',','{,}'),'iⁿ ≥ '+fD(rs))]],rng)],
+      ['Mₙ = M₀(1 + i)ⁿ harus paling sedikit sama dengan target.','Bagi kedua ruas dengan M₀.','(1 + i)ⁿ ≥ '+fD(rs)+'.'],'(1 + i)ⁿ ≥ '+fD(rs)),
+    S('Periode bulat','hit','Hitung (1 + i)¹, (1 + i)², … sampai mencapai rasio. Tentukan n bulat terkecil.',[Fn('int','Paling sedikit',n,0,mis,'tahun')],
+      ['Kalikan berulang dengan '+fD(g)+'.','(1 + i)^'+(n-1)+' ≈ '+fD(powi(g,n-1))+' (belum mencapai '+fD(rs)+').','(1 + i)^'+n+' ≈ '+fD(powi(g,n))+' ≥ '+fD(rs)+', jadi n = '+n+'.'],'n = '+n+' tahun.')
+  ],'Paling sedikit <b>'+n+' tahun</b>.');
+};
+GEN.K8=function(rng){
+  var pr=pick(rng,[[4,2],[4,4],[6,2],[6,4],[6,12],[8,2],[8,4],[10,2],[10,4],[12,2],[12,4],[12,12]]),r=pr[0],m=pr[1],ip=r/m,M0=10000000;
+  var f=powi(1+ip/100,m),Mn=M0*f,B=Mn-M0,ef=(f-1)*100,nm=pick(rng,NAMA);
+  return Q('K8','Sebuah bank menawarkan bunga '+fPct(r)+' per tahun yang <b>dimajemukkan '+MNAMA[m]+'</b>. '+nm+' menyimpan '+fRp(M0)+' selama 1 tahun.',
+    'Berapa persen bunga yang benar-benar diperoleh dalam 1 tahun (suku bunga efektif per tahun)?',[
+    S('Suku bunga per periode','kv','Tentukan i = r/m (dalam persen).',[Fn('pct','i per periode',ip,0.001,[[r,'rm',0.001]])],
+      ['m = '+m+'.','i = '+fPct(r)+' / '+m+'.','i = '+fPct(ip)+'.'],'i = '+fPct(ip)+' per periode.'),
+    S('Saldo 1 tahun','hit','Hitung saldo setelah 1 tahun (n = '+m+' periode).',[Fn('rp','Saldo setelah 1 tahun',Mn,trp(Mn),[[M0*(1+r/100),'rm']])],
+      ['n = m · t = '+m+' × 1.','Mₙ = '+fRp(M0)+' × (1 + '+fD(ip/100,6)+')^'+m+'.','Mₙ ≈ '+fRp(Mn)+'.'],'Mₙ ≈ '+fRp(Mn)+'.'),
+    S('Bunga 1 tahun','hit','Hitung bunga yang diperoleh selama 1 tahun.',[Fn('rp','Besar bunga B',B,trp(Mn),[[Mn,'bm']])],
+      [RM.BM+'.','B = '+fRp(Mn)+' − '+fRp(M0)+'.','B ≈ '+fRp(B)+'.'],'B ≈ '+fRp(B)+'.'),
+    S('Persen setahun','hit','Nyatakan bunga itu sebagai persen dari modal awal (2 desimal).',[Fn('pct','Bunga dalam 1 tahun',ef,TP,[[r,'rm',0.004]])],
+      ['Persen = B / M₀ × 100%.',fRp(B)+' / '+fRp(M0)+' × 100%.','≈ '+fPct(Math.round(ef*100)/100)+'.'],'≈ '+fPct(Math.round(ef*100)/100)+' per tahun.')
+  ],'Bunga yang benar-benar diperoleh ≈ <b>'+fPct(Math.round(ef*100)/100)+' per tahun</b>, lebih besar daripada '+fPct(r)+'.');
+};
+GEN.K9=function(rng){
+  var M0=jt(rnd(rng,2,40)),p1=rnd(rng,3,10),t1=rnd(rng,2,4),p2,t2=rnd(rng,1,3);
+  do{p2=rnd(rng,3,10);}while(p2===p1);
+  var S1=M0*powi(1+p1/100,t1),S2=S1*powi(1+p2/100,t2),nm=pick(rng,NAMA);
+  return Q('K9',nm+' menyimpan '+fRp(M0)+' dengan <b>bunga majemuk</b> '+fPct(p1)+' per tahun selama '+t1+' tahun pertama. Setelah itu suku bunga berubah menjadi '+fPct(p2)+' per tahun selama '+t2+' tahun berikutnya.',
+    'Tentukan saldo akhirnya.',[
+    S('Tahap 1','hit','Hitung saldo pada akhir tahun ke-'+t1+'.',[Fn('rp','Saldo akhir tahap 1',S1,trp(S1),[[M0*(1+p1*t1/100),'jenisT']])],
+      ['Gunakan '+RM.MM+' dengan i = '+fD(p1/100)+' dan n = '+t1+'.','Saldo = '+fRp(M0)+' × '+fD(powi(1+p1/100,t1),6)+'.','Saldo ≈ '+fRp(S1)+'.'],'Saldo tahap 1 ≈ '+fRp(S1)+'.'),
+    S('Tahap 2','hit','Hitung saldo akhir setelah '+t2+' tahun berikutnya.',[Fn('rp','Saldo akhir',S2,trp(S2),[[M0*powi(1+p1/100,t1+t2),'ubah'],[M0*powi(1+p2/100,t1+t2),'ubah'],[M0*powi(1+p2/100,t2),'ubah']])],
+      ['Saldo tahap 1 menjadi modal untuk tahap 2.','Saldo akhir = '+fRp(S1)+' × (1 + '+fD(p2/100)+')^'+t2+'.','Saldo akhir ≈ '+fRp(S2)+'.'],'Saldo akhir ≈ '+fRp(S2)+'.')
+  ],'Saldo akhir: <b>'+fRp(S2)+'</b>.');
+};
+GEN.K10=function(rng){
+  var M0=jt(rnd(rng,5,30)),p=rnd(rng,4,10),t1=rnd(rng,1,3),St=jt(rnd(rng,1,20)),t2=rnd(rng,1,4),g=1+p/100,A=M0*powi(g,t1),F=(A+St)*powi(g,t2),nm=pick(rng,NAMA);
+  return Q('K10',nm+' menyimpan '+fRp(M0)+' dengan <b>bunga majemuk</b> '+fPct(p)+' per tahun. Pada akhir tahun ke-'+t1+', '+nm+' menambah setoran '+fRp(St)+'. Tabungan lalu dibiarkan '+t2+' tahun lagi.',
+    'Tentukan saldo akhir tabungan (t₁ = '+t1+' tahun sebelum setoran, t₂ = '+t2+' tahun sesudahnya).',[
+    S('Model','kpt','Model perhitungan mana yang benar untuk saldo akhir?',
+      [Fo('Model',[[TX('M_0(1+i)^{t_1+t_2} + S(1+i)^{t_2}','M₀(1 + i)^(t₁+t₂) + S(1 + i)^t₂')],[TX('(M_0+S)(1+i)^{t_1+t_2}','(M₀ + S)(1 + i)^(t₁+t₂)'),'setor'],[TX('M_0(1+i)^{t_1} + S(1+i)^{t_2}','M₀(1 + i)^t₁ + S(1 + i)^t₂')],[TX('M_0(1+i)^{t_1+t_2} + S','M₀(1 + i)^(t₁+t₂) + S'),'setor']],rng)],
+      ['Modal awal berbunga selama t₁ + t₂ tahun.','Setoran S berbunga hanya selama t₂ tahun.','Saldo akhir = M₀(1 + i)^(t₁+t₂) + S(1 + i)^t₂.'],'M₀(1 + i)^(t₁+t₂) + S(1 + i)^t₂'),
+    S('Sebelum setoran','hit','Hitung saldo pada akhir tahun ke-'+t1+' (sebelum setoran).',[Fn('rp','Saldo sebelum setoran',A,trp(A))],
+      ['Gunakan '+RM.MM+'.',fRp(M0)+' × '+fD(powi(g,t1),6)+'.','≈ '+fRp(A)+'.'],'Saldo sebelum setoran ≈ '+fRp(A)+'.'),
+    S('Saldo akhir','hit','Hitung saldo akhir tabungan.',[Fn('rp','Saldo akhir',F,trp(F),[[(M0+St)*powi(g,t1+t2),'setor'],[M0*powi(g,t1+t2)+St,'setor']])],
+      ['Saldo sesudah setoran = '+fRp(A)+' + '+fRp(St)+' = '+fRp(A+St)+'.','Lalu kalikan (1 + i)^'+t2+' = '+fD(powi(g,t2),6)+'.','Saldo akhir ≈ '+fRp(F)+'.'],'Saldo akhir ≈ '+fRp(F)+'.')
+  ],'Saldo akhir: <b>'+fRp(F)+'</b>.');
+};
+GEN.K11=function(rng){
+  var M0=jt(rnd(rng,5,100)),t=rnd(rng,2,5),want=rng()<0.5?'A':'B',best=null,A,B;
+  for(var k=0;k<400;k++){
+    var a=pick(rng,[[6,12],[6,4],[8,4],[9,12],[9,4],[12,12],[12,4]]),mB=pick(rng,[1,2]),d=rnd(rng,-3,8);if(d===0)continue;
+    var rB=(a[0]*10+d)/10;
+    A={r:a[0],m:a[1]};B={r:rB,m:mB};
+    A.F=M0*powi(1+A.r/A.m/100,A.m*t);B.F=M0*powi(1+B.r/B.m/100,B.m*t);
+    var rel=Math.abs(A.F-B.F)/Math.min(A.F,B.F);if(rel<0.0015)continue;
+    var w=A.F>B.F?'A':'B';best={A:A,B:B,w:w};if(w===want)break;
+  }
+  A=best.A;B=best.B;var w=best.w,hi=A.r>B.r?'A':'B',nm=pick(rng,NAMA);
+  var tx=function(X,L){return '<b>Tawaran '+L+'</b>: '+fPct(X.r)+' per tahun, dimajemukkan '+(X.m===1?'tahunan (1 kali setahun)':MNAMA[X.m])+'.';};
+  var fo=function(X,L){return Fn('rp','Saldo akhir tawaran '+L,X.F,trp(X.F),[[M0*powi(1+X.r/100,X.m*t),'rm'],[M0*powi(1+X.r/100,t),'rm'],[M0*powi(1+X.r/X.m/100,t),'konv']]);};
+  var hn=function(X,L){return ['i = r/m = '+fPct(X.r)+' / '+X.m+' = '+fPct(X.r/X.m)+'; n = '+X.m+' × '+t+' = '+X.m*t+'.','Saldo '+L+' = '+fRp(M0)+' × (1 + '+fD(X.r/X.m/100,6)+')^'+X.m*t+'.','Saldo '+L+' ≈ '+fRp(X.F)+'.'];};
+  return Q('K11',nm+' akan mendepositokan '+fRp(M0)+' selama '+t+' tahun dan membandingkan dua tawaran bunga majemuk.<br>'+tx(A,'A')+'<br>'+tx(B,'B'),
+    'Tawaran mana yang lebih menguntungkan? Hitung saldo akhir masing-masing.',[
+    S('Saldo A','hit','Hitung saldo akhir tawaran A.',[fo(A,'A')],hn(A,'A'),'Saldo A ≈ '+fRp(A.F)+'.'),
+    S('Saldo B','hit','Hitung saldo akhir tawaran B.',[fo(B,'B')],hn(B,'B'),'Saldo B ≈ '+fRp(B.F)+'.'),
+    S('Keputusan','kpt','Tawaran mana yang lebih menguntungkan, dan apa alasannya?',
+      [Fo('Keputusan',[['Tawaran '+w+', karena saldo akhirnya lebih besar.'],['Tawaran '+(w==='A'?'B':'A')+', karena saldo akhirnya lebih besar.'],
+        ['Tawaran '+hi+', karena suku bunga nominalnya lebih tinggi.',hi===w?'alasan':''],['Keduanya sama menguntungkan, karena suku bunganya hampir sama.']],rng)],
+      ['Yang menentukan adalah saldo akhir, bukan hanya suku bunga nominal.','Pemajemukan yang lebih sering membuat bunga lebih cepat berbunga.','Saldo terbesar: tawaran '+w+'.'],'Tawaran '+w+' (saldo akhir lebih besar).')
+  ],'Tawaran <b>'+w+'</b> lebih menguntungkan, dengan selisih saldo ≈ '+fRp(Math.abs(A.F-B.F))+'.');
+};
+GEN.K12=function(rng){
+  var F,t,plans,meet,ok=false,tujuan=pick(rng,['biaya kuliah','biaya pernikahan','membeli sepeda motor','uang muka rumah','biaya ibadah haji']);
+  for(var k=0;k<400&&!ok;k++){
+    F=jt(rnd(rng,20,100));t=rnd(rng,3,8);plans=[];meet=[];
+    var rates=shuffle([3,4,5,6,7,8,9,10,11,12],rng).slice(0,4),good=true;
+    rates.forEach(function(p,ix){
+      var need=F/powi(1+p/100,t),X=Math.round(need*(0.86+rng()*0.28)/500000)*500000,FV=X*powi(1+p/100,t);
+      if(X<=0||Math.abs(FV/F-1)<0.01)good=false;
+      plans.push({X:X,p:p,FV:FV});if(FV>=F)meet.push(ix);
+    });
+    ok=good&&meet.length>=1&&meet.length<=2;
+  }
+  var ps=rnd(rng,3,12),need=F/powi(1+ps/100,t),nm=pick(rng,NAMA);
+  var data=tabel(['Rencana','Modal awal','Bunga majemuk','Jangka'],plans.map(function(q,ix){return [ix+1,fRp(q.X),fPct(q.p)+' per tahun',t+' tahun'];}));
+  return Q('K12',nm+' membutuhkan '+fRp(F)+' untuk '+tujuan+' dalam '+t+' tahun. Ada empat rencana tabungan bunga majemuk (lihat tabel).',
+    'Rencana mana yang memenuhi target? Lalu rancang modal awal minimum bila suku bunganya '+fPct(ps)+' per tahun selama '+t+' tahun.',[
+    S('Pilih rencana','kpt','Pilih <b>semua</b> rencana yang saldo akhirnya mencapai '+fRp(F)+'.',[{ty:'chk',lb:'Rencana yang memenuhi',o:plans.map(function(q,ix){return 'Rencana '+(ix+1);}),k:meet.slice()}],
+      ['Hitung Mₙ = M₀(1 + i)ⁿ untuk setiap rencana dengan n = '+t+'.','Bandingkan setiap hasil dengan target '+fRp(F)+'.','Saldo akhir: '+plans.map(function(q,ix){return 'R'+(ix+1)+' ≈ '+fRp(q.FV);}).join('; ')+'.'],
+      'Memenuhi: '+meet.map(function(ix){return 'Rencana '+(ix+1);}).join(' dan ')+'.'),
+    S('Modal minimum','hit','Rancang modal awal minimum agar target tercapai dengan bunga majemuk '+fPct(ps)+' per tahun selama '+t+' tahun.',[Fn('rp','Modal awal minimum',need,trp(need),[[F/(1+ps*t/100),'jenisT']])],
+      ['Target = M₀(1 + i)ⁿ, jadi M₀ = target ÷ (1 + i)ⁿ.','(1 + '+fD(ps/100)+')^'+t+' = '+fD(powi(1+ps/100,t),6)+'.','M₀ ≈ '+fRp(F)+' ÷ '+fD(powi(1+ps/100,t),6)+' ≈ '+fRp(need)+'.'],'Modal minimum ≈ '+fRp(need)+'.')
+  ],'Rencana yang memenuhi: <b>'+meet.map(function(ix){return ix+1;}).join(' dan ')+'</b>. Modal minimum pada '+fPct(ps)+' ≈ <b>'+fRp(need)+'</b>.',data);
+};
+
+/* ============ GABUNGAN ============ */
+GEN.G1=function(rng){
+  var M0=rng()<0.5?hm(rnd(rng,10,300)):jt(rnd(rng,1,30)),p=rnd(rng,3,12),n=rnd(rng,2,6),MT=M0+M0*p*n/100,MM=M0*powi(1+p/100,n),d=MM-MT,nm=pick(rng,NAMA);
+  return Q('G1',nm+' membandingkan dua tabungan dengan modal '+fRp(M0)+', suku bunga '+fPct(p)+' per tahun, dan jangka '+n+' tahun: satu memakai <b>bunga tunggal</b>, satu lagi <b>bunga majemuk</b>.',
+    'Tentukan selisih modal akhir keduanya.',[
+    S('Bunga tunggal','hit','Hitung modal akhir dengan bunga tunggal.',[Fn('rp','Mₙ bunga tunggal',MT,1,[[M0*p*n/100,'bm',1]])],
+      [RM.MT+'.',fRp(M0)+' × (1 + '+fD(p/100)+' × '+n+').','Mₙ = '+fRp(MT)+'.'],'Mₙ tunggal = '+fRp(MT)+'.'),
+    S('Bunga majemuk','hit','Hitung modal akhir dengan bunga majemuk.',[Fn('rp','Mₙ bunga majemuk',MM,trp(MM),[[MM-M0,'bm'],[MT,'jenisT']])],
+      [RM.MM+'.',fRp(M0)+' × '+fD(powi(1+p/100,n),6)+'.','Mₙ ≈ '+fRp(MM)+'.'],'Mₙ majemuk ≈ '+fRp(MM)+'.'),
+    S('Selisih','hit','Hitung selisih kedua modal akhir.',[Fn('rp','Selisih',d,trp(MM))],
+      ['Kurangkan yang lebih besar dengan yang lebih kecil.',fRp(MM)+' − '+fRp(MT)+'.','Selisih ≈ '+fRp(d)+'.'],'Selisih ≈ '+fRp(d)+'.')
+  ],'Bunga majemuk lebih besar ≈ <b>'+fRp(d)+'</b>.');
+};
+GEN.G2=function(rng){
+  var tA=rng()<0.5?'T':'M',tB=tA==='T'?'M':'T',MA=jt(rnd(rng,2,20)),MB=jt(rnd(rng,2,20)),pA=rnd(rng,4,12),pB;
+  do{pB=rnd(rng,4,12);}while(pB===pA);
+  var SA=[0,1,2,3,4].map(function(k){return saldo(MA,pA,tA,k);}),SB=[0,1,2,3,4].map(function(k){return saldo(MB,pB,tB,k);});
+  var jenis=[['Bunga tunggal (pola linear)'],['Bunga majemuk (pola eksponensial)']];
+  var kj=function(lb,ty){var f=Fo(lb,jenis,null);f.k=ty==='T'?0:1;return f;};
+  var data=tabel(['Tahun ke-','Tabungan A','Tabungan B'],SA.map(function(v,k){return [k,fRp(v),fRp(SB[k])];}))+svgSeri([{nm:'A',c:'#1d4ed8',v:SA},{nm:'B',c:'#c2410c',v:SB}]);
+  var hp=function(Sv,ty,L){return ty==='T'?'Tabungan '+L+': i = '+fRp(Sv[1]-Sv[0])+' / '+fRp(Sv[0])+'.':'Tabungan '+L+': 1 + i = '+fRp(Sv[1])+' / '+fRp(Sv[0])+'.';};
+  return Q('G2','Tabel dan grafik berikut menunjukkan saldo dua tabungan, A dan B, pada akhir setiap tahun. Tidak ada setoran atau penarikan.',
+    'Tentukan jenis bunga masing-masing tabungan beserta alasannya, lalu tentukan suku bunganya.',[
+    S('Jenis bunga','pola','Tentukan jenis bunga tiap tabungan dan alasan yang tepat.',[kj('Tabungan A',tA),kj('Tabungan B',tB),
+      Fo('Alasan',[['Selisih saldo bunga tunggal tetap, sedangkan selisih saldo bunga majemuk makin besar.'],['Saldo tabungan bunga majemuk selalu lebih besar.'],['Tabungan dengan modal awal lebih besar pasti memakai bunga majemuk.'],['Selisih saldo bunga majemuk tetap, sedangkan selisih saldo bunga tunggal makin besar.']],rng)],
+      ['Hitung selisih saldo dari tahun ke tahun untuk A dan B.','Selisih tetap → linear (bunga tunggal); selisih makin besar → eksponensial (bunga majemuk).','A: '+(tA==='T'?'bunga tunggal':'bunga majemuk')+'; B: '+(tB==='T'?'bunga tunggal':'bunga majemuk')+'.'],
+      'A: '+(tA==='T'?'bunga tunggal':'bunga majemuk')+'; B: '+(tB==='T'?'bunga tunggal':'bunga majemuk')+'.'),
+    S('Suku bunga','hit','Tentukan suku bunga per tahun tiap tabungan (dalam persen).',[Fn('pct','Suku bunga A',pA,TP),Fn('pct','Suku bunga B',pB,TP)],
+      ['Gunakan saldo tahun ke-0 dan tahun ke-1.',hp(SA,tA,'A'),hp(SB,tB,'B')+' Jadi i A = '+fPct(pA)+', i B = '+fPct(pB)+'.'],'i A = '+fPct(pA)+'; i B = '+fPct(pB)+'.')
+  ],'Tabungan A: <b>'+(tA==='T'?'bunga tunggal':'bunga majemuk')+' '+fPct(pA)+'</b>; Tabungan B: <b>'+(tB==='T'?'bunga tunggal':'bunga majemuk')+' '+fPct(pB)+'</b>.',data);
+};
+GEN.G3=function(rng){
+  var pT,pM,n,ok=false;
+  for(var k=0;k<600&&!ok;k++){
+    pT=rnd(rng,8,15);pM=rnd(rng,4,pT-2);n=0;var gm=1+pM/100;
+    for(var j=1;j<=30;j++){if(powi(gm,j)>1+pT*j/100){n=j;break;}}
+    ok=n>=3&&n<=12&&powi(gm,n)/(1+pT*n/100)>=1.0005&&(1+pT*(n-1)/100)/powi(gm,n-1)>=1.0005;
+  }
+  if(!ok){pT=10;pM=8;n=7;}
+  var M0=jt(rnd(rng,1,20)),T2=M0+M0*pT*2/100,M2=M0*powi(1+pM/100,2),nm=pick(rng,NAMA);
+  var row=function(j){return 'tahun ke-'+j+': tunggal '+fRp(M0+M0*pT*j/100)+', majemuk ≈ '+fRp(M0*powi(1+pM/100,j));};
+  return Q('G3',nm+' punya dua pilihan tabungan dengan modal sama, '+fRp(M0)+'. <b>Tabungan A</b>: bunga tunggal '+fPct(pT)+' per tahun. <b>Tabungan B</b>: bunga majemuk '+fPct(pM)+' per tahun.',
+    'Mulai akhir tahun ke berapa saldo tabungan B (bunga majemuk) lebih besar daripada tabungan A?',[
+    S('Saldo awal','hit','Hitung saldo kedua tabungan pada akhir tahun ke-2.',[Fn('rp','Saldo A (tunggal), tahun ke-2',T2,1),Fn('rp','Saldo B (majemuk), tahun ke-2',M2,trp(M2))],
+      ['A: '+RM.MT+'; B: '+RM.MM+'.','A = '+fRp(M0)+' × (1 + '+fD(pT/100)+' × 2); B = '+fRp(M0)+' × (1 + '+fD(pM/100)+')².','A = '+fRp(T2)+'; B ≈ '+fRp(M2)+'.'],'Tahun ke-2: A = '+fRp(T2)+', B ≈ '+fRp(M2)+'.'),
+    S('Periode','kpt','Lanjutkan perbandingan tahun demi tahun. Tentukan tahun pertama saat saldo B lebih besar daripada A.',[Fn('int','Mulai akhir tahun ke-',n,0,[[n-1,'silang',0]])],
+      ['Modalnya sama, jadi cukup bandingkan 1 + '+fD(pT/100)+' · n dengan '+fD(1+pM/100)+'ⁿ.',row(n-1)+' (A masih lebih besar).',row(n)+', jadi jawabannya tahun ke-'+n+'.'],'Mulai tahun ke-'+n+'.')
+  ],'Saldo bunga majemuk mulai lebih besar pada <b>akhir tahun ke-'+n+'</b>.');
+};
+GEN.G4=function(rng){
+  var M0=jt(rnd(rng,2,20)),p=rnd(rng,4,12),g=1+p/100,T1=M0+M0*p/100,Th=M0+M0*p/200,Mh=Math.round(M0*Math.sqrt(g)),
+    T3=M0+M0*3*p/100,M3=Math.round(M0*powi(g,3)),T2=M0+M0*2*p/100,M2=Math.round(M0*powi(g,2)),v=rng()<0.5?1:0.5;
+  var c1='n = 1 tahun: bunga tunggal menghasilkan '+fRp(T1)+' dan bunga majemuk juga '+fRp(T1)+'. Hasilnya sama, jadi majemuk tidak lebih menguntungkan.';
+  var ch='n = 6 bulan (½ tahun): bunga tunggal menghasilkan '+fRp(Th)+', bunga majemuk ≈ '+fRp(Mh)+'. Bunga tunggal lebih besar.';
+  var o=[[v===1?c1:ch],
+    ['n = 3 tahun: bunga tunggal '+fRp(T3)+' dan bunga majemuk ≈ '+fRp(M3)+'. Bunga majemuk lebih besar.','alasan'],
+    ['n = 2 tahun: bunga tunggal '+fRp(M2)+' dan bunga majemuk '+fRp(T2)+'. Bunga tunggal lebih besar.'],
+    [v===1?'n = 6 bulan (½ tahun): bunga majemuk '+fRp(Th+M0*p/400)+' lebih besar daripada bunga tunggal '+fRp(Th)+'.':'n = 1 tahun: bunga majemuk '+fRp(T1+M0*p/100)+' lebih besar daripada bunga tunggal '+fRp(T1)+'.']];
+  return Q('G4','Seorang teman berkata: <b>“Bunga majemuk selalu lebih menguntungkan daripada bunga tunggal.”</b> Misalkan modal '+fRp(M0)+' dengan suku bunga '+fPct(p)+' per tahun untuk kedua jenis bunga.',
+    'Nilailah kebenaran pernyataan itu dan pilih contoh penyangkal yang tepat.',[
+    S('Penilaian','kpt','Apakah pernyataan itu benar untuk semua jangka waktu?',[Fo('Pernyataan',[['Salah'],['Benar']],null)].map(function(f){f.o=['Benar','Salah'];f.mo=['',''];f.k=1;return f;}),
+      ['Ingat perbandingan pada rangkuman: bagaimana hasilnya untuk n = 1?','Untuk n = 1 hasil keduanya sama, jadi “selalu lebih menguntungkan” tidak berlaku.','Pernyataan itu salah.'],'Pernyataan itu salah.'),
+    S('Contoh penyangkal','kpt','Pilih contoh penyangkal yang tepat (hitungannya benar dan membantah pernyataan).',[Fo('Contoh penyangkal',o,rng)],
+      ['Contoh penyangkal harus menunjukkan bunga majemuk TIDAK lebih besar.','Periksa hitungan tiap pilihan dengan '+RM.MT+' dan '+RM.MM+'.',v===1?'Untuk n = 1: M₀(1 + i) = M₀(1 + i·1), hasilnya sama.':'Untuk n = ½: '+fRp(Th)+' > '+fRp(Mh)+'.'],
+      v===1?'n = 1: hasilnya sama.':'n = ½ tahun: bunga tunggal lebih besar.')
+  ],'Pernyataan itu <b>salah</b>: untuk n = 1 hasilnya sama, dan untuk n &lt; 1 bunga tunggal lebih besar.');
+};
+
+/* ---------- penilai ---------- */
+function judgeField(f,a){
+  if(f.ty==='opt')return a===f.k;
+  if(f.ty==='chk'){
+    if(!Array.isArray(a)||a.length!==f.k.length)return false;
+    var s=a.slice().sort(),q=f.k.slice().sort();
+    for(var i=0;i<s.length;i++)if(s[i]!==q[i])return false;
+    return true;
+  }
+  return isNum(a)&&Math.abs(a-f.k)<=f.t+1e-9*Math.max(1,Math.abs(f.k));
+}
+function misOf(f,a){
+  if(f.ty==='opt')return isInt(a)&&f.mo[a]?f.mo[a]:'';
+  if(!isNum(a)||!f.mis)return '';
+  for(var i=0;i<f.mis.length;i++){
+    var m=f.mis[i],t=m[2]!=null?m[2]:f.t;
+    if(m[1]&&Math.abs(a-m[0])<=t+1e-9*Math.max(1,Math.abs(m[0])))return m[1];
+  }
+  return '';
+}
+function validAns(f,a){
+  if(f.ty==='opt')return isInt(a)&&a>=0&&a<f.o.length;
+  if(f.ty==='chk'){
+    if(!Array.isArray(a)||a.length>f.o.length)return false;
+    for(var i=0;i<a.length;i++){if(!isInt(a[i])||a[i]<0||a[i]>=f.o.length||a.indexOf(a[i])!==i)return false;}
+    return true;
+  }
+  return isNum(a)&&Math.abs(a)<1e13;
+}
+function judgeStep(st,ans,locked){
+  var ok=[],first=-1;
+  st.f.forEach(function(f,k){var o=!!(locked&&locked[k])||judgeField(f,ans[k]);ok.push(o);if(!o&&first<0)first=k;});
+  return {ok:ok,all:first<0,first:first};
+}
+function keyAns(st){return st.f.map(function(f){return f.ty==='chk'?f.k.slice():f.k;});}
+
+/* ---------- paket kuis: 8 soal, urut mudah → sulit ---------- */
+var SLOT=[['T1','T2','T3'],['K1','K2','K3'],['T4','T5','T6','T7','T8'],['K4','K5','K6','K7','K8','K9'],['T9','T10'],['K10','K11','K12']];
+function buildPack(seed){
+  var rng=mulberry32(seed),ids=SLOT.map(function(s){return pick(rng,s);}),g=shuffle(['G2','G3','G4'],rng).slice(0,2).sort();
+  ids=ids.concat(g);
+  return {seed:seed,ids:ids,set:ids.map(function(id){return GEN[id](rng);})};
+}
+var MAKS_LEWAT=2;   /* langkah boleh dilewati (bernilai 0) setelah sekian jawaban salah */
+
+/* ---------- penilai jejak jawaban ----------
+   jejak = daftar peristiwa {p,s,a,t}: p = nomor soal, s = nomor langkah, a = daftar jawaban mentah
+   per kotak (angka, indeks pilihan, atau daftar indeks) atau 'LEWAT', t = waktu (ms sejak mulai).
+   Nilai = rata-rata proporsi langkah yang benar pada percobaan pertama per soal, skala 0–100. */
+function gradeTrace(pack,trace){
+  var order=[];
+  pack.set.forEach(function(q,p){q.steps.forEach(function(_,s){order.push({p:p,s:s});});});
+  var ev=Array.isArray(trace)?trace:[],c=0,wc=0,lk=null,ignored=0,missed={},steps=[],lastT=0,monotonic=true;
+  var okP=pack.set.map(function(){return 0;}),nP=pack.set.map(function(q){return q.steps.length;}),benar=0;
+  function done(ok){
+    var d=order[c],st=pack.set[d.p].steps[d.s];
+    steps.push({p:d.p,s:d.s,ok:ok});
+    if(ok){okP[d.p]++;benar++;}else missed[st.cat]=(missed[st.cat]||0)+1;
+    c++;wc=0;lk=null;
+  }
+  for(var k=0;k<ev.length;k++){
+    var e=ev[k];
+    if(!e||typeof e!=='object'){ignored++;continue;}
+    if(isNum(e.t)){if(e.t<lastT)monotonic=false;else lastT=e.t;}
+    var d=order[c];
+    if(!d||e.p!==d.p||e.s!==d.s){ignored++;continue;}
+    var st=pack.set[d.p].steps[d.s];
+    if(e.a==='LEWAT'){if(wc>=MAKS_LEWAT)done(false);else ignored++;continue;}
+    if(!Array.isArray(e.a)||e.a.length!==st.f.length){ignored++;continue;}
+    var bad=false;for(var j=0;j<st.f.length;j++)if(!validAns(st.f[j],e.a[j]))bad=true;
+    if(bad){ignored++;continue;}
+    var r=judgeStep(st,e.a,lk);lk=r.ok;
+    if(r.all)done(wc===0);else wc++;
+  }
+  var tot=0;okP.forEach(function(o,i){tot+=o/nP[i];});
+  var score=pack.set.length?Math.round(100*tot/pack.set.length):0;
+  return {score:score,max:100,benar:benar,langkah:order.length,done:c,complete:c===order.length,ignored:ignored,missed:missed,steps:steps,monotonic:monotonic,lastT:lastT};
+}
+
+/* ---------- sidik jari kode: halaman dan server harus menghasilkan nilai yang sama ---------- */
+function djb2(s){var h=5381;for(var i=0;i<s.length;i++)h=((h<<5)+h+s.charCodeAt(i))|0;return (h>>>0).toString(16);}
+function wrongAns(st){return st.f.map(function(f){
+  if(f.ty==='opt')return (f.k+1)%f.o.length;
+  if(f.ty==='chk')return f.k.length===f.o.length?[]:f.o.map(function(_,i){return i;});
+  return f.k*2+12345;});}
+function cek(){
+  var pk=buildPack(20261029),sm=[],t=0;
+  function add(p,s,a){sm.push({p:p,s:s,a:a,t:++t});}
+  pk.set.forEach(function(q,p){q.steps.forEach(function(st,s){
+    var m=(p+s)%3;
+    if(m===0){add(p,s,wrongAns(st));add(p,s,wrongAns(st));add(p,s,'LEWAT');}
+    else if(m===1){add(p,s,wrongAns(st));add(p,s,keyAns(st));}
+    else add(p,s,keyAns(st));
+  });});
+  add(9,9,'zz');
+  var all=KRIT.map(function(r,i){return GEN[r[0]](mulberry32(7000+i));});
+  return VERSI+':'+djb2(JSON.stringify({pk:pk,g:gradeTrace(pk,sm),all:all,mis:MIS}));
+}
+
+return {VERSI:VERSI,KRIT:KRIT,GEN:GEN,MIS:MIS,CAT:CAT,SLOT:SLOT,MAKS_LEWAT:MAKS_LEWAT,mulberry32:mulberry32,powi:powi,
+  fNum:fNum,fRp:fRp,fPct:fPct,fD:fD,TX:TX,RM:RM,judgeField:judgeField,misOf:misOf,validAns:validAns,judgeStep:judgeStep,
+  keyAns:keyAns,buildPack:buildPack,gradeTrace:gradeTrace,cek:cek};
+})();
+/* ===== CORE-SELESAI ===== */
+var $=function(s){return document.querySelector(s);};
+var esc=function(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');};
+var fRp=CORE.fRp,fPct=CORE.fPct,fD=CORE.fD,fNum=CORE.fNum,powi=CORE.powi;
+var GNAMA={T:'Bunga Tunggal',K:'Bunga Majemuk',G:'Gabungan'};
+var LVNAMA={LOTS:'LOTS (C1–C2)',MOTS:'MOTS (C3)',HOTS:'HOTS (C4–C6)'};
+function newSeed(){return Math.floor(Math.random()*2147483646)+1;}
+function kritOf(id){var r=null;CORE.KRIT.forEach(function(k){if(k[0]===id)r=k;});return r;}
+function label(q){return GNAMA[q.g]+' · Kriteria '+q.no+' · '+q.lv+' ('+q.kog+')';}
+
+/* ---------- membaca angka format Indonesia ----------
+   rupiah/bilangan bulat: titik = pemisah ribuan, koma = desimal (1.250.000 atau 1250000).
+   desimal/persen: koma atau titik sebagai tanda desimal (0,06 atau 0.06); pecahan a/b juga boleh untuk desimal. */
+function parseIn(s,ty){
+  s=String(s==null?'':s).replace(/\s+/g,'').replace(/^rp\.?/i,'').replace(/%$/,'').replace(/−/g,'-');
+  if(!s)return null;
+  if(s.indexOf('/')>=0){
+    if(ty!=='dec')return NaN;
+    var pr=s.split('/');if(pr.length!==2)return NaN;
+    var a=parseIn(pr[0],'dec'),b=parseIn(pr[1],'dec');
+    return (typeof a==='number'&&isFinite(a)&&typeof b==='number'&&isFinite(b)&&b!==0)?a/b:NaN;
+  }
+  if(ty==='rp'||ty==='int'){s=s.indexOf(',')>=0?s.replace(/\./g,'').replace(',','.'):s.replace(/\./g,'');}
+  else if(s.indexOf(',')>=0)s=s.replace(/\./g,'').replace(',','.');
+  if(!/^-?\d+(\.\d+)?$/.test(s))return NaN;
+  var v=Number(s);
+  if(ty==='int'&&Math.floor(v)!==v)return NaN;
+  return v;
+}
+function preview(v,ty){
+  if(v===null)return '';
+  if(typeof v!=='number'||!isFinite(v))return '⚠ format belum terbaca';
+  if(ty==='rp')return 'terbaca: '+fRp(v)+(Math.round(v)!==v?' (dibulatkan)':'');
+  if(ty==='pct')return 'terbaca: '+fNum(v,4,true)+'%';
+  if(ty==='int')return 'terbaca: '+fNum(v,0);
+  return 'terbaca: '+fNum(v,6,true);
+}
+
+/* ---------- status ---------- */
+var st={mode:'explain',q:null,stage:'intro',s:0,hints:0,wc:0,lk:null,vals:[],res:[],pick:{g:'T',lv:'LOTS',id:'acak'},
+  over:false,gate:false,pack:null,trace:[],idx:0,sess:null,send:null,lw:null,refl:null};
+window.__st=st;
+function setProblem(q){
+  st.q=q;st.stage='intro';st.s=0;st.hints=0;st.wc=0;st.lk=null;st.vals=[];st.res=[];st.lw=null;st.refl=null;
+  renderAll();mascotSay('sapa');
+}
+function setStep(s){st.s=s;st.hints=0;st.wc=0;st.lk=null;st.vals=[];st.lw=null;renderAll();}
+function cur(){return st.q&&st.q.steps[st.s];}
+
+/* ---------- Latihan Mandiri ---------- */
+function kandidat(){
+  var p=st.pick;
+  return CORE.KRIT.filter(function(k){return k[1]===p.g&&k[3]===p.lv;});
+}
+function genLearn(){
+  var c=kandidat(),id=st.pick.id;
+  if(id==='acak'||!c.some(function(k){return k[0]===id;}))id=c[Math.floor(Math.random()*c.length)][0];
+  return CORE.GEN[id](CORE.mulberry32(newSeed()));
+}
+function startLearn(){plusHome();st.mode='learn';st.over=false;st.gate=false;stopTimer();setProblem(genLearn());}
+function nextLearn(){setProblem(genLearn());}
+
+/* ---------- Kuis ---------- */
+function practiceActive(){return st.mode==='practice'&&!st.gate&&!st.over&&!!st.sess;}
+function startPractice(){
+  plusHome();
+  st.mode='practice';st.over=false;st.send=null;
+  if(CONFIG.ENDPOINT){st.gate=true;st.sess=null;st.pack=null;st.trace=[];st.q=null;renderAll();}
+  else beginPractice(newSeed(),null);
+}
+function beginPractice(seed,sess){
+  st.mode='practice';st.over=false;st.gate=false;st.send=null;st.idx=0;
+  st.pack=CORE.buildPack(seed);st.trace=[];
+  st.sess=sess||{token:null,nama:'',t0c:performance.now(),sisaMenit:60};
+  st.sess.deadline=performance.now()+Math.max(0,st.sess.sisaMenit==null?60:st.sess.sisaMenit)*60000;
+  startTimer();
+  setProblem(st.pack.set[0]);
+}
+/* merekam setiap percobaan jawaban (bukan skor!) untuk dinilai ulang oleh server */
+function rec(a){
+  if(st.mode!=='practice'||!st.sess)return;
+  st.trace.push({p:st.idx,s:st.s,a:a,t:Math.round(performance.now()-st.sess.t0c)});
+}
+function grade(){return st.pack?CORE.gradeTrace(st.pack,st.trace):null;}
+var timerId=null;
+function startTimer(){stopTimer();timerId=setInterval(tick,1000);}
+function stopTimer(){if(timerId){clearInterval(timerId);timerId=null;}}
+function sisaMs(){return st.sess&&st.sess.deadline?st.sess.deadline-performance.now():0;}
+function fmtWaktu(ms){ms=Math.max(0,ms);var m=Math.floor(ms/60000),s=Math.floor(ms%60000/1000);return m+':'+(s<10?'0':'')+s;}
+function tick(){
+  if(!practiceActive()){stopTimer();return;}
+  var t=$('#tmr');if(t){t.textContent='⏱ '+fmtWaktu(sisaMs());t.classList.toggle('low',sisaMs()<5*60000);}
+  if(sisaMs()<=0)finishQuiz(true);
+}
+function finishQuiz(habis){
+  stopTimer();st.over=true;st.send=null;st.habis=!!habis;renderAll();submitScore();
+}
+
+/* ---------- koneksi ke server (Google Apps Script) ---------- */
+function callServer(obj){
+  var ctl=('AbortController' in window)?new AbortController():null,tm=null;
+  if(ctl)tm=setTimeout(function(){ctl.abort();},30000);
+  return fetch(CONFIG.ENDPOINT,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(obj),signal:ctl?ctl.signal:undefined})
+    .then(function(r){if(tm)clearTimeout(tm);return r.json();});
+}
+function netMsg(err){return err&&err.name==='AbortError'?'Server tidak merespons (waktu habis). Coba lagi.':'Tidak dapat terhubung ke server. Periksa internet, lalu coba lagi.';}
+var PKEY='bunga-skor-tertunda-'+CONFIG.MATERI;
+function savePending(o){try{localStorage.setItem(PKEY,JSON.stringify(o));}catch(e){}}
+function loadPending(){try{var x=localStorage.getItem(PKEY);return x?JSON.parse(x):null;}catch(e){return null;}}
+function clearPending(){try{localStorage.removeItem(PKEY);}catch(e){}}
+function fatalCode(r){return !!r&&(r.kode==='token'||r.kode==='habis'||r.kode==='versi'||r.kode==='jejak');}
+function loginPanel(el){
+  var pend=loadPending();
+  el.innerHTML='<h2>Kuis · Masuk</h2>'
+    +'<div class="note"><p>Kuis berisi <b>8 soal</b> (3 bunga tunggal, 3 bunga majemuk, 2 gabungan) yang diurutkan dari mudah ke sulit. Waktu: <b>60 menit</b> sejak kamu masuk.</p>'
+    +'<p>Nilai kuis <b>disetor ke gurumu</b>. Soal dibuat oleh server dan nilai dihitung ulang dari jawabanmu, jadi kerjakan sendiri.</p>'
+    +'<p>Kuis hanya bisa dikerjakan <b>sekali</b>. Jika halaman tertutup sebelum selesai, masuk lagi (dalam batas waktu) untuk mendapat soal yang sama.</p></div>'
+    +(pend?'<div class="rule">Ada nilai yang <b>belum terkirim</b> dari kuis sebelumnya. <button class="btn" id="bPending">Kirim sekarang</button></div>':'')
+    +'<div class="form"><div class="two"><label>Kelas<input id="lgKelas" autocomplete="off" placeholder="mis. XI-2" maxlength="20"></label>'
+    +'<label>No. absen<input id="lgAbsen" type="number" inputmode="numeric" min="1" max="99" placeholder="mis. 7"></label></div>'
+    +'<label>PIN<input id="lgPin" type="password" autocomplete="off" placeholder="dari gurumu" maxlength="20"></label>'
+    +'<label>Nama atau inisial <small>(isi hanya bila gurumu belum menyiapkan daftar siswa)</small><input id="lgNama" autocomplete="off" maxlength="40"></label></div>'
+    +'<div id="lgMsg" class="fb" hidden></div>'
+    +'<div class="row"><button class="btn primary" id="bLogin">Mulai kuis ➜</button></div>';
+  on('bLogin',doLogin);on('bPending',resendPending);
+  ['lgKelas','lgAbsen','lgPin','lgNama'].forEach(function(id){$('#'+id).addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});});
+}
+function lgMsg(kind,html){var e=$('#lgMsg');if(!e)return;e.hidden=false;e.className='fb '+kind;e.innerHTML=html;}
+function doLogin(){
+  var kelas=$('#lgKelas').value.trim(),absen=$('#lgAbsen').value.trim(),pin=$('#lgPin').value,nama=$('#lgNama').value.trim();
+  if(!kelas||!absen){lgMsg('info','Isi kelas dan nomor absen.');return;}
+  var btn=$('#bLogin');btn.disabled=true;lgMsg('info','⏳ Menghubungi server…');
+  callServer({action:'start',materi:CONFIG.MATERI,kelas:kelas,absen:absen,pin:pin,nama:nama,cek:CORE.cek()})
+    .then(function(res){
+      if(!res||!res.ok){btn.disabled=false;lgMsg('bad',esc((res&&res.pesan)||'Gagal masuk.'));return;}
+      beginPractice(res.seed,{token:res.token,nama:res.nama,t0c:performance.now(),lanjut:!!res.lanjut,batasMenit:res.batasMenit,sisaMenit:res.sisaMenit});
+    })
+    .catch(function(err){btn.disabled=false;lgMsg('bad',netMsg(err));});
+}
+function submitBody(){var g=grade();return {action:'submit',materi:CONFIG.MATERI,token:st.sess.token,trace:st.trace,klaim:{skor:g.score,maks:g.max},cek:CORE.cek()};}
+function submitScore(){
+  if(!CONFIG.ENDPOINT||!st.sess||!st.sess.token){st.send={state:'off'};renderPanel();return;}
+  var body=submitBody();savePending(body);sendBody(body);
+}
+var AUTO_JEDA=[4000,8000];
+var sendSeq=0;
+function sendBody(body,n){
+  var id=++sendSeq;n=n||0;
+  var stale=function(){return id!==sendSeq;};
+  var show=function(x){st.send=x;if(st.over)renderPanel();};
+  var fail=function(msg,retry){
+    if(stale())return;
+    if(retry&&n<AUTO_JEDA.length){
+      show({state:'sending',n:n+1,wait:true});
+      setTimeout(function(){if(!stale())sendBody(body,n+1);},AUTO_JEDA[n]);
+      return;
+    }
+    show({state:'err',msg:msg,retry:retry});
+  };
+  show({state:'sending',n:n});
+  callServer(body).then(function(res){
+    if(res&&res.ok){clearPending();if(!stale())show({state:'ok',res:res});}
+    else{var f=fatalCode(res);if(f)clearPending();fail((res&&res.pesan)||'Server menolak nilai.',!f);}
+  }).catch(function(err){fail(netMsg(err),true);});
+}
+function resendPending(){
+  var p=loadPending();if(!p)return;
+  lgMsg('info','⏳ Mengirim nilai tertunda…');
+  callServer(p).then(function(res){
+    if(res&&res.ok){clearPending();lgMsg('ok','✔ Nilai tertunda terkirim: '+res.skor+' / '+res.maks+'.');var b=$('#bPending');if(b)b.disabled=true;}
+    else{if(fatalCode(res))clearPending();lgMsg('bad',esc((res&&res.pesan)||'Gagal mengirim.'));}
+  }).catch(function(err){lgMsg('bad',netMsg(err));});
+}
+function unsentScore(){
+  var x=st.send;
+  return st.mode==='practice'&&st.over&&!!x&&(x.state==='sending'||(x.state==='err'&&x.retry));
+}
+function konfirmPindah(){
+  if(!unsentScore())return true;
+  return confirm(loadPending()
+    ?'Nilaimu belum tercatat di server. Kamu masih bisa mengirimnya nanti lewat Kuis di peramban dan perangkat ini, selama waktu kuis belum habis. Tetap pindah?'
+    :'Nilaimu belum tercatat di server dan tidak dapat disimpan di peramban ini. Jika pindah, nilai bisa hilang. Tetap pindah?');
+}
+function pendNotice(el){
+  if(!CONFIG.ENDPOINT||st.gate||st.over||practiceActive()||!loadPending())return;
+  var d=document.createElement('div');d.id='pendBar';d.className='rule';
+  d.innerHTML='<span id="pendMsg">⚠ Ada nilai kuis yang <b>belum terkirim</b> ke gurumu.</span> <button class="btn" id="bPendBar">Kirim sekarang</button>';
+  el.insertBefore(d,el.firstChild);on('bPendBar',resendBar);
+}
+function resendBar(){
+  var p=loadPending(),box=$('#pendBar'),msg=$('#pendMsg'),b=$('#bPendBar');
+  if(!p||!box)return;
+  b.disabled=true;msg.innerHTML='⏳ Mengirim nilai tertunda…';
+  callServer(p).then(function(res){
+    if(res&&res.ok){clearPending();box.className='fb ok';box.innerHTML='✔ Nilai tertunda terkirim: '+res.skor+' / '+res.maks+'.'+(res.ulang?' (Nilai ini sudah pernah dikirim sebelumnya.)':'');}
+    else if(fatalCode(res)){clearPending();box.className='fb bad';box.innerHTML=esc((res&&res.pesan)||'Server menolak nilai.');}
+    else{msg.innerHTML='⚠ '+esc((res&&res.pesan)||'Gagal mengirim.');b.disabled=false;}
+  }).catch(function(err){msg.innerHTML='⚠ '+esc(netMsg(err));b.disabled=false;});
+}
+
+/* ---------- umpan balik, petunjuk ---------- */
+function fb(kind,html){var e=$('#fb');if(!e)return;e.hidden=false;e.className='fb '+kind;e.innerHTML=html;renderMath(e);}
+function on(id,fn){var e=document.getElementById(id);if(e)e.onclick=fn;}
+function actions(html){var a=$('#actions');if(a)a.innerHTML=html;}
+function hintsBlock(){return '<ul id="hints" class="hints" hidden></ul><div id="fb" class="fb" hidden></div>';}
+function showHint(){var s=cur();if(!s)return;st.hints=Math.min(s.h.length,st.hints+1);renderHints();mascotSay('petunjuk');}
+function renderHints(){
+  var box=$('#hints'),s=cur();if(!box||!s)return;
+  box.innerHTML=s.h.slice(0,st.hints).map(function(h){return '<li>'+h+'</li>';}).join('');
+  box.hidden=!st.hints;renderMath(box);
+}
+
+/* ---------- tampilan umum ---------- */
+function renderAll(){
+  if(st.mode!=='explain'&&plusAt)plusHome();
+  document.body.classList.toggle('over',st.over||st.gate||st.mode==='explain');
+  renderProblem();renderProgress();renderPanel();renderSide();
+  exBarSync();
+}
+function renderProblem(){
+  if(!st.q||st.gate||st.mode==='explain'||st.over)return;
+  var q=st.q,meta;
+  if(st.mode==='learn')meta='Latihan Mandiri · '+label(q);
+  else meta=(st.sess&&st.sess.nama?esc(st.sess.nama)+' · ':'')+'Soal '+(st.idx+1)+' dari '+st.pack.set.length+' · '+label(q)+' · Nilai sementara '+grade().score+' · <span class="timer" id="tmr">⏱ '+fmtWaktu(sisaMs())+'</span>';
+  $('#probMeta').innerHTML=meta;
+  $('#probAsk').innerHTML=q.ctx;
+  $('#probText').innerHTML='<span class="qask">'+q.ask+'</span>';
+  $('#probData').innerHTML=q.data?'<div class="dtwrap">'+q.data+'</div>':'';
+  $('#bRepeat').hidden=st.mode!=='learn';
+  $('#bNextQ').hidden=st.mode!=='learn';
+  renderMath($('#problemCard'));
+}
+function renderProgress(){
+  if(!st.q||st.gate||st.mode==='explain'||st.over)return;
+  var q=st.q,items=[{l:'Soal',d:st.stage!=='intro',c:st.stage==='intro'}];
+  q.steps.forEach(function(s,k){
+    var dn=st.stage==='done'||(st.stage==='work'&&k<st.s);
+    items.push({l:s.nm,d:dn,m:dn&&st.res[k]===false,c:st.stage==='work'&&k===st.s});
+  });
+  $('#progress').innerHTML=items.map(function(it,i){
+    return '<li class="'+(it.m?'miss':it.d?'done':it.c?'cur':'')+'"><span>'+(it.d?(it.m?'!':'✓'):i+1)+'</span><em>'+esc(it.l)+'</em></li>';
+  }).join('');
+  var t='';
+  if(st.stage==='intro')t='Baca soal, lalu tekan Mulai';
+  else if(st.stage==='work')t='Langkah '+(st.s+1)+' dari '+q.steps.length+': '+q.steps[st.s].nm;
+  else t='Selesai 🎉';
+  $('#stepText').textContent=t;
+}
+function renderPanel(){
+  var el=$('#panel');
+  if(st.mode==='explain')return explainPanel(el);
+  if(st.gate)return loginPanel(el);
+  if(st.over)return overPanel(el);
+  if(st.stage==='intro')introPanel(el);
+  else if(st.stage==='done')summaryPanel(el);
+  else stepPanel(el);
+  pendNotice(el);
+  renderMath(el);
+}
+
+/* ---------- panel samping: data soal, catatan jawaban, kartu rumus / grafik ---------- */
+function renderSide(){
+  var el=$('#side'),h='';
+  if(st.mode==='explain'){document.body.classList.remove('noside');el.innerHTML=chartHtml();bindChart();drawChart();return;}
+  if(st.over||!st.q&&!st.gate){document.body.classList.add('noside');el.innerHTML='';return;}
+  document.body.classList.remove('noside');
+  if(st.gate){
+    el.innerHTML='<h3>Tentang kuis</h3><ul class="found"><li>8 soal: tunggal (LOTS, MOTS, HOTS), majemuk (LOTS, MOTS, HOTS), dan 2 soal gabungan HOTS.</li><li>Setiap soal dikerjakan bertahap. Langkah yang benar pada percobaan pertama mendapat poin penuh.</li><li>Setelah 2 kali salah, kamu boleh melewati langkah itu (bernilai 0) agar bisa lanjut.</li><li>Siapkan kalkulator untuk menghitung pangkat.</li></ul>';
+    return;
+  }
+  var q=st.q;
+  if(q.data)h+='<div class="sdata"><h3>Data soal</h3><div class="dtwrap">'+q.data+'</div></div>';
+  var items=[];
+  q.steps.forEach(function(s,k){if(k<st.res.length)items.push('<li class="'+(st.res[k]===false?'ms':'')+'"><b>'+esc(s.nm)+':</b> '+s.ok+'</li>');});
+  h+='<h3>Catatan jawabanmu</h3>'+(items.length?'<ul class="found">'+items.join('')+'</ul>':'<p class="muted">Hasil setiap langkah yang selesai akan tercatat di sini.</p>');
+  if(st.mode==='learn')h+=rumusCard();
+  el.innerHTML=h;renderMath(el);
+}
+function rumusCard(){
+  var R=CORE.RM;
+  return '<details class="rumus"><summary>📘 Kartu rumus (dari rangkuman)</summary>'
+    +'<p><b>Bunga tunggal</b>: '+R.BT+' &nbsp; '+R.MT+'</p><p>Rumus turunan: '+R.M0T+', '+R.IT+', '+R.NT+'</p>'
+    +'<p>n dalam bulan → n/12 tahun; n dalam hari → n/360 (tahun bank) atau n/365 (tahun kalender).</p>'
+    +'<p><b>Bunga majemuk</b>: '+R.MM+' &nbsp; '+R.BM+'</p><p>Dimajemukkan m kali per tahun: i = r/m, n = m · t, '+R.MMm+'</p></details>';
+}
+
+/* ---------- panel Soal (awal) ---------- */
+function introPanel(el){
+  var learn=st.mode==='learn',q=st.q,h='';
+  if(learn){
+    var p=st.pick,c=kandidat();
+    h+='<h2>Pilih kriteria soal</h2><p class="muted">Pilih kelompok dan level. Soal dibangkitkan acak sesuai pilihanmu.</p>';
+    h+='<div class="lvl"><b>Kelompok</b><div class="chips">'+['T','K','G'].map(function(g){return '<button class="chip'+(p.g===g?' on':'')+'" data-g="'+g+'">'+GNAMA[g]+'</button>';}).join('')+'</div></div>';
+    h+='<div class="lvl"><b>Level</b><div class="chips">'+['LOTS','MOTS','HOTS'].map(function(lv){
+      var ada=CORE.KRIT.some(function(k){return k[1]===p.g&&k[3]===lv;});
+      return '<button class="chip'+(p.lv===lv?' on':'')+'" data-lv="'+lv+'"'+(ada?'':' disabled title="Tidak ada kriteria untuk level ini"')+'>'+LVNAMA[lv]+'</button>';}).join('')+'</div></div>';
+    h+='<div class="lvl"><b>Kriteria</b><div class="chips"><button class="chip'+(p.id==='acak'?' on':'')+'" data-id="acak">🎲 Acak</button>'
+      +c.map(function(k){return '<button class="chip'+(p.id===k[0]?' on':'')+'" data-id="'+k[0]+'">No. '+k[2]+' · '+k[4]+'</button>';}).join('')+'</div></div>';
+    h+='<p class="muted"><b>Soal sekarang:</b> '+esc(label(q))+'. '+esc(q.ds)+'.</p>';
+  }else h+='<h2>Baca soal</h2>';
+  h+='<div class="note"><p><b>Rencana penyelesaian:</b> '+q.steps.map(function(s,k){return (k+1)+') '+esc(s.nm);}).join(', ')+'.</p>'
+    +(learn?'<p>Tulis angka dengan format Indonesia: <b>1.250.000</b> untuk rupiah, <b>0,06</b> untuk desimal.</p>':'<p>Petunjuk tidak tersedia di kuis. Setelah 2 kali salah, kamu boleh melewati langkah (bernilai 0).</p>')+'</div>';
+  if(!learn&&st.sess&&st.sess.lanjut&&st.idx===0)h+='<div class="rule">Kamu melanjutkan kuis. Soalnya sama, tetapi jawaban sebelumnya tidak tersimpan, jadi mulai lagi dari soal pertama.</div>';
+  h+='<div class="row"><button class="btn primary" id="bStart">Mulai ➜</button></div>';
+  el.innerHTML=h;
+  el.querySelectorAll('[data-g]').forEach(function(b){b.onclick=function(){
+    st.pick.g=b.dataset.g;st.pick.id='acak';
+    if(!kandidat().length)st.pick.lv=CORE.KRIT.filter(function(k){return k[1]===st.pick.g;})[0][3];
+    setProblem(genLearn());};});
+  el.querySelectorAll('[data-lv]').forEach(function(b){b.onclick=function(){st.pick.lv=b.dataset.lv;st.pick.id='acak';setProblem(genLearn());};});
+  el.querySelectorAll('[data-id]').forEach(function(b){b.onclick=function(){st.pick.id=b.dataset.id;setProblem(genLearn());};});
+  on('bStart',function(){st.stage='work';setStep(0);});
+}
+
+/* ---------- panel langkah ---------- */
+function fieldHtml(f,k,locked){
+  var v=st.vals[k],dis=locked?' disabled':'',h='<div class="trow'+(locked?' ok':'')+'" data-k="'+k+'" id="fld'+k+'">';
+  if(f.ty==='opt'||f.ty==='chk'){
+    var multi=f.ty==='chk';
+    h+='<p class="flb">'+f.lb+(multi?' <small class="muted">(boleh lebih dari satu)</small>':'')+'</p><div class="seg col">';
+    f.o.forEach(function(o,j){
+      var sel=multi?(Array.isArray(v)&&v.indexOf(j)>=0):v===j;
+      h+='<button type="button" class="segb'+(multi?'':' rad')+(sel?' on':'')+'" data-k="'+k+'" data-j="'+j+'"'+dis+' aria-pressed="'+sel+'"><span class="bx" aria-hidden="true">'+(sel?(multi?'✓':'●'):'')+'</span><span>'+o+'</span></button>';
+    });
+    return h+'</div></div>';
+  }
+  var pre=f.ty==='rp'?'<span class="pre">Rp</span>':'',suf=f.ty==='pct'?'<span class="suf">%</span>':(f.u?'<span class="suf">'+esc(f.u)+'</span>':'');
+  var ph=f.ty==='rp'?'mis. 1.250.000':f.ty==='pct'?'mis. 6,5':f.ty==='int'?'bilangan bulat':'mis. 0,06';
+  h+='<label class="flb" for="in'+k+'">'+f.lb+'</label><div class="inrow">'+pre+'<input class="num'+(locked?' ok':'')+'" id="in'+k+'" data-k="'+k+'" inputmode="decimal" autocomplete="off" spellcheck="false" placeholder="'+ph+'" value="'+esc(v==null?'':v)+'"'+dis+'>'+suf+'</div>'
+    +'<small class="pv" id="pv'+k+'">'+(v?esc(preview(parseIn(v,f.ty),f.ty)):'')+'</small>';
+  return h+'</div>';
+}
+function stepPanel(el){
+  var q=st.q,s=cur(),learn=st.mode==='learn',lk=st.lk||[];
+  var pills=q.steps.map(function(x,k){return '<span class="'+(k<st.s?(st.res[k]===false?'ms':'dn'):k===st.s?'cur':'')+'">'+(k+1)+'. '+esc(x.nm)+'</span>';}).join('');
+  el.innerHTML='<h2>Langkah '+(st.s+1)+' · '+esc(s.nm)+'</h2><div class="mini">'+pills+'</div><p>'+s.p+'</p>'
+    +s.f.map(function(f,k){return fieldHtml(f,k,!!lk[k]);}).join('')
+    +hintsBlock()+'<div id="actions" class="row">'+(learn?'<button class="btn ghost" id="bHint">💡 Petunjuk</button>':'')+'<button class="btn primary" id="bCheck">Periksa</button>'+skipBtn()+'</div>';
+  on('bHint',showHint);on('bCheck',checkStep);on('bSkip',skipStep);
+  el.querySelectorAll('input.num').forEach(function(inp){
+    var k=+inp.dataset.k;
+    inp.addEventListener('input',function(){st.vals[k]=inp.value;inp.classList.remove('bad');var r=$('#fld'+k);if(r)r.classList.remove('bad');var pv=$('#pv'+k);if(pv)pv.textContent=preview(parseIn(inp.value,s.f[k].ty),s.f[k].ty);});
+    inp.addEventListener('keydown',function(e){if(e.key==='Enter')checkStep();});
+  });
+  el.querySelectorAll('.segb[data-j]').forEach(function(b){b.onclick=function(){
+    var k=+b.dataset.k,j=+b.dataset.j,f=s.f[k];if((st.lk||[])[k])return;
+    if(f.ty==='chk'){var a=Array.isArray(st.vals[k])?st.vals[k].slice():[],ix=a.indexOf(j);if(ix>=0)a.splice(ix,1);else a.push(j);st.vals[k]=a.sort();}
+    else st.vals[k]=j;
+    var row=$('#fld'+k);row.classList.remove('bad');
+    row.querySelectorAll('.segb').forEach(function(x){
+      var jj=+x.dataset.j,sel=f.ty==='chk'?st.vals[k].indexOf(jj)>=0:st.vals[k]===jj;
+      x.classList.toggle('on',sel);x.setAttribute('aria-pressed',sel);x.querySelector('.bx').textContent=sel?(f.ty==='chk'?'✓':'●'):'';
+    });
+  };});
+  renderHints();
+}
+function skipBtn(){
+  if(st.wc<CORE.MAKS_LEWAT)return '';
+  return st.mode==='learn'?'<button class="btn ghost" id="bSkip">👀 Tunjukkan jawaban</button>':'<button class="btn ghost" id="bSkip">Lewati langkah (0 poin)</button>';
+}
+function readAns(){
+  var s=cur(),out=[],bad=-1;
+  s.f.forEach(function(f,k){
+    var v=st.vals[k],a;
+    if(f.ty==='opt'){a=(typeof v==='number')?v:null;if(a===null&&bad<0)bad=k;}
+    else if(f.ty==='chk'){a=Array.isArray(v)?v.slice():[];if(!a.length&&bad<0)bad=k;}
+    else{a=parseIn(v,f.ty);if((a===null||!isFinite(a))&&bad<0)bad=k;}
+    out.push(a);
+  });
+  return {a:out,bad:bad};
+}
+function checkStep(){
+  var s=cur(),r=readAns();
+  if(r.bad>=0){
+    var f=s.f[r.bad];
+    fb('info',f.ty==='opt'||f.ty==='chk'?'Pilih jawaban pada bagian “'+f.lb+'” terlebih dahulu.':'Isi “'+f.lb+'” dengan angka yang formatnya benar, misalnya 1.250.000 atau 0,06.');
+    var e=$('#in'+r.bad);if(e)e.focus();return;
+  }
+  rec(r.a);
+  var j=CORE.judgeStep(s,r.a,st.lk);st.lk=j.ok;
+  s.f.forEach(function(f,k){
+    var row=$('#fld'+k),inp=$('#in'+k);
+    if(j.ok[k]){row.classList.add('ok');row.classList.remove('bad');if(inp){inp.disabled=true;inp.classList.add('ok');inp.classList.remove('bad');}row.querySelectorAll('.segb').forEach(function(b){b.disabled=true;});}
+    else{row.classList.add('bad');if(inp)inp.classList.add('bad');}
+  });
+  if(j.all){stepDone(st.wc===0,false);return;}
+  st.wc++;
+  var k=j.first,f=s.f[k],mis=CORE.misOf(f,r.a[k]);
+  st.lw={k:k,mis:mis};
+  if(st.mode==='learn'){
+    var msg=mis?CORE.MIS[mis]:(s.f.length>1?'Bagian “'+f.lb+'” belum tepat (yang benar sudah terkunci). ':'Jawabanmu belum tepat. ')+(mis?'':'Baca petunjuk, lalu coba lagi.');
+    fb('bad',msg);
+    if(st.hints<2)st.hints++;renderHints();
+    whereBtn();
+  }else fb('bad','Belum tepat, coba lagi.'+(st.wc>=CORE.MAKS_LEWAT?' Kamu juga boleh melewati langkah ini (bernilai 0).':''));
+  actions((st.mode==='learn'?'<button class="btn ghost" id="bHint">💡 Petunjuk</button>':'')+'<button class="btn primary" id="bCheck">Periksa</button>'+skipBtn());
+  on('bHint',showHint);on('bCheck',checkStep);on('bSkip',skipStep);
+  mascotSay('salah');
+  if(st.mode==='practice')renderProblem();
+}
+function skipStep(){
+  if(st.wc<CORE.MAKS_LEWAT)return;
+  rec('LEWAT');
+  var s=cur(),key=CORE.keyAns(s);
+  s.f.forEach(function(f,k){
+    var row=$('#fld'+k);row.classList.remove('bad');row.classList.add('ok');
+    if(f.ty==='opt'||f.ty==='chk'){
+      row.querySelectorAll('.segb').forEach(function(b){var jj=+b.dataset.j,sel=f.ty==='chk'?key[k].indexOf(jj)>=0:key[k]===jj;b.classList.toggle('on',sel);b.querySelector('.bx').textContent=sel?(f.ty==='chk'?'✓':'●'):'';b.disabled=true;});
+    }else{var inp=$('#in'+k);if(inp){inp.value=f.ty==='rp'?fNum(f.k,0):f.ty==='int'?String(f.k):fNum(f.k,f.ty==='pct'?2:6,true);inp.disabled=true;inp.classList.remove('bad');inp.classList.add('ok');}}
+  });
+  stepDone(false,true);
+}
+function stepDone(first,skipped){
+  var s=cur(),q=st.q,last=st.s>=q.steps.length-1;
+  st.res[st.s]=first;
+  var hh=$('#hints');if(hh)hh.hidden=true;
+  fb(skipped?'info':'ok',(skipped?'Jawaban langkah ini: ':'Tepat! ')+s.ok);
+  if(!skipped)mascotSay('benar');
+  actions('<button class="btn primary" id="bNext">'+(last?'Lihat ringkasan ➜':'Langkah berikutnya ➜')+'</button>');
+  on('bNext',function(){if(last){st.stage='done';st.hints=0;renderAll();}else setStep(st.s+1);});
+  var bn=$('#bNext');if(bn)bn.focus({preventScroll:true});
+  renderProblem();renderSide();renderProgress();
+}
+
+/* ---------- Ringkasan soal ---------- */
+var REFL=[['ragu','😟 Belum yakin','Coba satu soal lagi dengan kriteria yang sama dan buka petunjuk bila perlu. Baca lagi bagian yang sesuai di tab Belajar.'],
+  ['cukup','🙂 Cukup yakin','Kerjakan satu soal lagi dengan kriteria yang sama tanpa membuka petunjuk.'],
+  ['yakin','😄 Yakin','Tantang dirimu: naikkan levelnya (MOTS atau HOTS) atau coba kelompok lain.']];
+function summaryPanel(el,quiet){
+  var learn=st.mode==='learn',q=st.q,last=!learn&&st.idx>=st.pack.set.length-1,miss=[];
+  var li=q.steps.map(function(s,k){if(st.res[k]===false)miss.push(s);return '<li>'+(st.res[k]===false?'<b class="badc">!</b> ':'<b class="okc">✓</b> ')+'<b>'+esc(s.nm)+'</b>: '+s.ok+'</li>';}).join('');
+  var h='<h2>🎉 Soal selesai</h2><div class="ans">'+q.akhir+'</div><ol class="sum">'+li+'</ol>';
+  if(learn){
+    var mc={};miss.forEach(function(s){mc[s.cat]=1;});
+    h+='<div class="refl"><p><b>Refleksi:</b> seberapa yakin kamu dengan soal seperti ini?</p><div class="chips">'+REFL.map(function(r){return '<button class="chip'+(st.refl===r[0]?' on':'')+'" data-rf="'+r[0]+'">'+r[1]+'</button>';}).join('')+'</div>'
+      +(st.refl?'<p>'+REFL.filter(function(r){return r[0]===st.refl;})[0][2]+'</p>':'')
+      +(Object.keys(mc).length?'<p>Bagian yang masih perlu dilatih: <b>'+Object.keys(mc).map(esc).join(', ')+'</b>.</p>':'<p>Semua langkah benar pada percobaan pertama. 👏</p>')+'</div>';
+    h+='<div class="row"><button class="btn primary" id="bNextQ2">Soal berikutnya ➜</button><button class="btn" id="bAgain2">↺ Ulangi soal ini</button><button class="btn ghost" id="bPick">Ganti kriteria</button><button class="btn ghost" id="bToPractice">Kuis ➜</button></div>';
+  }else{
+    h+='<p class="muted">Nilai sementara: '+grade().score+' / 100</p><div class="row"><button class="btn primary" id="bNextP">'+(last?'Selesai dan kirim nilai':'Soal berikutnya ➜')+'</button></div>';
+  }
+  el.innerHTML=h;
+  if(!quiet)mascotSay('selesai');
+  el.querySelectorAll('[data-rf]').forEach(function(b){b.onclick=function(){st.refl=b.dataset.rf;summaryPanel(el,true);renderMath(el);};});
+  on('bNextQ2',nextLearn);on('bAgain2',function(){setProblem(st.q);});on('bPick',function(){st.stage='intro';renderAll();});
+  on('bToPractice',function(){setTab('practice');startPractice();});
+  on('bNextP',function(){if(last){finishQuiz(false);}else{st.idx++;setProblem(st.pack.set[st.idx]);}});
+}
+function overPanel(el){
+  var snd=st.send||{state:'off'},server=snd.state==='ok',g=grade()||{score:0,max:100,missed:{}},s=g.score,m=g.max,miss;
+  if(server){s=snd.res.skor;m=snd.res.maks;miss=snd.res.perluDiperkuat||[];}
+  else miss=Object.keys(g.missed).filter(function(k){return g.missed[k]>0;});
+  var pct=m?Math.round(100*s/m):0;
+  var msg=pct>=90?'Luar biasa! Kamu sudah mahir menghitung dan membandingkan bunga tunggal dan bunga majemuk.':pct>=70?'Bagus! Sedikit lagi kamu akan mahir.':'Ayo belajar lagi pelan-pelan di tab Belajar dan Latihan Mandiri.';
+  var h='<h2>Kuis selesai</h2>'+(st.habis?'<div class="rule">⏱ Waktu kuis habis. Jawaban yang sudah kamu kerjakan tetap dinilai.</div>':'')+'<div class="score">'+s+'<small> / '+m+'</small></div>';
+  if(snd.state==='sending')h+='<div class="fb info">⏳ '+(snd.wait?'Pengiriman gagal. Mencoba lagi otomatis ('+snd.n+' dari '+AUTO_JEDA.length+')…':'Mengirim nilai ke server…'+(snd.n?' (percobaan ulang '+snd.n+' dari '+AUTO_JEDA.length+')':''))+'</div>';
+  else if(server)h+='<div class="fb ok">✔ Nilai dihitung ulang oleh server dari jawabanmu dan sudah tercatat untuk gurumu.'+(snd.res.ulang?' (Nilai ini sudah pernah dikirim sebelumnya.)':'')+'</div>';
+  else if(snd.state==='err')h+='<div class="fb bad">'+esc(snd.msg||'Gagal mengirim nilai.')+(snd.retry?' Nilaimu <b>belum tercatat</b>. Pastikan internet menyala, lalu tekan “Kirim ulang”.':'')+'</div>';
+  else h+='<div class="fb info">Mode uji: nilai tidak disetor ke server.</div>';
+  h+='<p>'+msg+'</p>'+(miss.length?'<p><b>Perlu diperkuat:</b> '+miss.map(esc).join(', ')+'.</p>':'<p>Semua langkah benar pada percobaan pertama. 👏</p>');
+  h+='<div class="refl"><p><b>Refleksi:</b> jawablah dalam hati atau di buku catatanmu.</p><ol class="exl"><li>Soal mana yang paling menantang, dan mengapa?</li><li>Kesalahan apa yang paling sering kamu lakukan (satuan, persen, r/m, atau B dan Mₙ)?</li><li>Dalam kehidupan sehari-hari, kapan kamu perlu membandingkan bunga tunggal dan bunga majemuk?</li></ol></div>';
+  var b='';
+  if(snd.state==='err'&&snd.retry)b+='<button class="btn primary" id="bResend">Kirim ulang</button>';
+  if(snd.state!=='sending'){
+    var again=!CONFIG.ENDPOINT||(server&&snd.res.sisaPercobaan>0);
+    if(again)b+='<button class="btn primary" id="bAgain">Ulangi kuis</button>';
+    b+='<button class="btn" id="bLearn">Ke Latihan Mandiri</button>';
+  }
+  el.innerHTML=h+'<div class="row">'+b+'</div>';
+  if(st.send&&(snd.state==='ok'||snd.state==='off'))mascotSay('skor',pct);
+  on('bResend',function(){sendBody(submitBody());});on('bAgain',startPractice);on('bLearn',function(){if(!konfirmPindah())return;setTab('learn');startLearn();});
+}
+
+/* ---------- tab & tombol kartu soal ---------- */
+function setTab(m){$('#tabExplain').classList.toggle('on',m==='explain');$('#tabLearn').classList.toggle('on',m==='learn');$('#tabPractice').classList.toggle('on',m==='practice');}
+var MSG_KUIS='Kuis sedang berjalan. Jika pindah ke tab lain, kuis harus diulang dari awal dan tercatat sebagai "dilanjutkan". Tetap pindah?';
+$('#tabExplain').onclick=function(){
+  if(practiceActive()&&!confirm(MSG_KUIS))return;
+  if(!konfirmPindah())return;
+  stopTimer();setTab('explain');startExplain();
+};
+$('#tabLearn').onclick=function(){
+  if(practiceActive()&&!confirm(MSG_KUIS))return;
+  if(!konfirmPindah())return;
+  setTab('learn');startLearn();
+};
+$('#tabPractice').onclick=function(){if(practiceActive()||!konfirmPindah())return;setTab('practice');startPractice();};
+window.addEventListener('beforeunload',function(e){if(practiceActive()||unsentScore()){e.preventDefault();e.returnValue='';}});
+$('#bRepeat').onclick=function(){setProblem(st.q);};
+$('#bNextQ').onclick=nextLearn;
+
+/* ---------- Maskot "Plus" ---------- */
+var PLUS={
+  benar:['Hebat! Kamu benar!','Mantap, lanjut terus!','Tepat sekali! Keren!','Yeay, jawabanmu benar!','Pintar! Pertahankan ya!'],
+  salah:['Belum tepat, coba lagi ya!','Tenang, kamu pasti bisa!','Hampir! Ayo coba sekali lagi!','Salah itu bagian belajar!','Jangan menyerah, semangat!'],
+  sapaL:['Halo! Aku Plus, ayo belajar!','Hai! Pilih soal, lalu mulai ya!'],
+  sapaP:['Siap kuis? Semangat ya!','Ayo, kamu pasti bisa!'],
+  petunjuk:['Baca petunjuk di panel ya!','Petunjuknya ada di sini, lho!'],
+  selesai:['Yeay, soal ini selesai!','Kerja bagus! Kamu hebat!','Keren! Satu soal tuntas!']
+};
+var GUIDE={'Identifikasi unsur':'Persen dibagi 100 dulu, ya','Konversi satuan':'Samakan satuan i dan n dulu','Memilih rumus':'Baca lagi apa yang ditanyakan','Menghitung':'Hitung pelan-pelan, ya','Membaca pola':'Bandingkan selisihnya, yuk','Mengambil keputusan':'Bandingkan hasil hitunganmu'};
+var plusTb=null,plusTa=null;
+function plusReduced(){return !!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches);}
+function plusPick(a){return a[Math.floor(Math.random()*a.length)];}
+function plusGuide(){var s=cur();return (st.stage==='work'&&s&&GUIDE[s.cat])||plusPick(PLUS.salah);}
+function plusSay(text){
+  var b=$('#plusBubble');if(!b)return;
+  b.textContent=text;b.classList.add('show');
+  clearTimeout(plusTb);plusTb=setTimeout(function(){b.classList.remove('show');},4800);
+}
+function plusState(mood,act,ms){
+  var w=$('#plusWrap');if(!w)return;
+  w.removeAttribute('data-act');void w.offsetWidth;
+  w.setAttribute('data-mood',mood);
+  if(act)w.setAttribute('data-act',act);
+  clearTimeout(plusTa);
+  plusTa=setTimeout(function(){w.removeAttribute('data-act');w.setAttribute('data-mood','normal');},ms);
+}
+function plusConfetti(){
+  if(plusReduced())return;
+  var box=$('#plusConf');if(!box)return;
+  var cols=['#f59e0b','#15803d','#c2410c','#7e22ce','#1d4ed8','#ec4899'];
+  for(var i=0;i<16;i++){
+    var p=document.createElement('i'),a=-Math.PI*(0.12+0.76*Math.random()),r=50+Math.random()*45;
+    p.style.setProperty('--dx',Math.round(Math.cos(a)*r)+'px');
+    p.style.setProperty('--dy',Math.round(Math.sin(a)*r)+'px');
+    p.style.setProperty('--rot',Math.round(Math.random()*540-270)+'deg');
+    p.style.background=cols[i%cols.length];
+    p.style.animationDelay=(Math.random()*.15)+'s';
+    box.appendChild(p);
+    (function(el){setTimeout(function(){if(el.parentNode)el.parentNode.removeChild(el);},1800);})(p);
+  }
+}
+function mascotSay(kind,extra){
+  if(!$('#plusWrap')||document.body.classList.contains('plus-off'))return;
+  var learn=st.mode==='learn',msg,mood='normal',act='',ms=1500;
+  if(kind==='benar'){msg=plusPick(PLUS.benar);mood='happy';act='cheer';ms=1500;}
+  else if(kind==='salah'){msg=(learn&&Math.random()<.6)?plusGuide():plusPick(PLUS.salah);mood='sad';act='shake';ms=1200;}
+  else if(kind==='petunjuk'){msg=plusPick(PLUS.petunjuk);act='point';ms=1900;}
+  else if(kind==='selesai'){msg=plusPick(PLUS.selesai);mood='happy';act='spin';ms=1700;plusConfetti();}
+  else if(kind==='skor'){
+    if(extra>=70){msg='Luar biasa! Nilaimu tinggi!';mood='happy';act='spin';ms=1700;plusConfetti();}
+    else{msg='Tidak apa-apa, ayo belajar lagi!';act='wave';ms=2300;}
+  }else{msg=plusPick(st.mode!=='practice'?PLUS.sapaL:PLUS.sapaP);act='wave';ms=2300;}
+  plusSay(msg);plusState(mood,act,ms);
+}
+window.mascotSay=mascotSay;
+function setPlusOff(off,save){
+  var t=$('#plusToggle');
+  document.body.classList.toggle('plus-off',off);
+  t.textContent=off?'👋 Plus':'✕';
+  t.title=off?'Munculkan Plus':'Sembunyikan Plus';
+  t.setAttribute('aria-label',off?'Munculkan Plus':'Sembunyikan Plus');
+  if(off){var b=$('#plusBubble');if(b)b.classList.remove('show');}
+  if(save){try{localStorage.setItem('plusOff',off?'1':'0');}catch(_){}}
+}
+$('#plusToggle').onclick=function(){
+  var off=!document.body.classList.contains('plus-off');
+  setPlusOff(off,true);
+  if(!off)mascotSay('sapa');
+};
+try{setPlusOff(localStorage.getItem('plusOff')==='1',false);}catch(_){}
+
+/* ---------- Latihan Mandiri: tombol "Di mana salahku?" (tidak ada di Kuis) ---------- */
+function whereBtn(){
+  if(st.mode!=='learn'||!st.lw)return;
+  var e=$('#fb');if(!e||e.hidden)return;
+  var d=document.createElement('div');d.id='whereBox';d.className='whereBox';
+  d.innerHTML='<button class="btn ghost" id="bWhere" type="button">📍 Di mana salahku?</button> <span id="whereTxt" role="status"></span>';
+  e.appendChild(d);on('bWhere',whereShow);
+}
+function whereShow(){
+  var w=st.lw,s=cur();if(!w||!s||st.mode!=='learn')return;
+  var f=s.f[w.k],msg;
+  if(w.mis)msg='Bagian “'+f.lb+'”: '+CORE.MIS[w.mis].replace(/<[^>]+>/g,'');
+  else if(f.ty==='opt'||f.ty==='chk')msg='Pilihan pada bagian “'+f.lb+'” belum tepat. Bandingkan setiap pilihan dengan petunjuk.';
+  else msg='Angka pada “'+f.lb+'” belum tepat. Periksa substitusi dan pembulatanmu.';
+  var el=$('#whereTxt');if(el)el.textContent=msg;
+  plusGo({el:'#fld'+w.k},msg,9000);
+}
+
+/* ============================================================
+   TAB BELAJAR: penjelasan materi bersama Plus
+   Isi bersumber dari "Rangkuman Materi: Bunga Tunggal dan Bunga Majemuk"
+   dengan urutan yang sama. Tab ini TIDAK memanggil rec() dan tidak
+   menyentuh nilai, jejak, atau server.
+   ============================================================ */
+function B(say,at){return {say:say,at:at};}
+function El(s){return {el:s};}
+var T=function(t,s){return '<span data-tex="'+t+'">'+s+'</span>';};
+var PQ=function(id,t,s){return '<p class="eq" id="'+id+'" data-tex="'+t+'">'+s+'</p>';};
+var EX_TOPICS=[['tj','Tujuan dan alur belajar'],['k','1 · Konsep dasar'],['t1','2 · Bunga tunggal: rumus'],['t2','2 · Penyesuaian waktu'],['t3','2 · Rumus turunan'],
+  ['t4','2 · Contoh bunga tunggal'],['t5','2 · Keterkaitan: barisan aritmetika'],['m1','3 · Bunga majemuk: rumus'],['m2','3 · Pemajemukan m kali'],['m3','3 · Contoh 1'],['m4','3 · Contoh 2'],
+  ['pb','4 · Perbandingan'],['ks','5 · Kesalahan yang sering terjadi'],['x','Temukan kesalahan']];
+var EX=[
+{t:'tj',jd:'Tujuan dan alur belajar',src:'Pengantar media',ch:{M0:5000000,p:6,n:3},
+ panel:'<p id="a0">Di media ini kamu belajar menghitung dan membandingkan <b>bunga tunggal</b> dan <b>bunga majemuk</b>, lalu memakainya untuk mengambil keputusan keuangan.</p>'
+  +'<p><b>Tujuan pembelajaran.</b> Setelah belajar, kamu dapat:</p><ol class="exl"><li id="g1">membedakan bunga tunggal dan bunga majemuk dari dasar perhitungan bunganya;</li><li id="g2">menghitung B, Mₙ, M₀, i, dan n pada kedua jenis bunga;</li><li id="g3">membandingkan pilihan tabungan atau pinjaman, lalu memilih yang paling menguntungkan.</li></ol>'
+  +'<p><b>Alur belajar.</b></p><ol class="exl"><li id="a1"><b>Memahami</b> (tab Belajar): pelajari konsep, rumus, dan contoh dari rangkuman.</li><li id="a2"><b>Mengaplikasi</b> (tab Latihan Mandiri): kerjakan soal bertahap sesuai kriteria dan level pilihanmu, lalu uji dirimu di tab Kuis.</li><li id="a3"><b>Merefleksi</b>: setelah latihan dan kuis, renungkan langkah yang sulit dan kesalahan yang ingin kamu hindari.</li></ol>'
+  +'<div class="note" id="a4"><p><b>Pertanyaan pemantik:</b> Rp5.000.000 disimpan selama 3 tahun dengan bunga 6% per tahun. Mana yang menghasilkan modal akhir lebih besar, bunga tunggal atau bunga majemuk?</p><div class="chips" id="pemantik"></div><p id="tebakMsg" class="muted"></p></div>',
+ beats:[B('Halo! Kita belajar bunga tunggal dan majemuk.',El('#a0')),B('Ini tujuan belajar kita.',El('#g1')),B('Pertama, pahami konsepnya di sini.',El('#a1')),B('Lalu terapkan di Latihan Mandiri.',El('#a2')),B('Terakhir, renungkan hasil belajarmu.',El('#a3')),B('Tebak dulu, nanti kita cek bersama!',El('#a4'))]},
+{t:'k',jd:'1 · Konsep dasar',src:'Rangkuman bagian 1',
+ panel:'<p id="k0">Bunga adalah imbalan jasa atas penggunaan uang dalam jangka waktu tertentu. Perbedaan bunga tunggal dan majemuk terletak pada <b>dasar perhitungan bunganya</b>.</p>'
+  +'<ul class="exl"><li id="k1"><b>Modal awal (M₀)</b>: besar uang yang disimpan atau dipinjam di awal.</li><li id="k2"><b>Suku bunga (i)</b>: persentase bunga per periode (per tahun, per bulan, dan sebagainya).</li><li id="k3"><b>Periode (n)</b>: banyaknya periode bunga; satuannya harus sama dengan satuan suku bunga.</li></ul>',
+ beats:[B('Bunga adalah imbalan atas penggunaan uang.',El('#k0')),B('M₀: uang di awal.',El('#k1')),B('i: persen bunga per periode.',El('#k2')),B('Satuan n harus sama dengan satuan i!',El('#k3'))]},
+{t:'t1',jd:'2 · Bunga tunggal: rumus',src:'Rangkuman bagian 2',ch:{M0:5000000,p:6,n:3},
+ panel:'<p id="b0">Pada bunga tunggal, bunga selalu dihitung dari <b>modal awal</b>, sehingga besar bunga setiap periode <b>tetap</b>.</p>'
+  +'<p id="b1"><b>Rumus</b> (B = total bunga, Mₙ = modal akhir setelah n periode):</p>'
+  +PQ('b2','B = M_0 \\cdot i \\cdot n \\qquad M_n = M_0(1 + i \\cdot n)','B = M₀ · i · n &nbsp;&nbsp;&nbsp; Mₙ = M₀(1 + i · n)')
+  +'<p class="note" id="b3">Lihat grafik: saldo bunga tunggal naik dengan besar yang sama setiap periode. Geser penggeser M₀, i, dan n untuk mencoba.</p>',
+ beats:[B('Bunga tunggal selalu dari modal awal.',El('#b0')),B('Ini rumusnya: B dan Mₙ.',El('#b2')),B('Coba geser penggeser grafiknya!',El('#chartSvg'))]},
+{t:'t2',jd:'2 · Penyesuaian waktu',src:'Rangkuman bagian 2, penyesuaian waktu',
+ panel:'<p id="w0">Jika suku bunga dinyatakan <b>per tahun</b>, lama waktu harus diubah ke dalam tahun:</p>'
+  +'<ul class="exl"><li id="w1">n dalam <b>bulan</b> → gunakan '+T('\\dfrac{n}{12}','n/12')+' tahun.</li><li id="w2">n dalam <b>hari</b> → gunakan '+T('\\dfrac{n}{360}','n/360')+' (tahun bank) atau '+T('\\dfrac{n}{365}','n/365')+' (tahun kalender).</li></ul>',
+ beats:[B('Suku bunga per tahun? Ubah n ke tahun.',El('#w0')),B('Bulan: bagi 12.',El('#w1')),B('Hari: bagi 360 atau 365.',El('#w2'))]},
+{t:'t3',jd:'2 · Rumus turunan',src:'Rangkuman bagian 2, rumus turunan',
+ panel:'<p id="r0">Dari B = M₀ · i · n diperoleh rumus turunan untuk mencari M₀, i, atau n:</p>'
+  +PQ('r1','M_0 = \\dfrac{B}{i \\cdot n} \\qquad i = \\dfrac{B}{M_0 \\cdot n} \\qquad n = \\dfrac{B}{M_0 \\cdot i}','M₀ = B / (i · n) &nbsp;&nbsp; i = B / (M₀ · n) &nbsp;&nbsp; n = B / (M₀ · i)'),
+ beats:[B('Rumus ini dibalik dari rumus B.',El('#r0')),B('Pilih sesuai yang ditanyakan.',El('#r1'))]},
+{t:'t4',jd:'2 · Contoh bunga tunggal',src:'Rangkuman bagian 2, contoh',ch:{M0:5000000,p:6,n:3},
+ panel:'<p id="c0">Rp5.000.000 disimpan dengan bunga tunggal 6% per tahun selama 3 tahun.</p>'
+  +PQ('c1','B = 5.000.000 \\times 0{,}06 \\times 3 = 900.000','B = 5.000.000 × 0,06 × 3 = Rp900.000')
+  +'<p class="ans" id="c2">Jadi M₃ = Rp5.000.000 + Rp900.000 = Rp5.900.000.</p>',
+ beats:[B('M₀ = 5 juta, i = 0,06, n = 3.',El('#c0')),B('Bunganya Rp900.000.',El('#c1')),B('Modal akhirnya Rp5.900.000.',El('#c2'))]},
+{t:'t5',jd:'2 · Keterkaitan: barisan aritmetika',src:'Rangkuman bagian 2, keterkaitan',ch:{M0:5000000,p:6,n:3},
+ panel:'<p id="s0">Modal setiap periode pada bunga tunggal membentuk <b>barisan aritmetika</b> dengan beda '+T('b = M_0 \\times i','b = M₀ × i')+'.</p>'
+  +'<p id="s1">Pada contoh tadi, b = 5.000.000 × 0,06 = Rp300.000, sehingga modalnya:</p>'
+  +'<p class="ans" id="s2">Rp5.000.000; Rp5.300.000; Rp5.600.000; Rp5.900.000</p>'
+  +'<p class="note" id="s3">Pada grafik, titik-titik bunga tunggal terletak pada satu garis lurus (pola linear).</p>',
+ beats:[B('Beda tiap periode = M₀ × i.',El('#s0')),B('Bertambah Rp300.000 tiap tahun.',El('#s2')),B('Titik-titiknya segaris!',El('#chartSvg'))]},
+{t:'m1',jd:'3 · Bunga majemuk: rumus',src:'Rangkuman bagian 3',ch:{M0:5000000,p:6,n:10},
+ panel:'<p id="j0">Pada bunga majemuk, bunga setiap periode <b>ditambahkan ke modal</b>, lalu ikut berbunga pada periode berikutnya (<b>bunga berbunga</b>).</p>'
+  +'<p id="j1"><b>Rumus:</b></p>'+PQ('j2','M_n = M_0(1 + i)^n \\qquad B = M_n - M_0','Mₙ = M₀(1 + i)ⁿ &nbsp;&nbsp;&nbsp; B = Mₙ − M₀')
+  +'<p class="note" id="j3">Lihat grafik: garis bunga majemuk makin lama makin curam.</p>',
+ beats:[B('Bunga ikut berbunga!',El('#j0')),B('Ini rumus bunga majemuk.',El('#j2')),B('Garis oranye makin curam.',El('#chartSvg'))]},
+{t:'m2',jd:'3 · Pemajemukan m kali per tahun',src:'Rangkuman bagian 3, pemajemukan',
+ panel:'<p id="p0">Jika suku bunga nominal <b>r per tahun</b> dimajemukkan <b>m kali per tahun</b> selama <b>t tahun</b>:</p>'
+  +PQ('p1','i = \\dfrac{r}{m}, \\quad n = m \\cdot t \\quad \\Rightarrow \\quad M_n = M_0\\left(1 + \\dfrac{r}{m}\\right)^{mt}','i = r/m, n = m · t ⇒ Mₙ = M₀(1 + r/m)^(m·t)')
+  +'<table class="ext" id="p2"><tr><th>Pemajemukan</th><th>m</th></tr><tr><td>Tahunan</td><td>1</td></tr><tr><td>Semesteran</td><td>2</td></tr><tr><td>Kuartalan (triwulan)</td><td>4</td></tr><tr><td>Bulanan</td><td>12</td></tr></table>',
+ beats:[B('r per tahun, dimajemukkan m kali.',El('#p0')),B('Bagi r dengan m, kalikan t dengan m.',El('#p1')),B('Ini nilai m untuk tiap pemajemukan.',El('#p2'))]},
+{t:'m3',jd:'3 · Contoh 1',src:'Rangkuman bagian 3, contoh 1',ch:{M0:5000000,p:6,n:3},
+ panel:'<p id="e0">Rp5.000.000 dengan bunga majemuk 6% per tahun selama 3 tahun.</p>'
+  +PQ('e1','M_3 = 5.000.000 \\times (1{,}06)^3 = 5.000.000 \\times 1{,}191016 = 5.955.080','M₃ = 5.000.000 × (1,06)³ = 5.000.000 × 1,191016 = Rp5.955.080')
+  +'<p class="ans" id="e2">Bunganya Rp955.080, lebih besar Rp55.080 daripada bunga tunggal pada contoh sebelumnya.</p>',
+ beats:[B('Datanya sama dengan contoh bunga tunggal.',El('#e0')),B('Mₙ = M₀ × (1,06)³.',El('#e1')),B('Lebih besar Rp55.080!',El('#e2'))]},
+{t:'m4',jd:'3 · Contoh 2',src:'Rangkuman bagian 3, contoh 2',ch:{M0:10000000,p:1,n:24},
+ panel:'<p id="f0">Rp10.000.000 dengan bunga 12% per tahun yang <b>dimajemukkan bulanan</b> selama 2 tahun.</p>'
+  +'<p id="f1">i = 12% : 12 = <b>1% per bulan</b> dan n = 12 × 2 = <b>24</b>, sehingga</p>'
+  +PQ('f2','M_{24} = 10.000.000 \\times (1{,}01)^{24} \\approx 12.697.346','M₂₄ = 10.000.000 × (1,01)²⁴ ≈ Rp12.697.346')
+  +'<p class="note" id="f3">Pada grafik, satu periode = satu bulan (i = 1%, n = 24).</p>',
+ beats:[B('Dimajemukkan bulanan: m = 12.',El('#f0')),B('i = 1% per bulan, n = 24.',El('#f1')),B('Hasilnya ≈ Rp12.697.346.',El('#f2'))]},
+{t:'pb',jd:'4 · Perbandingan',src:'Rangkuman bagian 4',ch:{M0:5000000,p:6,n:15},
+ panel:'<p id="v0">Untuk <b>n = 1</b> hasil keduanya sama; untuk <b>n &gt; 1</b> bunga majemuk selalu menghasilkan modal akhir lebih besar, dan selisihnya makin lebar seiring waktu.</p>'
+  +'<div class="dtwrap"><table class="ext" id="v1"><tr><th>Aspek</th><th>Bunga Tunggal</th><th>Bunga Majemuk</th></tr>'
+  +'<tr><td>Dasar perhitungan bunga</td><td>Modal awal saja</td><td>Modal + bunga sebelumnya</td></tr>'
+  +'<tr><td>Bunga per periode</td><td>Tetap</td><td>Bertambah</td></tr>'
+  +'<tr><td>Rumus modal akhir</td><td>M₀(1 + i·n)</td><td>M₀(1 + i)ⁿ</td></tr>'
+  +'<tr id="v2"><td>Pola pertumbuhan</td><td>Linear (barisan aritmetika)</td><td>Eksponensial (barisan geometri)</td></tr>'
+  +'<tr><td>Penerapan umum</td><td>Pinjaman jangka pendek, koperasi sederhana</td><td>Tabungan, deposito, investasi, KPR</td></tr></table></div>'
+  +'<div class="note" id="v3"><p><b>Jawaban pertanyaan pemantik:</b> bunga majemuk. Dari kedua contoh, Rp5.955.080 &gt; Rp5.900.000, selisihnya Rp55.080.</p><p id="tebakCek" class="muted"></p></div>',
+ beats:[B('n = 1 sama; n > 1 majemuk lebih besar.',El('#v0')),B('Bandingkan setiap aspeknya.',El('#v1')),B('Linear vs eksponensial.',El('#v2')),B('Selisihnya makin lebar di grafik.',El('#chartSvg')),B('Cek tebakanmu tadi!',El('#v3'))]},
+{t:'ks',jd:'5 · Kesalahan yang sering terjadi',src:'Rangkuman bagian 5',
+ panel:'<ul class="exl"><li id="z1"><b>Satuan tidak disamakan.</b> Suku bunga per tahun dipakai dengan n dalam bulan tanpa konversi.</li>'
+  +'<li id="z2"><b>Persen tidak diubah ke desimal.</b> 6% harus ditulis 0,06.</li>'
+  +'<li id="z3"><b>Pada bunga majemuk, r tidak dibagi m.</b> Bunga 12% per tahun yang dimajemukkan bulanan berarti i = 1% per bulan, bukan 12%.</li>'
+  +'<li id="z4"><b>Tertukar antara B dan Mₙ.</b> Perhatikan apakah soal menanyakan besar bunga atau modal akhir.</li></ul>'
+  +'<p class="note" id="z5">Berikutnya: temukan kesalahan-kesalahan ini pada penyelesaian seorang siswa.</p>',
+ beats:[B('Samakan satuan dulu!',El('#z1')),B('Persen → desimal.',El('#z2')),B('Bagi r dengan m.',El('#z3')),B('B atau Mₙ? Baca soalnya.',El('#z4')),B('Ayo cari kesalahannya!',El('#z5'))]},
+/* ---- kasus "temukan kesalahan": masing-masing satu kesalahan dari Rangkuman bagian 5, memakai contoh rangkuman ---- */
+{t:'x',k:1,jd:'Kasus 1 · Satuan waktu',src:'Rangkuman bagian 2 (penyesuaian waktu) dan bagian 5',
+ soal:'Rp5.000.000 disimpan dengan bunga tunggal 6% per tahun selama 8 bulan. Tentukan besar bunganya.',
+ lines:['1. M₀ = 5.000.000; i = 0,06 per tahun; n = 8.','2. B = 5.000.000 × 0,06 × 8.','3. Jadi B = Rp2.400.000.'],
+ err:0,ws:'Kesalahannya di baris 1: n = 8 masih dalam bulan.',
+ why:'Suku bunganya per tahun, sedangkan n dalam bulan. Satuannya harus disamakan: n = 8/12 tahun.',
+ fix:'B = 5.000.000 × 0,06 × 8/12 = <b>Rp200.000</b>.'},
+{t:'x',k:1,jd:'Kasus 2 · Persen dan desimal',src:'Rangkuman bagian 2 (contoh) dan bagian 5',
+ soal:'Rp5.000.000 disimpan dengan bunga tunggal 6% per tahun selama 3 tahun. Tentukan besar bunganya.',
+ lines:['1. M₀ = 5.000.000; i = 6% per tahun; n = 3 tahun.','2. B = 5.000.000 × 6 × 3.','3. Jadi B = Rp90.000.000.'],
+ err:1,ws:'Kesalahannya di baris 2: 6% dimasukkan sebagai 6.',
+ why:'Persen harus diubah ke desimal lebih dulu: 6% = 0,06. Bunga Rp90.000.000 jauh lebih besar daripada modalnya sendiri, jadi pasti keliru.',
+ fix:'B = 5.000.000 × 0,06 × 3 = <b>Rp900.000</b>.'},
+{t:'x',k:1,jd:'Kasus 3 · r tidak dibagi m',src:'Rangkuman bagian 3 (contoh 2) dan bagian 5',
+ soal:'Rp10.000.000 dengan bunga 12% per tahun yang dimajemukkan bulanan selama 2 tahun. Tentukan modal akhirnya.',
+ lines:['1. Dimajemukkan bulanan: m = 12, n = 12 × 2 = 24.','2. i = 12% = 0,12 per bulan.','3. M₂₄ = 10.000.000 × (1,12)²⁴ ≈ Rp151.786.289.'],
+ err:1,ws:'Kesalahannya di baris 2: r = 12% belum dibagi m = 12.',
+ why:'Suku bunga 12% adalah suku bunga per <b>tahun</b>. Karena dimajemukkan bulanan, i = r/m = 12% : 12 = 1% per bulan.',
+ fix:'M₂₄ = 10.000.000 × (1,01)²⁴ ≈ <b>Rp12.697.346</b>.'},
+{t:'x',k:1,jd:'Kasus 4 · B atau Mₙ',src:'Rangkuman bagian 3 (contoh 1) dan bagian 5',
+ soal:'Rp5.000.000 dengan bunga majemuk 6% per tahun selama 3 tahun. Tentukan besar bunganya.',
+ lines:['1. M₀ = 5.000.000; i = 0,06; n = 3.','2. M₃ = 5.000.000 × (1,06)³ = Rp5.955.080.','3. Jadi besar bunganya Rp5.955.080.'],
+ err:2,ws:'Kesalahannya di baris 3: yang ditulis adalah Mₙ, bukan B.',
+ why:'Soal menanyakan <b>besar bunga</b>. Rp5.955.080 adalah modal akhir M₃. Bunga = Mₙ − M₀.',
+ fix:'B = 5.955.080 − 5.000.000 = <b>Rp955.080</b>.'}
+];
+var ex={i:0,b:0,rev:false,miss:0,tebak:null};
+function exBeats(sc){
+  if(!sc.k)return sc.beats;
+  if(!ex.rev)return [B('Ketuk baris yang menurutmu salah.',El('#exSols'))];
+  return [B(sc.ws,El('#sol'+sc.err)),B('Ini alasannya.',El('#exWhy')),B('Perbaikannya ada di sini.',El('#exFix'))];
+}
+function exCase(sc){
+  var h='<p>'+sc.soal+'</p><p><b>Penyelesaian seorang siswa</b>: ketuk baris yang menurutmu salah.</p><div class="sols" id="exSols">';
+  sc.lines.forEach(function(t,i){h+='<button class="sol'+(ex.rev&&i===sc.err?' bad':'')+'" id="sol'+i+'" data-i="'+i+'" type="button">'+t+'</button>';});
+  h+='</div><div id="exMsg" class="muted" role="status"></div>';
+  if(ex.rev)h+='<div class="exbox why" id="exWhy"><b>Letak dan alasan kesalahan:</b> '+sc.why+'</div><div class="exbox fix" id="exFix" hidden><b>Perbaikan:</b> '+sc.fix+'</div>';
+  else h+='<div class="row"><button class="btn ghost" id="exReveal" type="button">Tunjukkan kesalahannya</button></div>';
+  return h;
+}
+var TEBAK=[['T','Bunga tunggal'],['M','Bunga majemuk'],['S','Sama saja']];
+function explainPanel(el){
+  var sc=EX[ex.i],h='',last=ex.i===EX.length-1;
+  h+='<div class="exhd"><select id="exTopic" aria-label="Pilih topik">'+EX_TOPICS.map(function(t){return '<option value="'+t[0]+'"'+(t[0]===sc.t?' selected':'')+'>'+esc(t[1])+'</option>';}).join('')+'</select><small id="exPos"></small></div>';
+  h+='<h2>'+esc(sc.jd)+'</h2>'+(sc.k?exCase(sc):sc.panel)+'<small class="exsrc">Sumber: '+esc(sc.src)+'</small>';
+  h+='<div class="row'+(last?'':' exempty')+'" id="exNav"><div id="exFloat"><span class="exfpos" id="exFpos" aria-hidden="true"></span><button class="btn" id="exPrev" type="button">◀ Sebelumnya</button><button class="btn primary" id="exNext" type="button">Berikutnya ▶</button><button class="btn ghost" id="exAgain" type="button" aria-label="Ulangi">↺ <span class="lb">Ulangi</span></button></div>'+(last?'<button class="btn primary" id="exGo" type="button">Latihan Mandiri ➜</button>':'')+'</div>';
+  el.innerHTML=h;
+  var pm=$('#pemantik');
+  if(pm){pm.innerHTML=TEBAK.map(function(t){return '<button class="chip'+(ex.tebak===t[0]?' on':'')+'" data-tb="'+t[0]+'" type="button">'+t[1]+'</button>';}).join('');
+    pm.querySelectorAll('[data-tb]').forEach(function(b){b.onclick=function(){ex.tebak=b.dataset.tb;pm.querySelectorAll('[data-tb]').forEach(function(x){x.classList.toggle('on',x===b);});$('#tebakMsg').textContent='Tebakanmu dicatat. Kita cek jawabannya di bagian Perbandingan.';};});
+    if(ex.tebak)$('#tebakMsg').textContent='Tebakanmu dicatat. Kita cek jawabannya di bagian Perbandingan.';}
+  var tc=$('#tebakCek');
+  if(tc)tc.textContent=ex.tebak?('Tebakanmu tadi: '+TEBAK.filter(function(t){return t[0]===ex.tebak;})[0][1]+(ex.tebak==='M'?'. Tepat! 🎉':'. Sekarang kamu tahu alasannya.')):'Kamu belum menebak di bagian Tujuan. Tidak apa-apa!';
+  renderMath(el);
+  on('exPrev',exPrev);on('exNext',exNext);on('exAgain',function(){ex.b=0;exBeat();});on('exReveal',function(){ex.rev=true;ex.b=0;exShow();});
+  on('exGo',function(){setTab('learn');startLearn();});
+  var tp=$('#exTopic');if(tp)tp.onchange=function(){exTopic(tp.value);};
+  document.querySelectorAll('.sol').forEach(function(b){b.onclick=function(){exTap(parseInt(b.getAttribute('data-i'),10));};});
+  pendNotice(el);
+}
+function exTopic(id){for(var i=0;i<EX.length;i++)if(EX[i].t===id){ex.i=i;ex.b=0;ex.rev=false;exShow();return;}}
+function exTap(i){
+  var sc=EX[ex.i];if(ex.rev)return;
+  if(i===sc.err){ex.rev=true;ex.b=0;exShow();return;}
+  ex.miss++;
+  var b=$('#sol'+i);if(b)b.classList.add('ok');
+  var msg='Baris ini tidak mengandung kesalahan. Coba periksa baris lain.'+(ex.miss>=2?' Atau tekan "Tunjukkan kesalahannya".':'');
+  var m=$('#exMsg');if(m)m.textContent=msg;
+  plusGo({el:'#sol'+i},'Baris ini tidak mengandung kesalahan. Periksa baris lain.');
+}
+function exShow(){
+  var sc=EX[ex.i],af=document.activeElement&&document.activeElement.id;
+  if(sc.ch){CH.M0=sc.ch.M0;CH.p=sc.ch.p;CH.n=sc.ch.n;}
+  renderAll();
+  exBeat();
+  if(af&&/^ex(Prev|Next|Again)$/.test(af)){var fe=$('#'+af);if(fe&&!fe.disabled&&fe.focus)fe.focus({preventScroll:true});}
+}
+function exBeat(){
+  var sc=EX[ex.i],bs=exBeats(sc),bt=bs[Math.min(ex.b,bs.length-1)];
+  document.querySelectorAll('#panel .hit').forEach(function(e){e.classList.remove('hit');});
+  var fx=$('#exFix');if(fx)fx.hidden=!(sc.k&&ex.rev&&ex.b>=bs.length-1);
+  var pos=$('#exPos');if(pos)pos.textContent='Bagian '+(ex.i+1)+' dari '+EX.length+(bs.length>1?' · langkah '+(Math.min(ex.b,bs.length-1)+1)+'/'+bs.length:'');
+  var fp=$('#exFpos');if(fp&&pos)fp.textContent=pos.textContent;
+  var pv=$('#exPrev'),nx=$('#exNext');
+  if(pv)pv.disabled=(ex.i===0&&ex.b===0&&!ex.rev);
+  if(nx)nx.disabled=(ex.i===EX.length-1&&ex.b>=bs.length-1);
+  var te=bt.at&&bt.at.el?$(bt.at.el):null;if(te&&$('#panel').contains(te))te.classList.add('hit');
+  exBarSync();
+  plusGo(bt.at,bt.say);
+}
+function exNext(){
+  var sc=EX[ex.i],nb=exBeats(sc).length;
+  if(sc.k&&!ex.rev){if(ex.i<EX.length-1){ex.i++;ex.b=0;ex.rev=false;exShow();}return;}
+  if(ex.b<nb-1){ex.b++;exBeat();return;}
+  if(ex.i<EX.length-1){ex.i++;ex.b=0;ex.rev=false;exShow();}
+}
+function exPrev(){
+  var sc=EX[ex.i];
+  if(ex.b>0){ex.b--;exBeat();return;}
+  if(sc.k&&ex.rev){ex.rev=false;ex.b=0;exShow();return;}
+  if(ex.i>0){ex.i--;ex.b=0;ex.rev=false;exShow();}
+}
+function startExplain(i){
+  st.mode='explain';st.over=false;st.gate=false;st.stage='explain';st.lw=null;
+  ex.i=i||0;ex.b=0;ex.rev=false;ex.miss=0;
+  exShow();
+}
+
+/* ---------- Grafik saldo per periode (tab Belajar): bunga tunggal linear vs bunga majemuk eksponensial ---------- */
+var CH={M0:5000000,p:6,n:3};
+function chartHtml(){
+  return '<div class="chart"><h3>Grafik saldo per periode</h3>'
+    +'<svg id="chartSvg" viewBox="0 0 460 290" role="img" aria-label="Grafik saldo bunga tunggal dan bunga majemuk per periode"></svg>'
+    +'<div class="legend"><span class="lgT">● Bunga tunggal (linear)</span><span class="lgM">● Bunga majemuk (eksponensial)</span></div>'
+    +'<div class="sl"><label for="slM">M₀</label><input type="range" id="slM" min="1000000" max="20000000" step="500000" aria-label="Modal awal"><output id="oM"></output></div>'
+    +'<div class="sl"><label for="slP">i</label><input type="range" id="slP" min="0.5" max="15" step="0.5" aria-label="Suku bunga per periode"><output id="oP"></output></div>'
+    +'<div class="sl"><label for="slN">n</label><input type="range" id="slN" min="1" max="30" step="1" aria-label="Banyak periode"><output id="oN"></output></div>'
+    +'<div id="chartRead"></div></div>';
+}
+function bindChart(){
+  var m=$('#slM'),p=$('#slP'),n=$('#slN');if(!m)return;
+  m.value=CH.M0;p.value=CH.p;n.value=CH.n;
+  m.oninput=function(){CH.M0=+m.value;drawChart();};
+  p.oninput=function(){CH.p=+p.value;drawChart();};
+  n.oninput=function(){CH.n=+n.value;drawChart();};
+}
+function drawChart(){
+  var svg=$('#chartSvg');if(!svg)return;
+  var M0=CH.M0,i=CH.p/100,n=CH.n,W=460,H=290,L=58,R=14,Tp=14,Bt=34,k;
+  var TS=[],MS=[];for(k=0;k<=n;k++){TS.push(M0*(1+i*k));MS.push(M0*powi(1+i,k));}
+  var hi=MS[n],lo=M0,step=niceStep((hi-lo)/4||M0/10);lo=Math.floor(lo/step)*step;hi=Math.ceil(hi/step)*step;if(hi<=lo)hi=lo+step;
+  var X=function(x){return L+(W-L-R)*x/n;},Y=function(v){return Tp+(H-Tp-Bt)*(1-(v-lo)/(hi-lo));};
+  var s='';
+  for(var v=lo;v<=hi+1;v+=step){s+='<line x1="'+L+'" y1="'+Y(v)+'" x2="'+(W-R)+'" y2="'+Y(v)+'" stroke="#e4ebf7"/><text class="ax" x="'+(L-6)+'" y="'+(Y(v)+4)+'" text-anchor="end">'+fNum(v/1000000,2,true)+' jt</text>';}
+  var tk=n<=12?1:n<=20?2:5;
+  for(k=0;k<=n;k+=tk)s+='<text class="ax" x="'+X(k)+'" y="'+(H-Bt+16)+'" text-anchor="middle">'+k+'</text>';
+  s+='<text class="ax" x="'+((W+L)/2)+'" y="'+(H-4)+'" text-anchor="middle">periode ke-</text>';
+  s+='<line x1="'+L+'" y1="'+(H-Bt)+'" x2="'+(W-R)+'" y2="'+(H-Bt)+'" stroke="#94a3b8"/><line x1="'+L+'" y1="'+Tp+'" x2="'+L+'" y2="'+(H-Bt)+'" stroke="#94a3b8"/>';
+  var line=function(arr,c){return '<polyline fill="none" stroke="'+c+'" stroke-width="3" points="'+arr.map(function(v,x){return X(x).toFixed(1)+','+Y(v).toFixed(1);}).join(' ')+'"/>';};
+  s+=line(TS,'#1d4ed8')+line(MS,'#c2410c');
+  if(n<=15)for(k=0;k<=n;k++){s+='<circle cx="'+X(k)+'" cy="'+Y(TS[k])+'" r="3.5" fill="#1d4ed8"/><circle cx="'+X(k)+'" cy="'+Y(MS[k])+'" r="3.5" fill="#c2410c"/>';}
+  svg.innerHTML=s;
+  $('#oM').textContent=fRp(M0);$('#oP').textContent=fPct(CH.p);$('#oN').textContent=n+' periode';
+  var d=MS[n]-TS[n];
+  $('#chartRead').innerHTML='<div class="dtwrap"><table class="dt"><tr><th>Setelah n = '+n+'</th><th>Mₙ</th><th>Bunga B</th></tr>'
+    +'<tr><td>Bunga tunggal</td><td>'+fRp(TS[n])+'</td><td>'+fRp(TS[n]-M0)+'</td></tr>'
+    +'<tr><td>Bunga majemuk</td><td>'+fRp(MS[n])+'</td><td>'+fRp(MS[n]-M0)+'</td></tr></table></div>'
+    +'<p class="muted">'+(n===1?'Untuk n = 1 hasil keduanya <b>sama</b>.':'Bunga majemuk lebih besar <b>'+fRp(d)+'</b>.')+' Beda bunga tunggal per periode: '+fRp(M0*i)+' (barisan aritmetika); rasio bunga majemuk: '+fD(1+i)+' (barisan geometri).</p>';
+}
+function niceStep(x){var e=1;while(e*10<=x)e*=10;while(e>x)e/=10;var f=x/e;return (f<=1?1:f<=2?2:f<=5?5:10)*e;}
+
+/* ---------- Plus berpindah dan menunjuk ---------- */
+var plusAt=null,plusTf=null,plusTh=null;
+function fxEnsure(){
+  var f=$('#plusFx');if(f)return f;
+  f=document.createElementNS('http://www.w3.org/2000/svg','svg');f.id='plusFx';f.setAttribute('aria-hidden','true');
+  f.innerHTML='<defs><marker id="fxArr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#f59e0b"/></marker></defs>'
+    +'<rect class="ring" id="fxRing" x="0" y="0" width="0" height="0"/><path class="beam" id="fxBeam" d=""/>';
+  document.body.appendChild(f);return f;
+}
+var MQ_SMALL=window.matchMedia?window.matchMedia('not all and (min-width:860px) and (min-height:500px)'):null;
+function exBarH(){return parseFloat(document.documentElement.style.getPropertyValue('--exbar-h'))||0;}
+function exBarSync(){
+  var f=$('#exFloat'),onb=st.mode==='explain'&&!!MQ_SMALL&&MQ_SMALL.matches&&!!f;
+  document.body.classList.toggle('ex-bar',onb);
+  document.documentElement.style.setProperty('--exbar-h',(onb?f.offsetHeight:0)+'px');
+}
+var plusTouch=false;
+document.addEventListener('touchstart',function(){plusTouch=true;},{passive:true});
+['touchend','touchcancel'].forEach(function(nm){document.addEventListener(nm,function(){plusTouch=false;},{passive:true});});
+function plusReveal(b){
+  if(plusTouch)return;
+  var m=12,vh=window.innerHeight-exBarH(),dy;
+  if(b.top>=m&&b.bottom<=vh-m)return;
+  dy=(b.height>vh-2*m||b.top<m)?b.top-m:b.bottom-(vh-m);
+  if(dy)window.scrollBy(0,dy);
+}
+function plusRect(t,reveal){
+  if(!t||!t.el)return null;
+  var e=typeof t.el==='string'?$(t.el):t.el;if(!e)return null;
+  var r0=e.getBoundingClientRect();
+  if(!r0.width&&!r0.height)return null;
+  if(reveal){plusReveal({top:r0.top,bottom:r0.bottom,height:r0.height});r0=e.getBoundingClientRect();}
+  return {x:r0.left-4,y:r0.top-3,w:r0.width+8,h:r0.height+6,round:false};
+}
+function plusFxClear(){
+  var rg=$('#fxRing'),bm=$('#fxBeam');
+  if(rg){rg.setAttribute('width',0);rg.setAttribute('height',0);}
+  if(bm)bm.setAttribute('d','');
+}
+function plusPlace(reveal){
+  var a=plusAt;if(!a)return;
+  fxEnsure();
+  var r=plusRect(a.t,reveal);
+  if(!r){plusFxClear();return;}
+  var rg=$('#fxRing'),bm=$('#fxBeam');
+  rg.setAttribute('x',r.x);rg.setAttribute('y',r.y);rg.setAttribute('width',r.w);rg.setAttribute('height',r.h);rg.setAttribute('rx',r.round?r.w/2:10);
+  bm.setAttribute('d','');
+  var w=$('#plusWrap');
+  if(!w||document.body.classList.contains('plus-off'))return;
+  var vw=document.documentElement.clientWidth,vh=window.innerHeight-exBarH();
+  var bw=$('#plusBody').offsetWidth,bh=$('#plusBody').offsetHeight,ww=w.offsetWidth,wh=w.offsetHeight;
+  var hx=vw-8-ww,hy=vh-8-wh,m=16,tcx=r.x+r.w/2,tcy=r.y+r.h/2;
+  var yMid=tcy-(wh-bh/2);
+  var right={side:'r',X:r.x+r.w+m,Y:yMid},left={side:'l',X:r.x-m-ww,Y:yMid};
+  var vc=function(side,Y){var X=side==='r'?tcx-bw/2:tcx-(ww-bw/2);X=Math.min(Math.max(4,X),vw-4-ww);return {side:side,X:X,Y:Y,cx:X+(side==='r'?bw/2:ww-bw/2)};};
+  var vb=[vc('r',r.y+r.h+m),vc('l',r.y+r.h+m)],va=[vc('r',r.y-m-wh),vc('l',r.y-m-wh)];
+  var byC=function(p,q){return Math.abs(p.cx-tcx)-Math.abs(q.cx-tcx);};vb.sort(byC);va.sort(byC);
+  var cs=(tcx>vw/2?[left,right]:[right,left]).concat(tcy>vh/2?va.concat(vb):vb.concat(va));
+  var fits=function(c){return c.X>=4&&c.Y>=4&&c.X+ww<=vw-4&&c.Y+wh<=vh-4;};
+  var ex0=r.x-4,ey0=r.y-4,ew=r.w+8,eh=r.h+8;
+  var clash=function(c){return !(c.X+ww<=ex0||c.X>=ex0+ew||c.Y+wh<=ey0||c.Y>=ey0+eh);};
+  var pk=null,i;
+  for(i=0;i<cs.length;i++)if(fits(cs[i])&&!clash(cs[i])){pk=cs[i];break;}
+  if(!pk)for(i=0;i<cs.length;i++)if(fits(cs[i])){pk=cs[i];break;}
+  if(!pk){pk={side:cs[0].side,X:Math.min(Math.max(4,cs[0].X),vw-4-ww),Y:Math.min(Math.max(4,cs[0].Y),vh-4-wh)};}
+  w.setAttribute('data-side',pk.side);w.classList.add('go');
+  w.style.transform='translate('+Math.round(pk.X-hx)+'px,'+Math.round(pk.Y-hy)+'px)';
+  var S2={x:pk.X+(pk.side==='r'?bw/2:ww-bw/2),y:pk.Y+wh-bh/2},C={x:tcx,y:tcy};
+  clearTimeout(plusTf);
+  plusTf=setTimeout(function(){
+    if(!plusAt)return;
+    var dx=C.x-S2.x,dy=C.y-S2.y,L=Math.sqrt(dx*dx+dy*dy)||1,ux=dx/L,uy=dy/L;
+    var t1=Math.min((r.w/2+6)/(Math.abs(ux)||1e-6),(r.h/2+6)/(Math.abs(uy)||1e-6));
+    var s0=bw*.42;if(L<=s0+t1+8){bm.setAttribute('d','');return;}
+    bm.setAttribute('d','M'+(S2.x+ux*s0)+' '+(S2.y+uy*s0)+' L'+(C.x-ux*t1)+' '+(C.y-uy*t1));
+  },plusReduced()?0:680);
+}
+function plusGo(t,text,auto){
+  plusAt={t:t};clearTimeout(plusTh);
+  if(text){var b=$('#plusBubble');if(b){b.textContent=text;b.classList.add('show');clearTimeout(plusTb);}}
+  plusPlace(true);
+  if(!document.body.classList.contains('plus-off'))plusState('normal','point',1900);
+  if(auto)plusTh=setTimeout(plusHome,auto);
+}
+function plusHome(){
+  plusAt=null;clearTimeout(plusTf);clearTimeout(plusTh);
+  var w=$('#plusWrap');if(w){w.style.transform='';w.removeAttribute('data-side');}
+  plusFxClear();
+  var b=$('#plusBubble');if(b)b.classList.remove('show');
+}
+var plusRaf=0;
+function plusRefresh(){if(!plusAt||plusRaf)return;plusRaf=requestAnimationFrame(function(){plusRaf=0;plusPlace();});}
+window.addEventListener('resize',exBarSync);
+window.addEventListener('resize',plusRefresh);
+if(MQ_SMALL&&MQ_SMALL.addEventListener)MQ_SMALL.addEventListener('change',function(){exBarSync();plusRefresh();});
+window.addEventListener('scroll',plusRefresh,{passive:true});
+$('#panel').addEventListener('scroll',plusRefresh,{passive:true});
+$('#side').addEventListener('scroll',plusRefresh,{passive:true});
+document.addEventListener('keydown',function(e){
+  if(st.mode!=='explain')return;
+  var tg=e.target&&e.target.tagName;
+  if(e.key==='Escape'){plusHome();return;}
+  if(tg==='INPUT'||tg==='TEXTAREA'||tg==='SELECT')return;
+  if(e.key==='ArrowRight')exNext();else if(e.key==='ArrowLeft')exPrev();
+});
+
+/* ---------- Rumus: render LaTeX (KaTeX) dengan teks biasa sebagai cadangan ----------
+   Setiap rumus ditulis <… data-tex="LATEX">TEKS</…>. Bila KaTeX (JS dan CSS) belum/tidak termuat,
+   teks biasa tetap tampil. Perenderan dilakukan ke elemen sementara lalu ditukar. */
+var MATH_FB=(typeof WeakMap==='function')?new WeakMap():null;
+var MATH_OPT={throwOnError:false,displayMode:false,output:'htmlAndMathml',strict:'ignore',trust:false};
+var MATH_CSS_OK=false;
+function mathCss(){
+  var l=document.getElementById('katexCss'),okc=MATH_CSS_OK;
+  if(!l||!l.sheet)return false;
+  try{okc=l.sheet.cssRules.length>0;}catch(e){}
+  if(!okc)return false;
+  if(l.media!=='all')l.media='all';
+  return true;
+}
+function mathReady(){return !!(MATH_FB&&window.katex&&typeof window.katex.render==='function'&&mathCss());}
+function renderMath(root){
+  if(!root||!mathReady())return 0;
+  var list=[].slice.call(root.querySelectorAll?root.querySelectorAll('[data-tex]'):[]);
+  if(root.nodeType===1&&root.hasAttribute('data-tex'))list.unshift(root);
+  var c=0;
+  list.forEach(function(el){
+    if(el.querySelector('.katex'))return;
+    var tex=el.getAttribute('data-tex'),tmp;
+    try{
+      tmp=document.createElement('span');
+      window.katex.render(tex,tmp,MATH_OPT);
+      if(!tmp.querySelector('.katex')||tmp.querySelector('.katex-error'))return;
+    }catch(e){return;}
+    MATH_FB.set(el,el.innerHTML);
+    el.innerHTML='';
+    while(tmp.firstChild)el.appendChild(tmp.firstChild);
+    c++;
+  });
+  if(c){plusRefresh();if(document.fonts&&document.fonts.ready)document.fonts.ready.then(plusRefresh);}
+  return c;
+}
+function mathBoot(){if(mathReady())renderMath(document);}
+['katexJs','katexCss'].forEach(function(id){var e=document.getElementById(id);if(e)e.addEventListener('load',function(){if(id==='katexCss')MATH_CSS_OK=true;mathBoot();});});
+window.addEventListener('load',mathBoot);
+if(document.fonts&&document.fonts.addEventListener)document.fonts.addEventListener('loadingdone',plusRefresh);
+
+window.__api={EX:EX,CORE:CORE,parseIn:parseIn,startExplain:startExplain,startLearn:startLearn,startPractice:startPractice,plusGo:plusGo,plusHome:plusHome};
+startExplain();
+})();
+</script>
+</body>
+</html>
