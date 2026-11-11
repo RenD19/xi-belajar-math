@@ -123,7 +123,55 @@ ul.aturan li{margin:.35em 0}
 .spin{display:inline-block;width:18px;height:18px;border:3px solid currentColor;border-right-color:transparent;border-radius:50%;animation:sp .8s linear infinite;vertical-align:-3px;margin-right:6px}
 @keyframes sp{to{transform:rotate(360deg)}}
 @media(prefers-reduced-motion:reduce){.spin{animation-duration:2.4s}.prog>i{transition:none}}
-@media(max-width:520px){.form{grid-template-columns:1fr}.card{padding:14px}.nav .btn{flex:1}.nav{gap:6px}}
+@media(max-width:520px){.kbtn .kl{display:none}.bar .siapa{max-width:48vw}.simpan:not(.bad){display:none}.simpan.bad{flex-basis:100%;order:3;font-size:.78rem}.krh small{display:none}.form{grid-template-columns:1fr}.card{padding:14px}.nav .btn{flex:1}.nav{gap:6px}}
+
+/* ===== kalkulator ===== */
+.kbtn{min-height:42px;padding:6px 12px;font-size:.92rem;display:inline-flex;align-items:center;gap:6px}
+.kbtn[aria-expanded="true"]{background:var(--blue);color:#fff}
+.kalk{position:fixed;z-index:15;background:#fff;border:1px solid var(--line);box-shadow:0 -6px 24px rgba(15,23,42,.18);display:flex;flex-direction:column;
+  left:0;right:0;bottom:0;max-height:min(62vh,470px);border-radius:16px 16px 0 0}
+@media(max-width:1099px){.kpad{gap:4px}.kpad button{min-height:40px}.kalk .kbody{gap:6px;padding:8px}.khas{font-size:1.25rem}.kriw ol{max-height:76px}.kalk .kh{padding:4px 8px 4px 12px}body.kalk-on .side{position:static}}
+.kalk .kh{display:flex;align-items:center;gap:8px;padding:8px 10px 8px 14px;border-bottom:1px solid var(--line);flex:none}
+.kalk .kh b{font-size:1rem}
+.kalk .kh small{color:var(--mut);font-size:.78rem;flex:1}
+.kalk .kh button{font:inherit;font-weight:700;border:1px solid var(--line);background:#fff;border-radius:8px;min-width:40px;min-height:36px;cursor:pointer;color:var(--ink)}
+.kalk .kbody{display:flex;flex-direction:column;gap:8px;padding:10px;overflow:auto;min-height:0}
+.kalk.min .kbody{display:none}
+.kdisp{background:#f1f5fd;border:1px solid var(--line);border-radius:12px;padding:6px 12px;text-align:right;font-variant-numeric:tabular-nums}
+.keks{min-height:1.5em;color:var(--mut);font-size:1rem;overflow-wrap:anywhere}
+.keks .kur{display:inline-block;width:2px;height:1.1em;background:var(--blue);vertical-align:-2px;margin-left:1px;animation:kk 1s steps(1) infinite}
+@keyframes kk{50%{opacity:0}}
+.khas{font-size:1.45rem;font-weight:800;min-height:1.4em;overflow-wrap:anywhere}
+.khas.prev{color:var(--mut);font-weight:600;font-size:1.15rem}
+.khas.err{color:var(--red);font-size:1rem;font-weight:600}
+.kpad{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.kpad button{font:inherit;font-weight:700;font-size:1.05rem;min-height:44px;border:1px solid var(--line);background:#fff;border-radius:10px;cursor:pointer;color:var(--ink);padding:0}
+.kpad button.op{background:#eef3fb;color:var(--blue)}
+.kpad button.fn{background:#f6f2ff;color:#6b21a8;font-size:.95rem}
+.kpad button.ctl{background:#fff4e5;color:var(--amber)}
+.kpad button.eq{background:var(--blue);color:#fff;border-color:var(--blue)}
+.kpad button:active{transform:translateY(1px)}
+.kpad button:focus-visible,.kriw button:focus-visible,.kalk .kh button:focus-visible{outline:3px solid #93b4ff;outline-offset:1px}
+.kriw{border-top:1px dashed var(--line);padding-top:6px;min-height:0}
+.krh{font-weight:700;font-size:.9rem;margin-bottom:4px}
+.krh small{font-weight:400;color:var(--mut)}
+.kriw ol{list-style:none;margin:0;padding:0;max-height:110px;overflow:auto}
+.kriw li{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 6px;padding:4px 0;border-bottom:1px solid #eef2f8;font-size:.9rem}
+.kriw li small{color:var(--mut);font-size:.75rem;margin-left:auto}
+.kriw li button{font:inherit;border:0;background:none;padding:2px 4px;border-radius:6px;cursor:pointer;color:var(--ink);text-align:left;overflow-wrap:anywhere}
+.kriw li button.h{font-weight:700;color:var(--blue)}
+.kriw li button:hover{background:#eef3fb}
+.kriw .kosong{color:var(--mut);font-size:.85rem;border:0}
+body.kalk-on .wrap{padding-bottom:calc(var(--kalk-h,0px) + 24px)}
+@media(min-width:1100px){
+  .kalk{left:auto;right:0;top:0;bottom:0;width:340px;max-height:none;border-radius:0;box-shadow:-6px 0 24px rgba(15,23,42,.12)}
+  .kalk .kh button#kMin{display:none}
+  .kalk .kbody{flex:1}
+  .kriw{flex:1;display:flex;flex-direction:column}
+  .kriw ol{max-height:none;flex:1}
+  body.kalk-on .wrap{max-width:none;margin:0 340px 0 0;padding-bottom:40px}
+}
+@media(prefers-reduced-motion:reduce){.keks .kur{animation:none}}
 </style>
 </head>
 <body>
@@ -142,7 +190,7 @@ ul.aturan li{margin:.35em 0}
         <h2>Masuk ke kuis</h2>
         <div class="chips" id="chips"><span class="chip">Memuat informasi kuis…</span></div>
         <form id="fMasuk" class="form" autocomplete="off" novalidate>
-          <label class="f">Kelas<input class="in" id="iKelas" placeholder="mis. XI AL HASIB" maxlength="12" required></label>
+          <label class="f">Kelas<input class="in" id="iKelas" placeholder="mis. XI-1" maxlength="12" required></label>
           <label class="f">Nomor absen<input class="in" id="iAbsen" inputmode="numeric" pattern="[0-9]*" maxlength="2" required></label>
           <label class="f full" id="lNama">Nama lengkap<input class="in" id="iNama" maxlength="40" autocomplete="off"></label>
           <label class="f" id="lPin" hidden>PIN<small>dari gurumu</small><input class="in" id="iPin" inputmode="numeric" maxlength="12" type="password"></label>
@@ -160,6 +208,7 @@ ul.aturan li{margin:.35em 0}
           <li>Waktu berjalan sejak kamu menekan <i>Mulai</i>. Saat waktu habis, jawabanmu dikirim otomatis.</li>
           <li>Jawaban tersimpan otomatis. Bila halaman tertutup, buka lagi dan masuk dengan data yang sama untuk melanjutkan.</li>
           <li>Siapkan kertas dan kalkulator untuk menghitung.</li>
+          <li id="liKalk" hidden>Gunakan <b>kalkulator</b> di halaman kuis (tombol 🧮 di samping waktu). Riwayat perhitunganmu tercatat untuk guru.</li>
           <li id="liSeb" hidden>Kamu mengerjakan di <b>Safe Exam Browser</b>. Jangan keluar dari aplikasi sebelum jawaban terkirim; bila terpaksa keluar, buka lagi dan masuk dengan data yang sama.</li>
         </ul>
       </div>
@@ -172,6 +221,7 @@ ul.aturan li{margin:.35em 0}
       <div class="siapa" id="siapa">–</div>
       <div style="display:flex;align-items:center;gap:12px">
         <span class="simpan" id="stSimpan" aria-live="polite"></span>
+        <button class="btn kbtn" id="bKalk" type="button" hidden aria-expanded="false" aria-controls="kalk" aria-label="Kalkulator"><span aria-hidden="true">🧮</span><span class="kl">Kalkulator</span></button>
         <div class="timer" id="timer" role="timer" aria-label="Sisa waktu">--:--</div>
       </div>
     </div>
@@ -206,6 +256,23 @@ ul.aturan li{margin:.35em 0}
     <div class="card hasil" id="hasilIsi"></div>
   </section>
 </div>
+
+<section class="kalk" id="kalk" hidden aria-label="Kalkulator" tabindex="-1">
+  <div class="kh"><b>Kalkulator</b><small>koma ( , ) = desimal</small>
+    <button type="button" id="kMin" aria-label="Perkecil kalkulator" aria-expanded="true">▾</button>
+    <button type="button" id="kTutup" aria-label="Tutup kalkulator">✕</button></div>
+  <div class="kbody">
+    <div class="kdisp"><div class="keks" id="kEks"></div><div class="khas" id="kHas" aria-live="polite">0</div></div>
+    <div class="kpad" id="kPad">
+      <button type="button" class="ctl" data-k="C" aria-label="Hapus semua">C</button><button type="button" class="ctl" data-k="DEL" aria-label="Hapus satu">⌫</button><button type="button" class="op" data-k="(">(</button><button type="button" class="op" data-k=")">)</button><button type="button" class="op" data-k="÷" aria-label="bagi">÷</button>
+      <button type="button" data-k="7">7</button><button type="button" data-k="8">8</button><button type="button" data-k="9">9</button><button type="button" class="op" data-k="×" aria-label="kali">×</button><button type="button" class="fn" data-k="^" aria-label="pangkat">xʸ</button>
+      <button type="button" data-k="4">4</button><button type="button" data-k="5">5</button><button type="button" data-k="6">6</button><button type="button" class="op" data-k="−" aria-label="kurang">−</button><button type="button" class="fn" data-k="√" aria-label="akar kuadrat">√</button>
+      <button type="button" data-k="1">1</button><button type="button" data-k="2">2</button><button type="button" data-k="3">3</button><button type="button" class="op" data-k="+" aria-label="tambah">+</button><button type="button" class="fn" data-k="log" aria-label="logaritma basis 10">log</button>
+      <button type="button" data-k="0">0</button><button type="button" data-k=",">,</button><button type="button" class="op" data-k="%" aria-label="persen">%</button><button type="button" class="fn" data-k="Ans" aria-label="hasil terakhir">Ans</button><button type="button" class="eq" data-k="=" aria-label="sama dengan">=</button>
+    </div>
+    <div class="kriw"><div class="krh">Riwayat <small>· ketuk hasil untuk memakainya · tercatat untuk guru</small></div><ol id="kRiw"></ol></div>
+  </div>
+</section>
 
 <div class="modal" id="modal" hidden role="dialog" aria-modal="true" aria-labelledby="mJudul">
   <div class="card">
@@ -275,7 +342,7 @@ function api(action,data,ms){
 var GAGAL_JARINGAN='Tidak dapat terhubung ke server. Periksa internetmu, lalu coba lagi.';
 
 /* ---------- keadaan ---------- */
-var S={sesi:null,soal:[],jw:[],ragu:[],idx:0,deadline:0,tab:0,dirty:false,saving:false,tSimpan:0,tTimer:0,kirim:false,demo:false,selesai:false};
+var S={sesi:null,soal:[],jw:[],ragu:[],idx:0,deadline:0,tab:0,dirty:false,saving:false,tSimpan:0,tTimer:0,kirim:false,demo:false,selesai:false,kalk:[],kalkOn:false,t0:0};
 
 function tampil(v){['vMasuk','vKuis','vHasil'].forEach(function(id){$(id).hidden=id!==v;});window.scrollTo(0,0);}
 function pesan(el,teks,jenis){el.hidden=!teks;el.className='fb '+(jenis||'bad');el.textContent=teks||'';}
@@ -294,7 +361,8 @@ function muatInfo(){
     if(!j.ok)throw new Error(j.pesan||'');
     INFO=j;
     if(j.judul){$('judul').textContent=j.judul;document.title=j.judul;}
-    $('chips').innerHTML='<span class="chip">⏱ '+j.durasi+' menit</span><span class="chip">📝 '+j.jumlah+' soal</span><span class="chip">PG · PG kompleks · Benar/Salah</span>'+(j.maksPercobaan>1?'<span class="chip">'+j.maksPercobaan+' kali kesempatan</span>':'');
+    $('chips').innerHTML='<span class="chip">⏱ '+j.durasi+' menit</span><span class="chip">📝 '+j.jumlah+' soal</span><span class="chip">PG · PG kompleks · Benar/Salah</span>'+(j.kalkulator?'<span class="chip">🧮 Kalkulator tersedia</span>':'')+(j.maksPercobaan>1?'<span class="chip">'+j.maksPercobaan+' kali kesempatan</span>':'');
+    $('liKalk').hidden=!j.kalkulator;
     $('lNama').hidden=!j.modeTerbuka;$('lPin').hidden=j.modeTerbuka;$('lToken').hidden=!j.perluToken;
     if(!j.modeTerbuka&&!j.perluToken)$('lPin').classList.add('full');
     if(!j.buka)pesan($('pesanMasuk'),'Kuis belum dibuka atau sudah ditutup oleh guru. Siswa yang sedang mengerjakan tetap dapat melanjutkan.','info');
@@ -336,8 +404,13 @@ function mulaiKuis(j){
   S.idx=typeof lokal.idx==='number'&&lokal.idx<j.soal.length?lokal.idx:0;
   S.tab=Math.max(j.pindahTab||0,lokal.tab||0);
   S.deadline=Date.now()+j.sisaDetik*1000;
+  S.t0=S.deadline-(j.durasi||45)*60000;
+  var kl=LS.get('kalk:'+nonce())||[],ks=Array.isArray(j.kalk)?j.kalk:[];
+  S.kalk=(kl.length>=ks.length?kl:ks).slice(-300);
+  S.kalkOn=j.kalkulator!==false;$('bKalk').hidden=!S.kalkOn;
   if(!S.demo){LS.set('sesi',S.sesi);LS.del('hasil');}
-  $('siapa').innerHTML=esc(j.nama)+'<small>'+esc(j.kelas)+' · No. '+esc(j.absen)+(j.lanjut?' · melanjutkan':'')+'</small>';
+  $('siapa').innerHTML=esc(j.nama)+'<small>'+esc(j.kelas)+' · No. '+esc(j.absen)+(j.paket?' · Paket '+esc(j.paket):'')+(j.lanjut?' · melanjutkan':'')+'</small>';
+  K.riwayat();
   bangunNomor();render();tampil('vKuis');
   clearInterval(S.tTimer);S.tTimer=setInterval(detak,1000);detak();
   stSimpan(j.lanjut?'Jawaban sebelumnya dipulihkan':'');
@@ -428,7 +501,7 @@ function jam(){var d=new Date();return ('0'+d.getHours()).slice(-2)+'.'+('0'+d.g
 function simpanServer(){
   if(S.demo||!S.dirty||S.saving||S.kirim||S.selesai)return;
   S.saving=true;S.dirty=false;stSimpan('Menyimpan…');
-  api('simpan',{sesi:S.sesi,jawaban:S.jw,pindahTab:S.tab},20000).then(function(j){
+  api('simpan',{sesi:S.sesi,jawaban:S.jw,pindahTab:S.tab,kalk:kalkKirim()},20000).then(function(j){
     if(!j.ok){stSimpan('Belum tersimpan di server',true);S.dirty=true;return;}
     if(j.selesai){tampilHasil(null,'Jawaban untuk sesi ini sudah terkirim sebelumnya.');return;}
     if(j.habis){S.deadline=Date.now();detak();return;}
@@ -476,8 +549,8 @@ function kirim(otomatis,percobaan){
   if(S.demo){S.selesai=true;clearInterval(S.tTimer);tampilHasil({ok:true,tampil:false,demo:true});return;}
   S.kirim=true;clearTimeout(S.tSimpan);S.tSimpan=0;
   percobaan=percobaan||0;
-  var data={sesi:S.sesi,jawaban:S.jw,pindahTab:S.tab,otomatis:!!otomatis};
-  LS.set('tertunda',{sesi:S.sesi,jawaban:S.jw,pindahTab:S.tab,otomatis:!!otomatis});
+  var data={sesi:S.sesi,jawaban:S.jw,pindahTab:S.tab,otomatis:!!otomatis,kalk:kalkKirim()};K.tutup();$('bKalk').hidden=true;
+  LS.set('tertunda',data);
   tampil('vHasil');
   $('hasilIsi').innerHTML='<h2><span class="spin"></span>'+(otomatis?'Waktu habis. ':'')+'Mengirim jawaban…</h2><p class="muted">Jangan tutup halaman ini.</p>';
   api('kirim',data,45000).then(function(j){
@@ -486,7 +559,7 @@ function kirim(otomatis,percobaan){
       var er=new Error(j.pesan||'Gagal');er.server=true;throw er;
     }
     S.selesai=true;clearInterval(S.tTimer);
-    LS.del('tertunda');LS.del('jw:'+nonce());LS.set('hasil',j);
+    LS.del('tertunda');LS.del('jw:'+nonce());LS.del('kalk:'+nonce());LS.set('hasil',j);
     tampilHasil(j);
   }).catch(function(e){
     if(percobaan<2){setTimeout(function(){kirim(otomatis,percobaan+1);},percobaan?6000:3000);return;}
@@ -498,7 +571,7 @@ function kirim(otomatis,percobaan){
   });
 }
 function tampilHasil(j,catatan){
-  S.selesai=true;clearInterval(S.tTimer);tampil('vHasil');
+  S.selesai=true;clearInterval(S.tTimer);K.tutup();$('bKalk').hidden=true;tampil('vHasil');
   var h='';
   if(!j){h='<h2>Sesi selesai</h2><p>'+esc(catatan||'')+'</p>';}
   else if(j.demo){h='<h2>Pratinjau selesai</h2><p class="muted">Dalam kuis sebenarnya, jawaban dinilai di server dan nilainya tercatat di Google Sheet guru.</p>';}
@@ -514,25 +587,156 @@ function tampilHasil(j,catatan){
   }
   h+='<div class="row" style="justify-content:center"><button class="btn ghost" id="bKeluar" type="button">Keluar</button></div>';
   $('hasilIsi').innerHTML=h;
-  $('bKeluar').onclick=function(){LS.del('sesi');LS.del('hasil');if(S.sesi)LS.del('jw:'+nonce());location.reload();};
+  $('bKeluar').onclick=function(){LS.del('sesi');LS.del('hasil');if(S.sesi){LS.del('jw:'+nonce());LS.del('kalk:'+nonce());}location.reload();};
 }
 
 /* ================= PRATINJAU (tanpa server) ================= */
 function mulaiDemo(){
   S.demo=true;$('demoBar').hidden=false;
-  mulaiKuis({sesi:'demo.x',nama:'Pratinjau',kelas:'XI',absen:0,sisaDetik:600,soal:[
+  mulaiKuis({sesi:'demo.x',nama:'Pratinjau',kelas:'XI',absen:0,paket:'A',kalkulator:true,durasi:10,sisaDetik:600,soal:[
     {no:1,tipe:'PG',soal:'Andi menabung Rp2.000.000 di koperasi sekolah dengan bunga tunggal 6% per tahun.\nBesar bunga yang diterima Andi setelah 3 tahun adalah …',opsi:['Rp120.000','Rp360.000','Rp382.032','Rp600.000','Rp2.360.000']},
     {no:2,tipe:'PGK',soal:'Sebuah bank menawarkan deposito dengan suku bunga nominal 12% per tahun yang dimajemukkan setiap triwulan (3 bulan).\nPilih SEMUA pernyataan yang benar.',opsi:['Suku bunga setiap triwulan adalah 3%.','Dalam satu tahun terjadi 4 kali pemajemukan.','Suku bunga efektif per tahun sekitar 12,55%.','Suku bunga efektif per tahun tepat 12%.','Dengan suku bunga nominal yang sama, makin sering dimajemukkan, suku bunga efektifnya makin kecil.']},
     {no:3,tipe:'BS',soal:'Tabel berikut menunjukkan saldo dua tabungan, P dan Q, pada akhir setiap tahun.\n| Tahun ke- | 0 | 1 | 2 | 3\n| Tabungan P | Rp4.000.000 | Rp4.200.000 | Rp4.400.000 | Rp4.600.000\n| Tabungan Q | Rp4.000.000 | Rp4.200.000 | Rp4.410.000 | Rp4.630.500\nTentukan Benar atau Salah setiap pernyataan berikut.',opsi:['Tabungan P memakai bunga tunggal karena saldonya bertambah dengan selisih yang tetap.','Tabungan Q memakai bunga majemuk karena perbandingan saldo dua tahun berurutan tetap, yaitu 1,05.','Suku bunga tabungan Q adalah 10% per tahun.','Jika polanya berlanjut, saldo tabungan P pada akhir tahun ke-5 adalah Rp5.000.000.']}
   ]});
 }
 
+/* ================= KALKULATOR ================= */
+function kalkKirim(){return S.kalk.map(function(x){return {s:x.s,e:x.e,h:x.h,t:x.t};});}
+var K=(function(){
+  var eks='',ans=0,adaAns=false,baruHitung=false,buka=false;
+  var OPS='+−×÷^';
+  /* --- format angka gaya Indonesia --- */
+  function kelompok(s){return s.replace(/\B(?=(\d{3})+(?!\d))/g,'.');}
+  function fmt(v){
+    if(!isFinite(v))return 'Tidak terdefinisi';
+    if(v===0)return '0';
+    var a=Math.abs(v);
+    if(a>=1e15||a<1e-9)return v.toExponential(6).replace('.',',').replace('-','−').replace('e+','×10^').replace('e−','×10^−');
+    var r=parseFloat(v.toPrecision(12)),ip=Math.floor(Math.abs(r)).toString().length,dec=Math.max(0,Math.min(10,10-ip));
+    var t=Math.abs(r).toFixed(dec);if(t.indexOf('.')>=0)t=t.replace(/0+$/,'').replace(/\.$/,'');
+    var bag=t.split('.');return (r<0?'−':'')+kelompok(bag[0])+(bag[1]?','+bag[1]:'');
+  }
+  function polos(v){var r=parseFloat(v.toPrecision(12));return String(r).replace('-','−').replace('.',',');}
+  function nilaiH(h){return parseFloat(String(h).replace(/\./g,'').replace(',','.').replace('−','-'));}
+  /* --- pengurai buatan sendiri (tanpa eval) --- */
+  function token(s){
+    var t=[],i=0,m;
+    while(i<s.length){
+      var c=s.charAt(i);
+      if(c===' '){i++;continue;}
+      if((m=/^(\d+(,\d*)?|,\d+)/.exec(s.slice(i)))){t.push({k:'n',v:parseFloat(m[0].replace(',','.'))});i+=m[0].length;continue;}
+      if(s.substr(i,3)==='Ans'){t.push({k:'n',v:ans,ans:true});i+=3;continue;}
+      if(s.substr(i,3)==='log'){t.push({k:'f',v:'log'});i+=3;continue;}
+      if(c==='√'){t.push({k:'f',v:'√'});i++;continue;}
+      if('+−×÷^()%'.indexOf(c)>=0){t.push({k:c});i++;continue;}
+      throw new Error('Simbol tidak dikenal');
+    }
+    return t;
+  }
+  function hitung(s){
+    var t=token(s),p=0;
+    function lihat(){return t[p];}
+    function makan(k){if(t[p]&&t[p].k===k){p++;return true;}return false;}
+    function mulaiPrimer(x){return x&&(x.k==='n'||x.k==='('||x.k==='f');}
+    function ekspr(){var v=suku();for(;;){if(makan('+'))v+=suku();else if(makan('−'))v-=suku();else return v;}}
+    function suku(){var v=unari();for(;;){if(makan('×'))v*=unari();else if(makan('÷'))v=v/unari();else if(mulaiPrimer(lihat()))v*=unari();else return v;}}
+    function unari(){if(makan('−'))return -unari();if(makan('+'))return unari();return pangkat();}
+    function pangkat(){var b=pasca();if(makan('^'))return Math.pow(b,unari());return b;}
+    function pasca(){var v=primer();while(makan('%'))v=v/100;return v;}
+    function primer(){
+      var x=lihat();if(!x)throw new Error('Ekspresi belum lengkap');
+      if(x.k==='n'){p++;return x.v;}
+      if(x.k==='('){p++;var v=ekspr();if(!makan(')')&&p<t.length)throw new Error('Kurung tidak cocok');return v;}
+      if(x.k==='f'){p++;var a=pasca();return x.v==='log'?Math.log(a)/Math.LN10:Math.sqrt(a);}
+      throw new Error('Ekspresi belum lengkap');
+    }
+    var v=ekspr();if(p<t.length)throw new Error('Kurung tidak cocok');
+    if(t.some(function(x){return x.ans;})&&!adaAns)throw new Error('Belum ada hasil (Ans)');
+    return v;
+  }
+  /* --- tampilan --- */
+  function tampilEks(){
+    $('kEks').innerHTML=esc(eks)+'<span class="kur" aria-hidden="true"></span>';
+    var h=$('kHas');
+    if(!eks){h.className='khas';h.textContent=baruHitung?fmt(ans):'0';return;}
+    try{var v=hitung(eks);h.className='khas prev';h.textContent=isFinite(v)?'= '+fmt(v):'';}catch(e){h.className='khas prev';h.textContent='';}
+  }
+  function riwayat(){
+    var ol=$('kRiw');
+    if(!S.kalk.length){ol.innerHTML='<li class="kosong">Belum ada perhitungan.</li>';return;}
+    var h='';
+    for(var i=S.kalk.length-1;i>=0;i--){var x=S.kalk[i];
+      h+='<li><button type="button" class="e" data-i="'+i+'" title="Pakai ekspresi ini">'+esc(x.e)+'</button>=<button type="button" class="h" data-i="'+i+'" title="Pakai hasil ini">'+esc(x.h)+'</button><small>Soal '+esc(x.s)+'</small></li>';}
+    ol.innerHTML=h;
+  }
+  function akhir(){return eks.slice(-1);}
+  function sisip(k){
+    if(baruHitung){baruHitung=false;eks=(OPS.indexOf(k)>=0||k==='%')?'Ans':'';}
+    if(k===','){var m=/(\d*,?\d*)$/.exec(eks)[0];if(m.indexOf(',')>=0)return;if(!/\d$/.test(eks))k='0,';}
+    if(OPS.indexOf(k)>=0&&k!=='−'&&OPS.indexOf(akhir())>=0)eks=eks.slice(0,-1);
+    if(k==='log')k='log(';if(k==='√')k='√(';
+    if(eks.length<120)eks+=k;
+  }
+  function hapus(){
+    if(baruHitung){baruHitung=false;eks='';return;}
+    if(/log\($/.test(eks))eks=eks.slice(0,-4);else if(/Ans$/.test(eks))eks=eks.slice(0,-3);else if(/√\($/.test(eks))eks=eks.slice(0,-2);else eks=eks.slice(0,-1);
+  }
+  function galat(teks){var h=$('kHas');h.className='khas err';h.textContent=teks;}
+  function samaDengan(){
+    if(!eks)return;
+    var tutup=(eks.match(/\(/g)||[]).length-(eks.match(/\)/g)||[]).length,e=eks;
+    while(tutup-->0)e+=')';
+    var v;try{v=hitung(e);}catch(x){galat(x.message);return;}
+    if(!isFinite(v)){galat('Tidak terdefinisi (mis. dibagi 0)');return;}
+    ans=v;adaAns=true;
+    S.kalk.push({s:S.idx+1,e:e,h:fmt(v),v:v,t:Math.max(0,Math.round((Date.now()-S.t0)/1000))});
+    if(S.kalk.length>300)S.kalk.shift();
+    if(!S.demo){LS.set('kalk:'+nonce(),S.kalk);S.dirty=true;jadwalSimpan(15000);}
+    eks='';baruHitung=true;tampilEks();riwayat();
+  }
+  function tekan(k){
+    if(k==='C'){eks='';baruHitung=false;}
+    else if(k==='DEL')hapus();
+    else if(k==='=')return samaDengan();
+    else sisip(k);
+    tampilEks();
+  }
+  $('kPad').addEventListener('click',function(e){var b=e.target.closest('button');if(b)tekan(b.getAttribute('data-k'));});
+  $('kRiw').addEventListener('click',function(e){
+    var b=e.target.closest('button');if(!b)return;var x=S.kalk[+b.getAttribute('data-i')];if(!x)return;
+    if(b.classList.contains('e')){eks=x.e;baruHitung=false;}
+    else{
+      var v=typeof x.v==='number'?x.v:nilaiH(x.h);if(!isFinite(v))return;
+      if(baruHitung){eks='';baruHitung=false;}
+      var s=polos(v);if(/[\d)%]$|Ans$/.test(eks))eks+='×';eks+=(s.charAt(0)==='−'?'('+s+')':s);
+    }
+    tampilEks();
+  });
+  $('kalk').addEventListener('keydown',function(e){
+    if(e.ctrlKey||e.metaKey||e.altKey)return;
+    var k=e.key,m={'*':'×','x':'×','X':'×','/':'÷','-':'−','.':',','Enter':'=','=':'=','Backspace':'DEL','Delete':'C'};
+    if(/^[0-9+()^%,]$/.test(k)||m[k]){e.preventDefault();tekan(m[k]||k);}
+    else if(k==='Escape'){e.preventDefault();tutup();$('bKalk').focus();}
+  });
+  function ukur(){var el=$('kalk');document.body.style.setProperty('--kalk-h',el.hidden?'0px':el.offsetHeight+'px');}
+  function bukaPanel(){
+    buka=true;$('kalk').hidden=false;document.body.classList.add('kalk-on');$('bKalk').setAttribute('aria-expanded','true');
+    tampilEks();riwayat();ukur();$('kalk').focus();
+  }
+  function tutup(){buka=false;$('kalk').hidden=true;document.body.classList.remove('kalk-on');$('bKalk').setAttribute('aria-expanded','false');ukur();}
+  $('bKalk').onclick=function(){if(buka)tutup();else bukaPanel();};
+  $('kTutup').onclick=function(){tutup();$('bKalk').focus();};
+  $('kMin').onclick=function(){var k=$('kalk'),m=k.classList.toggle('min');this.textContent=m?'▴':'▾';this.setAttribute('aria-expanded',String(!m));this.setAttribute('aria-label',m?'Perbesar kalkulator':'Perkecil kalkulator');ukur();};
+  window.addEventListener('resize',ukur);
+  return {tutup:tutup,riwayat:riwayat,hitung:hitung,fmt:fmt,tekan:tekan};
+})();
+
 /* ================= AWAL ================= */
 function awal(){
   if(DI_SEB)$('liSeb').hidden=false;
   if(!EP){muatInfo();return;}
   var tunda=LS.get('tertunda');
-  if(tunda&&tunda.sesi){S.sesi=tunda.sesi;S.jw=tunda.jawaban;S.tab=tunda.pindahTab||0;kirim(tunda.otomatis);return;}
+  if(tunda&&tunda.sesi){S.sesi=tunda.sesi;S.jw=tunda.jawaban;S.tab=tunda.pindahTab||0;S.kalk=Array.isArray(tunda.kalk)?tunda.kalk:[];kirim(tunda.otomatis);return;}
   var sesi=LS.get('sesi'),hasil=LS.get('hasil');
   if(sesi&&hasil){S.sesi=sesi;tampilHasil(hasil);return;}
   if(!sesi){muatInfo();return;}
