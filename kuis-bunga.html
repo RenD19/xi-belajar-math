@@ -128,7 +128,7 @@ ul.aturan li{margin:.35em 0}
 </head>
 <body>
 <!-- ============ SETELAN: isi dengan URL Aplikasi web (berakhiran /exec) dari Code kuis-bunga.gs ============ -->
-<script>window.KUIS_CONFIG={ENDPOINT:"https://script.google.com/macros/s/AKfycbyMNUCu7VbPJ8BDMUwwpbj0L1HzO71NNcrP-ojToujHcGcAO6E-yrvh4yzRKfza39YRQg/exec"};</script>
+<script>window.KUIS_CONFIG={ENDPOINT:""};</script>
 
 <div class="wrap">
   <header class="top" id="kepala">
@@ -142,7 +142,7 @@ ul.aturan li{margin:.35em 0}
         <h2>Masuk ke kuis</h2>
         <div class="chips" id="chips"><span class="chip">Memuat informasi kuis…</span></div>
         <form id="fMasuk" class="form" autocomplete="off" novalidate>
-          <label class="f">Kelas<input class="in" id="iKelas" placeholder="mis. XI AL HASIB" maxlength="12" required></label>
+          <label class="f">Kelas<input class="in" id="iKelas" placeholder="mis. XI-1" maxlength="12" required></label>
           <label class="f">Nomor absen<input class="in" id="iAbsen" inputmode="numeric" pattern="[0-9]*" maxlength="2" required></label>
           <label class="f full" id="lNama">Nama lengkap<input class="in" id="iNama" maxlength="40" autocomplete="off"></label>
           <label class="f" id="lPin" hidden>PIN<small>dari gurumu</small><input class="in" id="iPin" inputmode="numeric" maxlength="12" type="password"></label>
@@ -160,6 +160,7 @@ ul.aturan li{margin:.35em 0}
           <li>Waktu berjalan sejak kamu menekan <i>Mulai</i>. Saat waktu habis, jawabanmu dikirim otomatis.</li>
           <li>Jawaban tersimpan otomatis. Bila halaman tertutup, buka lagi dan masuk dengan data yang sama untuk melanjutkan.</li>
           <li>Siapkan kertas dan kalkulator untuk menghitung.</li>
+          <li id="liSeb" hidden>Kamu mengerjakan di <b>Safe Exam Browser</b>. Jangan keluar dari aplikasi sebelum jawaban terkirim; bila terpaksa keluar, buka lagi dan masuk dengan data yang sama.</li>
         </ul>
       </div>
     </div>
@@ -236,8 +237,36 @@ function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){retur
 function fAngka(x){return String(x).replace('.',',');}
 
 /* ---------- komunikasi dengan server ---------- */
+/* Safe Exam Browser memicu pemeriksaan CORS (preflight) yang tidak bisa dijawab Apps Script, sehingga
+   jawaban fetch terblokir. Di SEB (atau dengan ?kirim=form saat menguji) data dikirim lewat formulir ke
+   iframe tersembunyi; server membalas lewat postMessage. Di peramban biasa tetap memakai fetch. */
+var DI_SEB=/\bSEB\b/.test(navigator.userAgent);
+function pakaiForm(){return DI_SEB||/[?&]kirim=form\b/.test(location.search);}
+var ASAL_EP=(function(){try{return new URL(EP).origin;}catch(e){return '';}})();
+function apiForm(body,ms){
+  return new Promise(function(terima,tolak){
+    var rid='r'+Date.now().toString(36)+Math.random().toString(36).slice(2,12),tm=null;
+    var fr=document.createElement('iframe'),fm=document.createElement('form');
+    fr.name='kirim-'+rid;fr.title='Pengiriman data kuis';fr.setAttribute('aria-hidden','true');fr.tabIndex=-1;fr.style.display='none';
+    fm.method='POST';fm.action=EP;fm.target=fr.name;fm.acceptCharset='UTF-8';fm.style.display='none';
+    [['transport','form'],['rid',rid],['asal',location.origin],['payload',JSON.stringify(body)]].forEach(function(p){
+      var i=document.createElement('input');i.type='hidden';i.name=p[0];i.value=p[1];fm.appendChild(i);
+    });
+    function bersih(){clearTimeout(tm);window.removeEventListener('message',dengar);if(fr.parentNode)fr.parentNode.removeChild(fr);if(fm.parentNode)fm.parentNode.removeChild(fm);}
+    function dengar(ev){
+      if(ev.origin!==ASAL_EP&&!/^https:\/\/(script\.google\.com|([a-z0-9-]+\.)*[a-z0-9-]*script\.googleusercontent\.com)$/.test(ev.origin))return;
+      var d=ev.data;if(!d||d.kuisBungaRid!==rid)return;
+      bersih();terima(d.data);
+    }
+    window.addEventListener('message',dengar);
+    tm=setTimeout(function(){bersih();var e=new Error('Waktu habis');e.name='AbortError';tolak(e);},ms||30000);
+    document.body.appendChild(fr);document.body.appendChild(fm);
+    fm.submit();
+  });
+}
 function api(action,data,ms){
   var body=Object.assign({action:action},data||{});
+  if(pakaiForm())return apiForm(body,ms);
   var ctl=window.AbortController?new AbortController():null,t=ctl?setTimeout(function(){ctl.abort();},ms||30000):0;
   return fetch(EP,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body),signal:ctl?ctl.signal:undefined,redirect:'follow'})
     .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
@@ -414,7 +443,7 @@ document.addEventListener('visibilitychange',function(){
   else detak();
 });
 window.addEventListener('beforeunload',function(e){
-  if(S.demo)return;
+  if(S.demo||DI_SEB)return;
   if((!$('vKuis').hidden&&!S.selesai)||LS.get('tertunda')){e.preventDefault();e.returnValue='';}
 });
 
@@ -500,6 +529,7 @@ function mulaiDemo(){
 
 /* ================= AWAL ================= */
 function awal(){
+  if(DI_SEB)$('liSeb').hidden=false;
   if(!EP){muatInfo();return;}
   var tunda=LS.get('tertunda');
   if(tunda&&tunda.sesi){S.sesi=tunda.sesi;S.jw=tunda.jawaban;S.tab=tunda.pindahTab||0;kirim(tunda.otomatis);return;}
