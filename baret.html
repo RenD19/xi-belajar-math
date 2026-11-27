@@ -502,11 +502,13 @@ var MIS={
   ciri:'Bandingkan bentuknya: aritmetika berbentuk pn + q, geometri berbentuk c · rⁿ.',
   nilai:'Bandingkan nilai dalam pernyataan dengan hasil hitunganmu.',
   pangkatK:'Rasio adalah suku kedua dibagi suku pertama, termasuk pangkat k-nya.',
+  bulat:'Pada bulan itu jumlahnya belum mencapai target. Cari n terkecil dengan Sₙ ≥ target.',
+  persenR:'Bertambah 50% berarti menjadi 150% dari sebelumnya, jadi r = 1,5 (= 3/2).',
   alasan:'Pilihanmu benar, tetapi alasannya kurang tepat. Bandingkan dengan hasil hitunganmu.'
 };
 var CAT={id:'Identifikasi unsur',pola:'Membaca pola',rm:'Memilih rumus',hit:'Menghitung',kv:'Konversi satuan',syr:'Memeriksa syarat',kpt:'Mengambil keputusan'};
 
-/* ---------- daftar 19 kriteria, disusun dari soal ASTS Matematika kelas XI ---------- */
+/* ---------- daftar 25 kriteria, disusun dari soal ASTS Matematika kelas XI ---------- */
 var KRIT=[
  ['U1','U',1,'LOTS','C2','Barisan aritmetika diketahui beberapa suku; ditanya beda dan bentuk umum Uₙ'],
  ['U2','U',2,'LOTS','C2','Barisan geometri diketahui beberapa suku; ditanya rasio dan bentuk umum Uₙ'],
@@ -526,7 +528,13 @@ var KRIT=[
  ['T3','T',3,'MOTS','C3','Suku-suku deret berbentuk pecahan; ditanya rasio dan S∞'],
  ['T4','T',4,'MOTS','C3','Diketahui S∞ dan a atau r; ditanya r atau a'],
  ['T5','T',5,'HOTS','C4','Deret dengan parameter k; ditanya kekonvergenan, S∞, dan kebenaran pernyataan'],
- ['T6','T',6,'HOTS','C4','Bola yang terus memantul; ditanya panjang lintasan seluruhnya']
+ ['T6','T',6,'HOTS','C4','Bola yang terus memantul; ditanya panjang lintasan seluruhnya'],
+ ['C1','C',1,'LOTS','C2','Cerita tabungan atau hafalan yang bertambah tetap; ditanya bentuk umum Uₙ dan suku ke-k'],
+ ['C2','C',2,'LOTS','C2','Cerita pesan berantai yang berlipat; ditanya bentuk umum c · rⁿ dan suku ke-k'],
+ ['C3','C',3,'MOTS','C3','Cerita produksi dengan dua data bulan; ditanya jumlah produksi n bulan'],
+ ['C4','C',4,'MOTS','C3','Cerita infak atau peserta yang berlipat; ditanya jumlah n suku (deret geometri)'],
+ ['C5','C',5,'HOTS','C4','Cerita menabung menuju target; ditanya bulan pertama target tercapai'],
+ ['C6','C',6,'HOTS','C5','Dua rencana menabung (aritmetika dan geometri); ditanya rencana yang lebih menguntungkan']
 ];
 /* ---------- pembentuk soal ---------- */
 var TD=0.0001,TP=0.01;
@@ -967,6 +975,108 @@ GEN.T6=function(rng){
   ],'Panjang lintasan bola seluruhnya <b>'+frS(tot)+' m</b>.');
 };
 
+/* ============ KELOMPOK C: SOAL CERITA (BENTUK UMUM DAN DERET) ============ */
+var rb=function(k){return k*1000;};
+function Frp(lb,k,mis){return Fn('rp',lb,k,1,mis);}
+GEN.C1=function(rng){
+  var nm=pick(rng,NAMA),kind=pick(rng,['tabung','hafal']),a,b,k=rnd(rng,10,24),u,sat,lbl;
+  if(kind==='tabung'){a=rb(rnd(rng,2,10)*5);b=rb(rnd(rng,1,6)*5);}else{a=rnd(rng,2,6);b=rnd(rng,1,3);}
+  var Uk=a+(k-1)*b,p=b,q=a-b,f=LIN(F(p),F(q));
+  var fs=function(x){return kind==='tabung'?fRp(x):nS(x)+' ayat';};
+  var ctx=kind==='tabung'?nm+' menabung untuk berinfak di akhir tahun. Pada bulan pertama ia menabung '+fRp(a)+'. Setiap bulan berikutnya, tabungannya '+fRp(b)+' lebih banyak daripada bulan sebelumnya.'
+    :nm+' menambah hafalan Al-Qur’an setiap hari. Pada hari pertama ia menghafal '+a+' ayat. Setiap hari berikutnya, ia menghafal '+b+' ayat lebih banyak daripada hari sebelumnya.';
+  var per=kind==='tabung'?'bulan':'hari';
+  var F1=kind==='tabung'?function(l,v,m){return Frp(l,v,m);}:function(l,v,m){return Fi(l,v,m);};
+  return Q('C1',ctx,'Tentukan bentuk umum Uₙ (besar '+(kind==='tabung'?'tabungan':'hafalan')+' pada '+per+' ke-n) dan besarnya pada '+per+' ke-'+k+'.',[
+    S('Kenali pola','pola','Besaran yang berubah setiap '+per+' membentuk barisan apa?',[Fo('Jenis',[['Aritmetika, karena bertambah dengan besar yang sama'],['Geometri, karena bertambah setiap '+per,'ciri'],['Bukan keduanya','ciri']],rng)],
+      ['Perhatikan kata “… lebih banyak daripada '+per+' sebelumnya”.','Penambahannya selalu sama, yaitu '+fs(b)+'.','Barisannya aritmetika.'],'Barisan aritmetika.'),
+    S('Identifikasi','id','Tentukan suku pertama dan beda.',[F1('Suku pertama a',a),F1('Beda b',b)],
+      ['a = besar pada '+per+' pertama.','b = penambahan setiap '+per+'.','a = '+fs(a)+', b = '+fs(b)+'.'],'a = '+fs(a)+', b = '+fs(b)+'.'),
+    S('Bentuk umum','hit','Tulis Uₙ dalam bentuk <b>pn + q</b>.',[Fi('Koefisien n (p)',p),Fi('Konstanta (q)',q,[[a,'n1']])],
+      ['Uₙ = a + (n − 1)b.','Uₙ = '+nS(a)+' + (n − 1) × '+nS(b)+' = '+nS(b)+'n + '+par(q)+'.',f+'.'],f+'.'),
+    S(per.charAt(0).toUpperCase()+per.slice(1)+' ke-'+k,'hit','Hitung besarnya pada '+per+' ke-'+k+'.',[F1(U(k),Uk,[[a+k*b,'n1']])],
+      ['Substitusikan n = '+k+' ke bentuk umum.',U(k)+' = '+nS(p)+' × '+k+' + '+par(q)+'.',U(k)+' = '+fs(Uk)+'.'],U(k)+' = '+fs(Uk)+'.')
+  ],'Bentuk umum '+f+', dan pada '+per+' ke-'+k+' besarnya <b>'+fs(Uk)+'</b>.');
+};
+GEN.C2=function(rng){
+  var nm=pick(rng,NAMA),r=pick(rng,[2,3]),c=rnd(rng,1,5),a=c*r,k=rnd(rng,5,8),Uk=a*powi(r,k-1),f=GEO(F(c),F(r));
+  var ctx=nm+' membagikan poster ajakan bersedekah melalui grup pesan. Pada hari pertama poster itu dibaca '+a+' orang. Setiap hari, banyak pembaca baru menjadi '+(r===2?'dua':'tiga')+' kali lipat banyak pembaca baru hari sebelumnya.';
+  return Q('C2',ctx,'Tentukan bentuk umum Uₙ (banyak pembaca baru pada hari ke-n) dalam bentuk c · rⁿ, lalu hitung pembaca baru pada hari ke-'+k+'.',[
+    S('Kenali pola','pola','Banyak pembaca baru setiap hari membentuk barisan apa?',[Fo('Jenis',[['Geometri, karena berlipat dengan rasio tetap'],['Aritmetika, karena bertambah setiap hari','ciri'],['Bukan keduanya','ciri']],rng)],
+      ['Perhatikan kata “… kali lipat”.','Setiap hari dikali '+r+'.','Barisannya geometri dengan r = '+r+'.'],'Barisan geometri.'),
+    S('Identifikasi','id','Tentukan suku pertama dan rasio.',[Fi('Suku pertama a',a),Fi('Rasio r',r,[[a*r-a,'rSelisih']])],
+      ['a = pembaca baru hari pertama.','r = '+(r===2?'dua':'tiga')+' kali lipat.','a = '+a+', r = '+r+'.'],'a = '+a+', r = '+r+'.'),
+    S('Bentuk umum','hit','Uₙ = '+a+' · '+r+'ⁿ⁻¹. Tulis dalam bentuk <b>c · rⁿ</b>. Tentukan c.',[Fi('Nilai c',c,[[a,'pangkat']])],
+      ['rⁿ⁻¹ = rⁿ : r.','c = a : r.','c = '+a+' : '+r+' = '+c+', jadi '+f+'.'],f+'.'),
+    S('Hari ke-'+k,'hit','Hitung banyak pembaca baru pada hari ke-'+k+'.',[Fi(U(k),Uk,[[a*powi(r,k),'pangkat'],[a+(k-1)*r,'jenisA']])],
+      ['Substitusikan n = '+k+'.',U(k)+' = '+c+' × '+r+sup(k)+'.',U(k)+' = '+nS(Uk)+'.'],U(k)+' = '+nS(Uk)+' orang.')
+  ],'Bentuk umum '+f+', dan pembaca baru hari ke-'+k+' ada <b>'+nS(Uk)+' orang</b>.');
+};
+GEN.C3=function(rng){
+  var a=rnd(rng,8,40)*10,b=rnd(rng,1,8)*5,p=rnd(rng,2,4),q=p+rnd(rng,2,5),n=pick(rng,[10,12,15,20]),Up=a+(p-1)*b,Uq=a+(q-1)*b,Sn=n*(2*a+(n-1)*b)/2;
+  var ctx='Sebuah usaha kue milik koperasi sekolah meningkatkan produksinya dengan pertambahan yang tetap setiap bulan. Produksi pada bulan ke-'+p+' adalah '+nS(Up)+' kue dan pada bulan ke-'+q+' adalah '+nS(Uq)+' kue.';
+  return Q('C3',ctx,'Tentukan banyak kue yang diproduksi selama '+n+' bulan pertama.',[
+    S('Beda','hit','Tentukan pertambahan produksi setiap bulan (beda b).',[Fi('Beda b',b,[[Uq-Up,'selisihSuku']])],
+      [U(q)+' − '+U(p)+' = '+(q-p)+'b.',(q-p)+'b = '+nS(Uq)+' − '+nS(Up)+' = '+nS(Uq-Up)+'.','b = '+nS(b)+'.'],'b = '+nS(b)+' kue.'),
+    S('Suku pertama','hit','Tentukan produksi bulan pertama (a).',[Fi('Suku pertama a',a,[[Up-p*b,'n1']])],
+      [U(p)+' = a + '+(p-1)+'b.',nS(Up)+' = a + '+nS((p-1)*b)+'.','a = '+nS(a)+'.'],'a = '+nS(a)+' kue.'),
+    S('Uₙ atau Sₙ?','rm','Yang ditanyakan adalah …',[Fo('Besaran',[['Sₙ, karena yang ditanya jumlah produksi '+n+' bulan'],['Uₙ, karena yang ditanya produksi bulan ke-'+n,'unSn'],['b, karena yang ditanya pertambahannya','unSn']],rng)],
+      ['Kata “selama '+n+' bulan pertama” berarti semua bulan dijumlahkan.','Itu adalah deret.','Gunakan '+RM.SA+'.'],'Yang ditanya S'+sub(n)+'.'),
+    S('Hitung S'+sub(n),'hit','Hitung jumlah produksi '+n+' bulan pertama.',[Fi('S'+sub(n),Sn,[[a+(n-1)*b,'unSn'],[n*(a+(n-1)*b)/2,'dua']])],
+      ['S'+sub(n)+' = '+n+'/2 × (2 × '+nS(a)+' + '+(n-1)+' × '+nS(b)+').','S'+sub(n)+' = '+(n/2)+' × '+nS(2*a+(n-1)*b)+'.','S'+sub(n)+' = '+nS(Sn)+'.'],'S'+sub(n)+' = '+nS(Sn)+' kue.')
+  ],'Produksi selama '+n+' bulan pertama: <b>'+nS(Sn)+' kue</b>.');
+};
+GEN.C4=function(rng){
+  var g=rng()<0.5,nm=pick(rng,NAMA),n,r,a,Sn,ctx,ask,un;
+  if(g){r=F(3,2);n=rnd(rng,4,5);a=F(powi(2,n-1)*rnd(rng,1,3)*5);
+    ctx='Peserta kajian daring “Remaja Cinta Masjid” bertambah 50% setiap pekan dari pekan sebelumnya. Pada pekan pertama ada '+frS(a)+' peserta baru.';
+    ask='Tentukan banyak seluruh peserta baru selama '+n+' pekan pertama.';un='pekan';}
+  else{r=F(2);n=rnd(rng,6,9);a=F(rb(rnd(rng,1,5)));
+    ctx='Kelas XI mengumpulkan infak untuk pembangunan musala. Pada hari pertama terkumpul '+fRp(fv(a))+'. Setiap hari, infak yang terkumpul dua kali lipat infak hari sebelumnya.';
+    ask='Tentukan seluruh infak yang terkumpul selama '+n+' hari.';un='hari';}
+  Sn=sumG(a,r,n);var Un=fmul(a,fpow(r,n-1)),fs=function(x){return g?frS(x):fRp(fv(x));};
+  var FF=g?function(l,v,m){return Fd(l,v,m);}:function(l,v,m){return Frp(l,v,m);};
+  return Q('C4',ctx,ask,[
+    S('Identifikasi','id','Tentukan suku pertama dan rasio. Boleh ditulis pecahan atau desimal.',[FF('Suku pertama a',fv(a)),Fd('Rasio r',fv(r),g?[[0.5,'persenR']]:[])],
+      [g?'Bertambah 50% berarti menjadi 150% = 3/2 kali.':'Dua kali lipat berarti r = 2.','a = '+fs(a)+'.','r = '+frS(r)+'.'],'a = '+fs(a)+', r = '+frS(r)+'.'),
+    S('Uₙ atau Sₙ?','rm','Yang ditanyakan adalah …',[Fo('Besaran',[['Sₙ, jumlah selama '+n+' '+un],['Uₙ, besarnya pada '+un+' ke-'+n,'unSn'],['S∞, jumlah sampai tak hingga','syarat']],rng)],
+      ['Kata “seluruh … selama '+n+' '+un+'” berarti dijumlahkan.','Karena barisannya geometri, gunakan deret geometri.','Gunakan '+RM.SG+'.'],'Yang ditanya S'+sub(n)+'.'),
+    S('Hitung S'+sub(n),'hit','Hitung jumlahnya.',[FF('S'+sub(n),fv(Sn),[[fv(Un),'unSn']])],
+      ['S'+sub(n)+' = a(rⁿ − 1) / (r − 1).','S'+sub(n)+' = '+fs(a)+' × ('+frS(fpow(r,n))+' − 1) : ('+frS(r)+' − 1).','S'+sub(n)+' = '+fs(Sn)+'.'],'S'+sub(n)+' = '+fs(Sn)+'.')
+  ],'Jumlah selama '+n+' '+un+': <b>'+fs(Sn)+(g?' peserta':'')+'</b>.');
+};
+GEN.C5=function(rng){
+  var nm=pick(rng,NAMA),a=rb(rnd(rng,2,8)*5),b=rb(rnd(rng,1,4)*5),T,n,k,Sk;
+  T=rb(rnd(rng,60,200)*10);
+  var S_=function(m){return m*(2*a+(m-1)*b)/2;};
+  for(n=1;S_(n)<T;n++);
+  k=Math.max(2,n-rnd(rng,2,4));Sk=S_(k);
+  return Q('C5',nm+' menabung untuk membeli mushaf dan buku-buku islami seharga '+fRp(T)+'. Pada bulan pertama ia menabung '+fRp(a)+', dan setiap bulan berikutnya tabungannya '+fRp(b)+' lebih banyak daripada bulan sebelumnya.',
+    'Pada bulan ke berapa jumlah tabungan '+nm+' pertama kali cukup untuk membeli barang itu?',[
+    S('Identifikasi','id','Tentukan suku pertama dan beda.',[Frp('Suku pertama a',a),Frp('Beda b',b)],
+      ['a = tabungan bulan pertama.','b = pertambahan setiap bulan.','a = '+fRp(a)+', b = '+fRp(b)+'.'],'a = '+fRp(a)+', b = '+fRp(b)+'.'),
+    S('Jumlah '+k+' bulan','hit','Hitung jumlah tabungan setelah '+k+' bulan.',[Frp('S'+sub(k),Sk,[[a+(k-1)*b,'unSn']])],
+      ['Gunakan '+RM.SA+'.','S'+sub(k)+' = '+k+'/2 × (2 × '+fRp(a)+' + '+(k-1)+' × '+fRp(b)+').','S'+sub(k)+' = '+fRp(Sk)+'.'],'S'+sub(k)+' = '+fRp(Sk)+(Sk<T?' (belum cukup)':'')+'.'),
+    S('Bulan ke-n','kpt','Coba n = '+(k+1)+', '+(k+2)+', … sampai Sₙ ≥ '+fRp(T)+'. Pada bulan ke berapa tabungannya pertama kali cukup?',[Fi('Bulan ke-n',n,[[n-1,'bulat']])],
+      ['Hitung Sₙ untuk n berikutnya satu per satu.','S'+sub(n-1)+' = '+fRp(S_(n-1))+' (belum cukup).','S'+sub(n)+' = '+fRp(S_(n))+' ≥ '+fRp(T)+', jadi n = '+n+'.'],'Bulan ke-'+n+' (S'+sub(n)+' = '+fRp(S_(n))+').')
+  ],'Tabungan '+nm+' pertama kali cukup pada <b>bulan ke-'+n+'</b> (S'+sub(n)+' = '+fRp(S_(n))+').');
+};
+GEN.C6=function(rng){
+  var nmA=pick(rng,NAMA),nmB;do{nmB=pick(rng,NAMA);}while(nmB===nmA);
+  var a=rb(rnd(rng,10,40)*5),b=rb(rnd(rng,2,8)*5),c=rb(rnd(rng,1,4)*5),n=rnd(rng,6,9),SA=n*(2*a+(n-1)*b)/2,SB=c*(powi(2,n)-1);
+  if(SA===SB)n++;SA=n*(2*a+(n-1)*b)/2;SB=c*(powi(2,n)-1);
+  var opsi=SA>SB?[['Rencana '+nmA+' (aritmetika)'],['Rencana '+nmB+' (geometri)','banding'],['Keduanya sama','banding']]:[['Rencana '+nmB+' (geometri)'],['Rencana '+nmA+' (aritmetika)','banding'],['Keduanya sama','banding']];
+  return Q('C6','Dua sahabat membuat rencana menabung untuk kegiatan bakti sosial. '+nmA+' menabung '+fRp(a)+' pada bulan pertama dan menambah '+fRp(b)+' setiap bulan. '+nmB+' menabung '+fRp(c)+' pada bulan pertama, lalu setiap bulan menabung dua kali lipat bulan sebelumnya.',
+    'Setelah '+n+' bulan, rencana siapa yang menghasilkan jumlah tabungan lebih besar?',[
+    S('Tabungan '+nmA,'hit','Hitung jumlah tabungan '+nmA+' selama '+n+' bulan (deret aritmetika).',[Frp('Jumlah '+nmA,SA,[[a+(n-1)*b,'unSn']])],
+      ['a = '+fRp(a)+', b = '+fRp(b)+', n = '+n+'.','S'+sub(n)+' = '+n+'/2 × (2a + (n − 1)b).','S'+sub(n)+' = '+fRp(SA)+'.'],nmA+': '+fRp(SA)+'.'),
+    S('Tabungan '+nmB,'hit','Hitung jumlah tabungan '+nmB+' selama '+n+' bulan (deret geometri).',[Frp('Jumlah '+nmB,SB,[[c*powi(2,n-1),'unSn']])],
+      ['a = '+fRp(c)+', r = 2, n = '+n+'.','S'+sub(n)+' = a(2ⁿ − 1) / (2 − 1).','S'+sub(n)+' = '+fRp(SB)+'.'],nmB+': '+fRp(SB)+'.'),
+    S('Bandingkan','kpt','Rencana mana yang menghasilkan tabungan lebih besar setelah '+n+' bulan?',[Fo('Kesimpulan',opsi,rng)],
+      ['Bandingkan kedua jumlah tabungan.',fRp(SA)+' dan '+fRp(SB)+'.',opsi[0][0]+'.'],opsi[0][0]+'.')
+  ],'Setelah '+n+' bulan: '+nmA+' '+fRp(SA)+', '+nmB+' '+fRp(SB)+'. Yang lebih besar: <b>'+opsi[0][0]+'</b>.');
+};
+
 /* ---------- penilai ---------- */
 function judgeField(f,a){
   if(f.ty==='opt')return a===f.k;
@@ -1004,7 +1114,7 @@ function judgeStep(st,ans,locked){
 function keyAns(st){return st.f.map(function(f){return f.ty==='chk'?f.k.slice():f.k;});}
 
 /* ---------- paket kuis: 8 soal, urut mudah → sulit ---------- */
-var SLOT=[['U1','U2','U3'],['U4','U5','U6'],['U7','U8'],['D1','D2'],['D3','D4'],['D5'],['T1','T2','T3','T4'],['T5','T6']];
+var SLOT=[['U1','U2','U3'],['U4','U5','U6'],['D1','D2'],['D3','D4'],['C1','C2','C3','C4'],['U7','U8','D5','C5','C6'],['T1','T2','T3','T4'],['T5','T6']];
 function buildPack(seed){
   var rng=mulberry32(seed),ids=SLOT.map(function(s){return pick(rng,s);});
   return {seed:seed,ids:ids,set:ids.map(function(id){return GEN[id](rng);})};
@@ -1073,7 +1183,7 @@ return {VERSI:VERSI,KRIT:KRIT,GEN:GEN,MIS:MIS,CAT:CAT,SLOT:SLOT,MAKS_LEWAT:MAKS_
 var $=function(s){return document.querySelector(s);};
 var esc=function(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');};
 var fRp=CORE.fRp,fPct=CORE.fPct,fD=CORE.fD,fNum=CORE.fNum,powi=CORE.powi;
-var GNAMA={U:'Bentuk Umum Barisan',D:'Deret',T:'Deret Geometri Tak Hingga'};
+var GNAMA={U:'Bentuk Umum Barisan',D:'Deret',C:'Soal Cerita',T:'Deret Geometri Tak Hingga'};
 var LVNAMA={LOTS:'LOTS (C1–C2)',MOTS:'MOTS (C3)',HOTS:'HOTS (C4–C6)'};
 function newSeed(){return Math.floor(Math.random()*2147483646)+1;}
 function kritOf(id){var r=null;CORE.KRIT.forEach(function(k){if(k[0]===id)r=k;});return r;}
@@ -1183,7 +1293,7 @@ function fatalCode(r){return !!r&&(r.kode==='token'||r.kode==='habis'||r.kode===
 function loginPanel(el){
   var pend=loadPending();
   el.innerHTML='<h2>Kuis · Masuk</h2>'
-    +'<div class="note"><p>Kuis berisi <b>8 soal</b> (3 bentuk umum barisan, 3 deret, 2 deret geometri tak hingga) yang diurutkan dari mudah ke sulit. Waktu: <b>60 menit</b> sejak kamu masuk.</p>'
+    +'<div class="note"><p>Kuis berisi <b>8 soal</b> (bentuk umum barisan, deret, soal cerita, dan deret geometri tak hingga) yang diurutkan dari mudah ke sulit. Waktu: <b>60 menit</b> sejak kamu masuk.</p>'
     +'<p>Nilai kuis <b>disetor ke gurumu</b>. Soal dibuat oleh server dan nilai dihitung ulang dari jawabanmu, jadi kerjakan sendiri.</p>'
     +'<p>Kuis hanya bisa dikerjakan <b>sekali</b>. Jika halaman tertutup sebelum selesai, masuk lagi (dalam batas waktu) untuk mendapat soal yang sama.</p></div>'
     +(pend?'<div class="rule">Ada nilai yang <b>belum terkirim</b> dari kuis sebelumnya. <button class="btn" id="bPending">Kirim sekarang</button></div>':'')
@@ -1336,7 +1446,7 @@ function renderSide(){
   if(st.over||!st.q&&!st.gate){document.body.classList.add('noside');el.innerHTML='';return;}
   document.body.classList.remove('noside');
   if(st.gate){
-    el.innerHTML='<h3>Tentang kuis</h3><ul class="found"><li>8 soal: bentuk umum barisan (LOTS, MOTS, HOTS), deret (LOTS, MOTS, HOTS), dan deret geometri tak hingga (LOTS atau MOTS, HOTS).</li><li>Setiap soal dikerjakan bertahap. Langkah yang benar pada percobaan pertama mendapat poin penuh.</li><li>Setelah 2 kali salah, kamu boleh melewati langkah itu (bernilai 0) agar bisa lanjut.</li><li>Jawaban boleh ditulis pecahan, misalnya 31/32. Siapkan kalkulator untuk menghitung pangkat.</li></ul>';
+    el.innerHTML='<h3>Tentang kuis</h3><ul class="found"><li>8 soal: 2 bentuk umum barisan, 2 deret, 1 soal cerita, 1 soal HOTS (barisan, deret, atau soal cerita), dan 2 deret geometri tak hingga.</li><li>Setiap soal dikerjakan bertahap. Langkah yang benar pada percobaan pertama mendapat poin penuh.</li><li>Setelah 2 kali salah, kamu boleh melewati langkah itu (bernilai 0) agar bisa lanjut.</li><li>Jawaban boleh ditulis pecahan, misalnya 31/32. Siapkan kalkulator untuk menghitung pangkat.</li></ul>';
     return;
   }
   var q=st.q;
@@ -1364,7 +1474,7 @@ function introPanel(el){
   if(learn){
     var p=st.pick,c=kandidat();
     h+='<h2>Pilih kriteria soal</h2><p class="muted">Pilih kelompok dan level. Soal dibangkitkan acak sesuai pilihanmu.</p>';
-    h+='<div class="lvl"><b>Kelompok</b><div class="chips">'+['U','D','T'].map(function(g){return '<button class="chip'+(p.g===g?' on':'')+'" data-g="'+g+'">'+GNAMA[g]+'</button>';}).join('')+'</div></div>';
+    h+='<div class="lvl"><b>Kelompok</b><div class="chips">'+['U','D','C','T'].map(function(g){return '<button class="chip'+(p.g===g?' on':'')+'" data-g="'+g+'">'+GNAMA[g]+'</button>';}).join('')+'</div></div>';
     h+='<div class="lvl"><b>Level</b><div class="chips">'+['LOTS','MOTS','HOTS'].map(function(lv){
       var ada=CORE.KRIT.some(function(k){return k[1]===p.g&&k[3]===lv;});
       return '<button class="chip'+(p.lv===lv?' on':'')+'" data-lv="'+lv+'"'+(ada?'':' disabled title="Tidak ada kriteria untuk level ini"')+'>'+LVNAMA[lv]+'</button>';}).join('')+'</div></div>';
@@ -1666,7 +1776,7 @@ var PQ=function(id,t,s){return '<p class="eq" id="'+id+'" data-tex="'+t+'">'+s+'
 var EX_TOPICS=[['tj','Tujuan dan alur belajar'],['k','1 · Barisan dan suku'],['a1','2 · Barisan aritmetika'],['a2','2 · Contoh: bentuk umum aritmetika'],
   ['g1','3 · Barisan geometri'],['g2','3 · Contoh: bentuk umum geometri'],['j','4 · Mengenali jenis dari bentuk umum'],['d1','5 · Deret aritmetika'],
   ['d2','6 · Deret geometri'],['d3','6 · Penerapan: gerakan relawan'],['p','7 · Pertumbuhan dan peluruhan'],['t1','8 · Deret geometri tak hingga'],
-  ['t2','8 · Contoh: deret dengan parameter k'],['t3','8 · Konvergen atau divergen?'],['n','9 · Refleksi: keteraturan dan kemudahan'],['ks','10 · Kesalahan yang sering terjadi'],['x','Temukan kesalahan']];
+  ['t2','8 · Contoh: deret dengan parameter k'],['t3','8 · Konvergen atau divergen?'],['c1','9 · Strategi soal cerita'],['c2','9 · Contoh soal cerita'],['n','10 · Refleksi: keteraturan dan kemudahan'],['ks','11 · Kesalahan yang sering terjadi'],['x','Temukan kesalahan']];
 var EX=[
 {t:'tj',jd:'Tujuan dan alur belajar',src:'Pengantar media',ch:{j:'G',a:3,r:3,n:4},
  panel:'<p id="a0">Di media ini kamu belajar menemukan <b>bentuk umum barisan</b>, menghitung <b>jumlah deret</b>, dan menentukan jumlah <b>deret geometri tak hingga</b>.</p>'
@@ -1764,14 +1874,36 @@ var EX=[
   +'<tr id="o2"><td>1 − 1 + 1 − …</td><td>−1</td><td>Divergen</td></tr></table></div>'
   +'<p class="note" id="o3">Suku yang kecil belum menjamin konvergen. ½ + ½ + ½ + … mempunyai suku yang sedikit, tetapi karena terus ditambahkan, jumlahnya membesar tanpa batas. Deret 1 − 1 + 1 − … juga divergen karena jumlahnya berganti-ganti 1, 0, 1, 0 tanpa menuju satu nilai.</p>',
  beats:[B('Periksa rasio setiap deret.',El('#o0')),B('r = 1 atau r > 1: divergen.',El('#o1')),B('r = −1 juga divergen.',El('#o2')),B('Sedikit tapi terus-menerus!',El('#o3')),B('Lihat: Sₙ terus naik.',El('#chartSvg'))]},
-{t:'n',jd:'9 · Refleksi: keteraturan dan kemudahan',src:'Soal ASTS nomor 5 dan 9',
+{t:'c1',jd:'9 · Strategi soal cerita',src:'Soal ASTS nomor 7 dan 10',
+ panel:'<p id="y0">Soal cerita barisan dan deret dapat diselesaikan dengan empat langkah:</p>'
+  +'<ol class="exl"><li id="y1"><b>Cari besaran yang berubah</b> (tabungan, produksi, peserta, populasi) dan satuan waktunya (hari, pekan, bulan).</li>'
+  +'<li id="y2"><b>Tentukan jenisnya.</b> Bertambah atau berkurang dengan besar yang sama → aritmetika. Berlipat atau berubah dengan persentase tetap → geometri.</li>'
+  +'<li id="y3"><b>Tentukan a, b atau r, dan n.</b> a = keadaan pada periode pertama. Bertambah 50% berarti r = 1,5; menyusut 30% berarti r = 0,7.</li>'
+  +'<li id="y4"><b>Uₙ atau Sₙ?</b> “pada bulan ke-n” → Uₙ. “selama n bulan”, “seluruhnya”, atau “total” → Sₙ.</li></ol>'
+  +'<div class="dtwrap"><table class="ext" id="y5"><tr><th>Kata kunci dalam soal</th><th>Artinya</th></tr>'
+  +'<tr><td>“… lebih banyak/sedikit Rp10.000 daripada sebelumnya”</td><td>Aritmetika, b = ±10.000</td></tr>'
+  +'<tr><td>“dua kali lipat”, “bertambah 50%”, “menyusut 30%”</td><td>Geometri, r = 2; 1,5; 0,7</td></tr>'
+  +'<tr><td>“pada pekan ke-4”, “bulan ke-10”</td><td>Suku Uₙ</td></tr>'
+  +'<tr><td>“selama 3 pekan pertama”, “seluruh”, “total”</td><td>Jumlah Sₙ</td></tr></table></div>'
+  +'<p class="note" id="y6">Terakhir, periksa apakah jawabanmu masuk akal: jumlah selalu lebih besar daripada suku terakhir bila semua sukunya positif.</p>',
+ beats:[B('Ada empat langkah.',El('#y0')),B('Apa yang berubah?',El('#y1')),B('Tetap atau berlipat?',El('#y2')),B('Tentukan a, b/r, dan n.',El('#y3')),B('Suku atau jumlah?',El('#y4')),B('Perhatikan kata kuncinya.',El('#y5')),B('Cek apakah masuk akal.',El('#y6'))]},
+{t:'c2',jd:'9 · Contoh soal cerita',src:'Contoh penerapan',ch:{j:'A',a:50,d:10,n:12},
+ panel:'<p id="x0">Aisyah menabung untuk berinfak. Bulan pertama ia menabung Rp50.000, dan setiap bulan berikutnya Rp10.000 lebih banyak daripada bulan sebelumnya.</p>'
+  +'<p id="x1"><b>Jenis:</b> bertambah sama besar → aritmetika dengan a = 50.000 dan b = 10.000.</p>'
+  +'<p id="x2"><b>Bentuk umum</b> (tabungan bulan ke-n):</p>'+PQ('x3','U_n = 50.000 + (n - 1) \\cdot 10.000 = 10.000n + 40.000','Uₙ = 50.000 + (n − 1) · 10.000 = 10.000n + 40.000')
+  +'<p id="x4"><b>Tabungan bulan ke-12:</b> U₁₂ = 10.000 × 12 + 40.000 = Rp160.000.</p>'
+  +'<p id="x5"><b>Jumlah tabungan selama 12 bulan:</b></p>'+PQ('x6','S_{12} = \\dfrac{12}{2}\\left(50.000 + 160.000\\right) = 1.260.000','S₁₂ = 12/2 · (50.000 + 160.000) = 1.260.000')
+  +'<p class="ans" id="x7">Jadi tabungan bulan ke-12 adalah Rp160.000, dan seluruh tabungan selama 12 bulan adalah Rp1.260.000.</p>'
+  +'<p class="note" id="x8">Grafik di samping memakai satuan ribu rupiah: batang = tabungan setiap bulan (Uₙ), garis = jumlah tabungan (Sₙ).</p>',
+ beats:[B('Baca ceritanya dulu.',El('#x0')),B('Bertambah tetap: aritmetika.',El('#x1')),B('Ini bentuk umumnya.',El('#x3')),B('Bulan ke-12: Rp160.000.',El('#x4')),B('Total 12 bulan: Sₙ.',El('#x6')),B('Uₙ dan Sₙ berbeda!',El('#x7')),B('Lihat batang dan garisnya.',El('#chartSvg'))]},
+{t:'n',jd:'10 · Refleksi: keteraturan dan kemudahan',src:'Soal ASTS nomor 5 dan 9',
  panel:'<div class="refl" id="r0"><p>“Karena sesungguhnya beserta kesulitan ada kemudahan. Sesungguhnya beserta kesulitan ada kemudahan.” (QS. Al-Insyirah: 5–6)</p></div>'
   +'<ul class="exl"><li id="r1">Pola keteraturan bilangan pada fenomena alam menunjukkan bahwa di balik kerumitan alam semesta ada keteraturan (sunnatullah) yang membantu manusia memprediksi kejadian di masa depan.</li>'
   +'<li id="r2">Rumus deret adalah salah satu wujud kemudahan: menjumlahkan ratusan suku cukup dengan satu rumus, tanpa penjumlahan berulang yang panjang dan melelahkan.</li>'
   +'<li id="r3">Bentuk umum ditemukan justru dengan <b>mengamati</b> selisih atau rasio. Barisan yang polanya belum terlihat dari dua suku pertama tidak perlu ditinggalkan; amati lebih banyak suku.</li></ul>'
   +'<div class="refl" id="r4"><p>“Amalan yang paling dicintai oleh Allah adalah amalan yang terus-menerus meskipun sedikit.” (HR. Bukhari dan Muslim)</p><p>Seperti deret ½ + ½ + ½ + … yang divergen: kebaikan kecil yang dilakukan terus-menerus akan terkumpul tanpa batas.</p></div>',
  beats:[B('Mari renungkan sejenak.',El('#r0')),B('Alam penuh keteraturan.',El('#r1')),B('Rumus deret memudahkan kita.',El('#r2')),B('Amati, jangan menyerah.',El('#r3')),B('Sedikit tapi terus-menerus.',El('#r4'))]},
-{t:'ks',jd:'10 · Kesalahan yang sering terjadi',src:'Hasil penguraian kompetensi dari soal ASTS',
+{t:'ks',jd:'11 · Kesalahan yang sering terjadi',src:'Hasil penguraian kompetensi dari soal ASTS',
  panel:'<ul class="exl"><li id="z1"><b>Lupa (n − 1).</b> Uₙ = a + (n − 1)b, bukan a + nb. Pada geometri, pangkatnya n − 1.</li>'
   +'<li id="z2"><b>Rasio dihitung dengan pengurangan</b> atau terbalik. Rasio = U₂ : U₁.</li>'
   +'<li id="z3"><b>Jenis barisan ditebak dari dua suku pertama.</b> 2, 4, … bisa aritmetika (2, 4, 6) atau geometri (2, 4, 8).</li>'
@@ -1780,26 +1912,26 @@ var EX=[
   +'<li id="z6"><b>Memakai S∞ untuk deret divergen.</b> Periksa dulu −1 &lt; r &lt; 1.</li></ul>'
   +'<p class="note" id="z7">Berikutnya: temukan kesalahan-kesalahan ini pada penyelesaian seorang siswa.</p>',
  beats:[B('Ingat (n − 1)!',El('#z1')),B('Rasio pakai pembagian.',El('#z2')),B('Jangan hanya dua suku.',El('#z3')),B('Teliti pangkatnya.',El('#z4')),B('Uₙ atau Sₙ?',El('#z5')),B('Cek syarat dulu.',El('#z6')),B('Ayo cari kesalahannya!',El('#z7'))]},
-/* ---- kasus "temukan kesalahan": masing-masing satu kesalahan dari bagian 10, memakai soal ASTS ---- */
-{t:'x',k:1,jd:'Kasus 1 · Lupa (n − 1)',src:'Soal ASTS nomor 1 dan bagian 10',
+/* ---- kasus "temukan kesalahan": masing-masing satu kesalahan dari bagian 11, memakai soal ASTS ---- */
+{t:'x',k:1,jd:'Kasus 1 · Lupa (n − 1)',src:'Soal ASTS nomor 1 dan bagian 11',
  soal:'Tentukan bentuk umum barisan 5, 2, −1, −4, −7, … .',
  lines:['1. a = 5 dan b = 2 − 5 = −3.','2. Uₙ = a + nb = 5 + n(−3).','3. Jadi Uₙ = 5 − 3n.'],
  err:1,ws:'Kesalahannya di baris 2: rumusnya a + nb.',
  why:'Suku ke-n memuat (n − 1) kali beda. Dengan Uₙ = 5 − 3n, suku pertamanya 2, padahal seharusnya 5.',
  fix:'Uₙ = 5 + (n − 1)(−3) = <b>8 − 3n</b>.'},
-{t:'x',k:1,jd:'Kasus 2 · Pangkat rasio',src:'Soal ASTS nomor 2 dan bagian 10',
+{t:'x',k:1,jd:'Kasus 2 · Pangkat rasio',src:'Soal ASTS nomor 2 dan bagian 11',
  soal:'Tentukan bentuk umum barisan 15, 45, 135, 405, … .',
  lines:['1. a = 15 dan r = 45 : 15 = 3.','2. Uₙ = a · rⁿ.','3. Jadi Uₙ = 15 · 3ⁿ.'],
  err:1,ws:'Kesalahannya di baris 2: pangkatnya ditulis n.',
  why:'Rumus suku ke-n barisan geometri adalah a · rⁿ⁻¹. Dengan 15 · 3ⁿ, suku pertamanya 45, padahal seharusnya 15.',
  fix:'Uₙ = 15 · 3ⁿ⁻¹ = <b>5 · 3ⁿ</b>.'},
-{t:'x',k:1,jd:'Kasus 3 · Membaca pangkat',src:'Soal ASTS nomor 6 dan bagian 10',
+{t:'x',k:1,jd:'Kasus 3 · Membaca pangkat',src:'Soal ASTS nomor 6 dan bagian 11',
  soal:'Diketahui Uₙ = 2²ⁿ. Tentukan S₅.',
  lines:['1. U₁ = 2² = 4.','2. Rasionya r = 2.','3. S₅ = 4(2⁵ − 1) : (2 − 1) = 124.'],
  err:1,ws:'Kesalahannya di baris 2: r = 2.',
  why:'2²ⁿ = (2²)ⁿ = 4ⁿ. Periksa: U₂ = 2⁴ = 16, sehingga r = 16 : 4 = 4.',
  fix:'S₅ = 4(4⁵ − 1) : (4 − 1) = <b>1.364</b>.'},
-{t:'x',k:1,jd:'Kasus 4 · Syarat konvergen',src:'Soal ASTS nomor 9 dan bagian 10',
+{t:'x',k:1,jd:'Kasus 4 · Syarat konvergen',src:'Soal ASTS nomor 9 dan bagian 11',
  soal:'Tentukan jumlah deret 24 + 96 + 384 + … .',
  lines:['1. a = 24 dan r = 96 : 24 = 4.','2. S∞ = a : (1 − r) = 24 : (1 − 4).','3. Jadi S∞ = −8.'],
  err:1,ws:'Kesalahannya di baris 2: rumus S∞ dipakai padahal r = 4.',
